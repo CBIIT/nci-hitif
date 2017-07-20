@@ -9,10 +9,11 @@ from keras.callbacks import ModelCheckpoint,ReduceLROnPlateau,EarlyStopping
 from keras import backend as K
 from keras.models import load_model
 import argparse
+import pickle
 
 
 K.set_image_data_format('channels_last')  # TF dimension ordering in this code
-
+__file__="/gpfs/gsfs2/users/zakigf/swift-t/examples/nci-hitif/model.py"
 img_rows = 128
 img_cols = 128
 
@@ -20,8 +21,8 @@ smooth = 1.
 
 reloadFlag = True
 savePNGS = False
-oldmodelwtsfname = 'short_weights_nodil_normalize.h5'
-modelwtsfname = 'short_weights_nodil_normalize.h5'
+#oldmodelwtsfname = 'short_weights_nodil_normalize.h5'
+modelwtsfname = 'modle_weights.h5'
 
 
 def dice_coef(y_true, y_pred):
@@ -37,6 +38,10 @@ def dice_coef_loss(y_true, y_pred):
 
 
 def get_unet (n_layers=5, filter_size=32, dropout=True, activation_func="relu", conv_size=3 ):
+
+    print('-'*30)
+    print('Creating and compiling model...')
+    print('-'*30)
     inputs = Input((img_rows, img_cols, 1))
     conv_layers=[] 
     pool_layers=[inputs]
@@ -74,18 +79,30 @@ def get_unet (n_layers=5, filter_size=32, dropout=True, activation_func="relu", 
 
     model = Model(inputs=[inputs], outputs=[last_conv])
 
+
+    model.compile(optimizer=Adam(lr=1e-5), loss=dice_coef_loss, metrics=[dice_coef])
+    model.summary()
+
     return model
 
-
-def train():
+def train(model):
 
     print('-'*30)
     print('Loading and preprocessing train data...')
     print('-'*30)
 
+    imgs_train_file="1CDT_Green_Red_FarRed_Annotated_FISH_Dilation4Conn1Iter_Training_128by128_normalize.npy"
+    imgs_mask_file="1CDT_Green_Red_FarRed_Annotated_FISH_Dilation4Conn1Iter_Training_128by128_normalize_Mask.npy"
+    file_path = os.path.dirname(os.path.realpath(__file__))
+    imgs_train_path=os.path.join(file_path, "data_python", imgs_train_file)
+    imgs_mask_path=os.path.join(file_path, "data_python", imgs_mask_file)
 
-    imgs_train = np.load('/data/zakigf/swift-t/examples/spots_learner/data_python/1CDT_Green_Red_Annotated_FISH_NoDillations__Training_128by128_normalize.npy')
-    imgs_mask_train = np.load('/data/zakigf/swift-t/examples/spots_learner/data_python/1CDT_Green_Red_Annotated_FISH_NoDillations__Training_128by128_normalize_Mask.npy')
+
+    imgs_train = np.load(imgs_train_path)
+    imgs_mask_train = np.load(imgs_mask_path)
+
+    #imgs_train = np.load('./data_python/1CDT_Green_Red_FarRed_Annotated_FISH_Dilation4Conn1Iter_Training_128by128_normalize.npy')
+    #imgs_mask_train = np.load('./data_python/1CDT_Green_Red_FarRed_Annotated_FISH_Dilation4Conn1Iter_Training_128by128_normalize_Mask.npy')
 
 
     imgs_train = imgs_train.astype('float32')
@@ -98,22 +115,18 @@ def train():
     imgs_mask_train = imgs_mask_train.astype('float32')
     imgs_mask_train /= 255.  # scale masks to [0, 1]
 
-    print('-'*30)
-    print('Creating and compiling model...')
-    print('-'*30)
-    
-    model = get_unet()
-
-    if os.path.isfile(oldmodelwtsfname) and reloadFlag :
-       print('-'*30)
-       print('Loading previous weights ...')
-       model.load_weights(oldmodelwtsfname)
+   
+#    model = get_unet()
+#
+#    if os.path.isfile(oldmodelwtsfname) and reloadFlag :
+#       print('-'*30)
+#       print('Loading previous weights ...')
+#       model.load_weights(oldmodelwtsfname)
 
 
-    model.compile(optimizer=Adam(lr=1e-5), loss=dice_coef_loss, metrics=[dice_coef])
-    model.summary()
-
-    exit()
+# G.Z. already done when mode is passed 
+#    model.compile(optimizer=Adam(lr=1e-5), loss=dice_coef_loss, metrics=[dice_coef])
+#    model.summary()
 
     model_checkpoint = ModelCheckpoint(modelwtsfname, monitor='val_loss', save_best_only=True)
     reduce_lr = ReduceLROnPlateau(monitor='val_loss', factor=0.1,patience=50, min_lr=0.001,verbose=1)
@@ -124,16 +137,16 @@ def train():
     print('-'*30)
     imgs_train = np.expand_dims(imgs_train, 3)
     imgs_mask_train = np.expand_dims(imgs_mask_train, 3)
-    model.fit(imgs_train, imgs_mask_train, batch_size=2, epochs=3000, verbose=1, shuffle=True,
+    return model.fit(imgs_train, imgs_mask_train, batch_size=2, epochs=2, verbose=2, shuffle=True,
               validation_split=0.10, callbacks=[model_checkpoint, reduce_lr, model_es])
 
-def predict():
+def predict(model):
     print('-'*30)
     print('Loading and preprocessing test data...')
     print('-'*30)
 
-    imgs_test = np.load('/data/zakigf/swift-t/examples/spots_learner/data_python/1CDT_Green_Red_Annotated_FISH_NoDillations__Testing_128by128_normalize.npy')
-    imgs_mask_test = np.load('/data/zakigf/swift-t/examples/spots_learner/data_python/1CDT_Green_Red_Annotated_FISH_NoDillations__Testing_128by128_normalize_Mask.npy')
+    imgs_test = np.load('./data_python/1CDT_Green_Red_FarRed_Annotated_FISH_Dilation4Conn1Iter_Testing_128by128_normalize.npy')
+    imgs_mask_test = np.load('.//data_python/1CDT_Green_Red_FarRed_Annotated_FISH_Dilation4Conn1Iter_Testing_128by128_normalize_Mask.npy')
     imgs_test = imgs_test.astype('float32')
 
     #imgs_train = np.load('../data_python/1CDT_Green_Red_Annotated_FISH_Dilation8Conn1Iter_Training_128by128.npy')
@@ -161,7 +174,7 @@ def predict():
 if __name__ == '__main__':
 
 
-    parser = argparse.ArgumentParser(description="Train spot learner")
+    parser = argparse.ArgumentParser(description="spot learner")
 
 
 #def get_unet (n_layers=5, filter_size=32, dropout=True, activation_func="relu", conv_size=3 ):
@@ -179,11 +192,10 @@ if __name__ == '__main__':
                      filter_size=args.num_filters, \
                      activation_func=args.activation, \
                      conv_size=args.conv_size)
-
-    model.compile(optimizer=Adam(lr=1e-5), loss=dice_coef_loss, metrics=[dice_coef])
-    model.summary()
-
-
-#    train()
+    history_callback = train(model)
+    print("Best val_dice_coef:")
+    print(max(history_callback.history["val_dice_coef"]))
+    #Save the history as pickle object
+    pickle.dump(history_callback.history, open( "fit_history.p", "wb" ) )
 #    predict()
 
