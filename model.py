@@ -37,7 +37,7 @@ def dice_coef_loss(y_true, y_pred):
 
 
 
-def get_unet (n_layers=5, filter_size=32, dropout=True, activation_func="relu", conv_size=3 ):
+def get_unet (n_layers=5, filter_size=32, dropout=None, activation_func="relu", conv_size=3 ):
 
     print('-'*30)
     print('Creating and compiling model...')
@@ -50,8 +50,8 @@ def get_unet (n_layers=5, filter_size=32, dropout=True, activation_func="relu", 
 
     for i in range(n_layers):
         conv = Conv2D(filter_size,  conv_filter, activation=activation_func, padding='same')(pool_layers[i])
-        if dropout:
-            conv = Dropout(0.2)(conv)
+        if dropout != None:
+            conv = Dropout(dropout)(conv)
         conv = Conv2D(filter_size, conv_filter, activation=activation_func, padding='same')(conv)
         pool = MaxPooling2D(pool_size=(2, 2))(conv)
         conv_layers.append(conv)
@@ -130,7 +130,7 @@ def train(model):
 
     model_checkpoint = ModelCheckpoint(modelwtsfname, monitor='val_loss', save_best_only=True)
     reduce_lr = ReduceLROnPlateau(monitor='val_loss', factor=0.1,patience=50, min_lr=0.001,verbose=1)
-    model_es = EarlyStopping(monitor='val_loss', min_delta=0.0000001, patience=100, verbose=1, mode='auto')
+    model_es = EarlyStopping(monitor='val_loss', min_delta=0.00001, patience=50, verbose=1, mode='auto')
 
     print('-'*30)
     print('Fitting model...')
@@ -182,7 +182,7 @@ if __name__ == '__main__':
     parser.add_argument('--nlayers', default=5, type = int, dest='n_layers', help="The number of layer in the forward path ")
     parser.add_argument('--num_filters', default=32, type = int, dest='num_filters', help="The number of convolution filters in the first layer")
     parser.add_argument('--conv_size', default='3', type = int, dest='conv_size', help="The convolution filter size.")
-    parser.add_argument('--dropout', default=True, type = bool, dest='dropout', help="Include a droupout layer.")
+    parser.add_argument('--dropout', default=None, type = float, dest='dropout', help="Include a droupout layer with a specific dropout value.")
     parser.add_argument('--activation', default='relu',dest='activation', help="Activation function.")
 
     args = parser.parse_args()
