@@ -5,7 +5,7 @@ import numpy as np
 from keras.models import Model
 from keras.layers import Input, concatenate, Conv2D, MaxPooling2D, Conv2DTranspose, Dropout
 from keras.optimizers import Adam
-from keras.callbacks import ModelCheckpoint,ReduceLROnPlateau,EarlyStopping
+from keras.callbacks import ModelCheckpoint,ReduceLROnPlateau,EarlyStopping, CSVLogger
 from keras import backend as K
 from keras.models import load_model
 import argparse
@@ -22,7 +22,7 @@ smooth = 1.
 reloadFlag = True
 savePNGS = False
 #oldmodelwtsfname = 'short_weights_nodil_normalize.h5'
-modelwtsfname = 'modle_weights.h5'
+modelwtsfname = 'model_weights.h5'
 
 
 def dice_coef(y_true, y_pred):
@@ -63,9 +63,6 @@ def get_unet (n_layers=5, filter_size=32, dropout=None, activation_func="relu", 
 
     for i in range(n_layers-1):
         up = concatenate([Conv2DTranspose(filter_size, (2, 2), strides=(2, 2), padding='same')(conv_layers[-1]), conv_layers[n_layers-i-2]], axis=3)
-
-
-
         conv = Conv2D(filter_size, conv_filter, activation=activation_func, padding='same')(up)
         if dropout:  
             conv = Dropout(0.2)(conv)
@@ -131,14 +128,15 @@ def train(model):
     model_checkpoint = ModelCheckpoint(modelwtsfname, monitor='val_loss', save_best_only=True)
     reduce_lr = ReduceLROnPlateau(monitor='val_loss', factor=0.1,patience=50, min_lr=0.001,verbose=1)
     model_es = EarlyStopping(monitor='val_loss', min_delta=0.00001, patience=50, verbose=1, mode='auto')
+    csv_logger = CSVLogger('training.csv')
 
     print('-'*30)
     print('Fitting model...')
     print('-'*30)
     imgs_train = np.expand_dims(imgs_train, 3)
     imgs_mask_train = np.expand_dims(imgs_mask_train, 3)
-    return model.fit(imgs_train, imgs_mask_train, batch_size=2, epochs=2, verbose=2, shuffle=True,
-              validation_split=0.10, callbacks=[model_checkpoint, reduce_lr, model_es])
+    return model.fit(imgs_train, imgs_mask_train, batch_size=2, epochs=3000, verbose=2, shuffle=True,
+              validation_split=0.10, callbacks=[model_checkpoint, reduce_lr, model_es, csv_logger])
 
 def predict(model):
     print('-'*30)
