@@ -161,7 +161,6 @@ def train(model, imgs_train, imgs_mask_train):
 
     print (np.shape(imgs_train))
     print (np.shape(imgs_mask_train))
-    exit()
     #return model.fit(imgs_train, imgs_mask_train, batch_size=2, epochs=3000, verbose=2, shuffle=True,
     return model.fit(imgs_train, imgs_mask_train, batch_size=2, epochs=3000, verbose=2, shuffle=True,
               validation_split=0.10, callbacks=[model_checkpoint, reduce_lr, model_es, csv_logger])
