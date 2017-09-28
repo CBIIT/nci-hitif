@@ -15,8 +15,8 @@ import pickle
 
 K.set_image_data_format('channels_last')  # TF dimension ordering in this code
 __file__="/gpfs/gsfs2/users/zakigf/swift-t/examples/nci-hitif/model.py"
-img_rows = 128
-img_cols = 128
+#img_rows = 128
+#img_cols = 128
 
 smooth = 1.
 
@@ -38,11 +38,13 @@ def dice_coef_loss(y_true, y_pred):
 
 
 
-def get_unet (n_layers=5, filter_size=32, dropout=None, activation_func="relu", conv_size=3 ):
+def get_unet (img_rows, img_cols, n_layers=5, filter_size=32, dropout=None, activation_func="relu", conv_size=3 ):
 
     print('-'*30)
     print('Creating and compiling model...')
     print('-'*30)
+    print (img_rows)
+    print (img_cols)
     inputs = Input((img_rows, img_cols, 1))
     conv_layers=[] 
     pool_layers=[inputs]
@@ -65,8 +67,8 @@ def get_unet (n_layers=5, filter_size=32, dropout=None, activation_func="relu", 
     for i in range(n_layers-1):
         up = concatenate([Conv2DTranspose(filter_size, (2, 2), strides=(2, 2), padding='same')(conv_layers[-1]), conv_layers[n_layers-i-2]], axis=3)
         conv = Conv2D(filter_size, conv_filter, activation=activation_func, padding='same')(up)
-        if dropout:  
-            conv = Dropout(0.2)(conv)
+        if dropout != None:  
+            conv = Dropout(dropout)(conv)
         conv = Conv2D(filter_size, conv_filter, activation=activation_func, padding='same')(conv)
         conv_layers.append(conv)
         filter_size /= 2
@@ -84,27 +86,33 @@ def get_unet (n_layers=5, filter_size=32, dropout=None, activation_func="relu", 
     return model
 
 
-def get_images(augmentation_factor=None):
+def get_images(images, masks, augmentation_factor=None, normalize_mask=False):
 
     print('-'*30)
     print('Loading and preprocessing train data...')
     print('-'*30)
 
-    imgs_train_file="1CDT_Green_Red_FarRed_Annotated_FISH_Dilation4Conn1Iter_Training_128by128_normalize.npy"
-    imgs_mask_file="1CDT_Green_Red_FarRed_Annotated_FISH_Dilation4Conn1Iter_Training_128by128_normalize_Mask.npy"
-    file_path = os.path.dirname(os.path.realpath(__file__))
-    imgs_train_path=os.path.join(file_path, "data_python", imgs_train_file)
-    imgs_mask_path=os.path.join(file_path, "data_python", imgs_mask_file)
+    #imgs_train_file="1CDT_Green_Red_FarRed_Annotated_FISH_Dilation4Conn1Iter_Training_128by128_normalize.npy"
+    #imgs_mask_file="1CDT_Green_Red_FarRed_Annotated_FISH_Dilation4Conn1Iter_Training_128by128_normalize_Mask.npy"
+    #file_path = os.path.dirname(os.path.realpath(__file__))
+    #imgs_train_path=os.path.join(file_path, "data_python", imgs_train_file)
+    #imgs_mask_path=os.path.join(file_path, "data_python", imgs_mask_file)
 
-    imgs_train = np.load(imgs_train_path)
-    imgs_mask_train = np.load(imgs_mask_path)
+
+    imgs_train = np.squeeze(np.load(images))
+    imgs_mask_train = np.squeeze(np.load(masks))
+
+
+    if imgs_train.ndim != 3:
+        raise Exception("Error: The number of dimensions for images should equal 3, after squeezing the shape is:{0}".format(np.shape(images)))
+
+    if imgs_mask_train.ndim != 3:
+        raise Exception("Error: The number of dimensions for masks should equal 3, after squeezing the shape is:{0}".format(np.shape(masks)))
 
     imgs_train = imgs_train.astype('float32')
     imgs_mask_train = imgs_mask_train.astype('float32')
-    imgs_mask_train /= 255.  # scale masks to [0, 1]
-
-    print (np.shape(imgs_train))
-    print (np.shape(imgs_mask_train))
+    if normalize_mask:
+        imgs_mask_train /= 255.  # scale masks to [0, 1]
 
 
     imgs_train = np.expand_dims(imgs_train, axis= 3)
@@ -119,9 +127,11 @@ def get_images(augmentation_factor=None):
         augmented_sample_size = int(float(sample_size) * augmentation_factor)
         print ("Expanding the images from:{0} to {1}\n".format(sample_size, augmented_sample_size))
     
-        data_gen_args = dict( rotation_range=90.,
-                width_shift_range=0.1,
+        #data_gen_args = dict( rotation_range=90.,
+        data_gen_args = dict( width_shift_range=0.1,
                 height_shift_range=0.1,
+                horizontal_flip=True,
+                vertical_flip=True,
                 )
         image_datagen = ImageDataGenerator(**data_gen_args)
         mask_datagen = ImageDataGenerator(**data_gen_args)
@@ -146,9 +156,11 @@ def get_images(augmentation_factor=None):
         return_images = np.stack(augmented_images, axis=0)
         return_masks = np.stack(augmented_masks, axis=0)
 
+    print (np.shape(return_images))
+    print (np.shape(return_masks))
     return [return_images, return_masks]
 
-def train(model, imgs_train, imgs_mask_train):
+def train(model, imgs_train, imgs_mask_train, initialize=None):
 
     model_checkpoint = ModelCheckpoint(modelwtsfname, monitor='val_loss', save_best_only=True)
     reduce_lr = ReduceLROnPlateau(monitor='val_loss', factor=0.1,patience=50, min_lr=0.001,verbose=1)
@@ -159,6 +171,10 @@ def train(model, imgs_train, imgs_mask_train):
     print('Fitting model...')
     print('-'*30)
 
+    if initialize != None:
+        print("Initializing the model using:{0}\n", initialize)
+        model.load_weights(initialize)
+        
     print (np.shape(imgs_train))
     print (np.shape(imgs_mask_train))
     #return model.fit(imgs_train, imgs_mask_train, batch_size=2, epochs=3000, verbose=2, shuffle=True,
@@ -197,6 +213,24 @@ def predict(model):
     np.save('/data/gudlap/koh/spot_learners_deeplearning/data_python/1CDT_Green_Red_Annotated_FISH_NoDillations__Testing_128by128_normalize_Mask_Pred_short.npy', np.squeeze(imgs_mask_test))
 
 
+def evaluate_params(args): 
+
+    images , masks = get_images(args.images, args.masks, args.augmentation, args.normalize_mask)
+
+    #Get the images size  
+    img_rows = np.shape(images)[1]
+    img_cols = np.shape(images)[2]
+        
+    #np.save("augmented-images.npy", np.squeeze(images))
+    model = get_unet(img_rows, img_cols, n_layers=args.n_layers, \
+                     dropout=args.dropout, \
+                     filter_size=args.num_filters, \
+                     activation_func=args.activation, \
+                     conv_size=args.conv_size)
+
+    history_callback = train(model, images, masks, initialize=args.initialize)
+    return history_callback
+ 
 
 
 if __name__ == '__main__':
@@ -204,30 +238,22 @@ if __name__ == '__main__':
 
     parser = argparse.ArgumentParser(description="spot learner")
 
+    parser.add_argument('images',  help="The 2d numpy array image stack or 128 * 128")
+    parser.add_argument('masks',  help="The 2d numpy array mask (8bits) stack or 128 * 128")
     parser.add_argument('--nlayers', default=5, type = int, dest='n_layers', help="The number of layer in the forward path ")
     parser.add_argument('--num_filters', default=32, type = int, dest='num_filters', help="The number of convolution filters in the first layer")
     parser.add_argument('--conv_size', default='3', type = int, dest='conv_size', help="The convolution filter size.")
     parser.add_argument('--dropout', default=None, type = float, dest='dropout', help="Include a droupout layer with a specific dropout value.")
     parser.add_argument('--activation', default='relu',dest='activation', help="Activation function.")
     parser.add_argument('--augmentation', default=None, type = float, dest='augmentation', help="Augmentation factor for the training set.")
+    parser.add_argument('--initialize', default=None, dest='initialize', help="Numpy array for weights initialization.")
+    parser.add_argument('--normalize_mask', default=False, dest='normalize_mask', help="Normalize the mask to 0-1 by dividing by 255.")
 
             
     args = parser.parse_args()
-
-    images , masks = get_images(args.augmentation)
-
-    model = get_unet(n_layers=args.n_layers, \
-                     dropout=args.dropout, \
-                     filter_size=args.num_filters, \
-                     activation_func=args.activation, \
-                     conv_size=args.conv_size)
-
-
-    
-    history_callback = train(model, images, masks)
+    history_callback = evaluate_params(args)
     print("Best val_dice_coef:")
     print(max(history_callback.history["val_dice_coef"]))
     #Save the history as pickle object
     pickle.dump(history_callback.history, open( "fit_history.p", "wb" ) )
 #    predict()
-
