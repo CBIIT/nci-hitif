@@ -247,7 +247,7 @@ if __name__ == '__main__':
     parser.add_argument('--activation', default='relu',dest='activation', help="Activation function.")
     parser.add_argument('--augmentation', default=None, type = float, dest='augmentation', help="Augmentation factor for the training set.")
     parser.add_argument('--initialize', default=None, dest='initialize', help="Numpy array for weights initialization.")
-    parser.add_argument('--normalize_mask', default=False, dest='normalize_mask', help="Normalize the mask to 0-1 by dividing by 255.")
+    parser.add_argument('--normalize_mask', action='store_true', dest='normalize_mask', help="Normalize the mask to 0-1 by dividing by 255.")
 
             
     args = parser.parse_args()
