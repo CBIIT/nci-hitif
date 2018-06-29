@@ -26,7 +26,7 @@ class TestCallback(Callback):
     def on_epoch_end(self, epoch, logs={}):
 
         x, y = self.test_data
-        loss, acc = self.model.evaluate(x, y, verbose=0)
+        loss, acc = self.model.evaluate(x, y, verbose=0, batch_size = 1)
         print('\nTesting loss: {}, acc: {}\n'.format(loss, acc))
 
 
