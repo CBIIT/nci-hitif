@@ -264,7 +264,7 @@ def train(model, imgs_train, imgs_mask_train, initialize=None):
     print (np.shape(imgs_mask_train))
     #return model.fit(imgs_train, imgs_mask_train, batch_size=2, epochs=3000, verbose=2, shuffle=True,
     return model.fit(imgs_train, imgs_mask_train, batch_size=1, epochs=3000, verbose=2, shuffle=True,
-              validation_split=0.10, callbacks=[model_checkpoint, reduce_lr, model_es, csv_logger, test_call])
+              validation_split=0.10, callbacks=[model_checkpoint, reduce_lr, model_es, csv_logger])
 
 def predict(model, weights, images, args):
     print('-'*30)
