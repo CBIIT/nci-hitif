@@ -13,6 +13,7 @@ import argparse
 import pickle
 from utils import augmented_predict
 import tensorflow as tf
+import arguments
 
 
 
@@ -30,30 +31,46 @@ class TestCallback(Callback):
         print('\nTesting loss: {}, acc: {}\n'.format(loss, acc))
 
 
+def focal_loss(labels, logits, gamma=0, alpha=1.0):
+    """
+    focal loss for multi-classification
+    FL(p_t)=-alpha(1-p_t)^{gamma}ln(p_t)
+    Notice: logits is probability after softmax
+    gradient is d(Fl)/d(p_t) not d(Fl)/d(x) as described in paper
+    d(Fl)/d(p_t) * [p_t(1-p_t)] = d(Fl)/d(x)
+
+    Focal Loss for Dense Object Detection, 
+    https://doi.org/10.1016/j.ajodo.2005.02.022
+
+    :param labels: ground truth labels, shape of [batch_size]
+    :param logits: model's output, shape of [batch_size, num_cls]
+    :param gamma:
+    :param alpha:
+    :return: shape of [batch_size]
+    """
+    epsilon = 1.e-9
+    labels = tf.to_int64(labels)
+    labels = tf.convert_to_tensor(labels, tf.int64)
+    logits = tf.convert_to_tensor(logits, tf.float32)
+    num_cls = logits.shape[1]
+
+    model_out = tf.add(logits, epsilon)
+    onehot_labels = tf.one_hot(labels, num_cls)
+    ce = tf.multiply(onehot_labels, -tf.log(model_out))
+    weight = tf.multiply(onehot_labels, tf.pow(tf.subtract(1., model_out), gamma))
+    fl = tf.multiply(alpha, tf.multiply(weight, ce))
+    reduced_fl = tf.reduce_max(fl, axis=1)
+    # reduced_fl = tf.reduce_sum(fl, axis=1)  # same as reduce_max
+    return reduced_fl
+
 
 def dice_coef(y_true, y_pred):
 
-#    print ("Calculating DICE COEF") 
-#
-#    print("y_pred histogram") 
-#    print(type(y_pred))
-#    u = tf.Session().run(y_pred.eval())
-#    print(type(u))
-#    hist, bin_edges = np.histogram(u)
-#    print(hist)
-#    print(bin_edges)
-#
-#    print("y_true histogram") 
-#    hist, bin_edges = np.histogram(y_true)
-#    print(hist)
-#    print(bin_edges)
-
     smooth = 1.
-    y_true_f = K.flatten(y_true)
-    y_pred_f = K.flatten(y_pred)
-    intersection = K.sum(y_true_f * y_pred_f)
-    return (2. * intersection + smooth) / (K.sum(y_true_f) + K.sum(y_pred_f) + smooth)
-
+    intersection = K.sum(y_true * y_pred, axis=[1,2,3])
+    union = K.sum(y_true, axis=[1,2,3]) + K.sum(y_pred, axis=[1,2,3]) 
+    dc = K.mean( (2. * intersection + smooth) / (union + smooth), axis=0)
+    return dc
 
 def dice_coef_loss(y_true, y_pred):
     return -dice_coef(y_true, y_pred)
@@ -164,7 +181,7 @@ def preprocess_masks(masks, normalize_mask=False):
     return imgs_mask_train
 
 
-def get_images(images, masks, augmentation_factor=None, normalize_mask=False):
+def get_images(images, masks, augmentation_factor = 1, normalize_mask=False):
 
     print('-'*30)
     print('Loading and preprocessing train data...')
@@ -203,7 +220,7 @@ def get_images(images, masks, augmentation_factor=None, normalize_mask=False):
     return_images = imgs_train 
     return_masks = imgs_mask_train 
 
-    if augmentation_factor != None:
+    if augmentation_factor > 1:
     
         sample_size = len(imgs_train) 
         augmented_sample_size = int(float(sample_size) * augmentation_factor)
@@ -263,7 +280,7 @@ def train(model, imgs_train, imgs_mask_train, initialize=None):
     print (np.shape(imgs_train))
     print (np.shape(imgs_mask_train))
     #return model.fit(imgs_train, imgs_mask_train, batch_size=2, epochs=3000, verbose=2, shuffle=True,
-    return model.fit(imgs_train, imgs_mask_train, batch_size=1, epochs=3000, verbose=2, shuffle=True,
+    return model.fit(imgs_train, imgs_mask_train, batch_size=2, epochs=1500, verbose=2, shuffle=True,
               validation_split=0.10, callbacks=[model_checkpoint, reduce_lr, model_es, csv_logger])
 
 def predict(model, weights, images, args):
@@ -355,26 +372,7 @@ def evaluate_params(args):
 
 if __name__ == '__main__':
 
-
-    parser = argparse.ArgumentParser(description="spot learner")
-
-    parser.add_argument('images',  help="The 2d numpy array image stack or 128 * 128")
-    parser.add_argument('masks',  help="The 2d numpy array mask (16bits) stack or 128 * 128")
-    parser.add_argument('--nlayers', default=4, type = int, dest='nlayers', help="The number of layer in the forward path ")
-    parser.add_argument('--num_filters', default=32, type = int, dest='num_filters', help="The number of convolution filters in the first layer")
-    parser.add_argument('--conv_size', default='3', type = int, dest='conv_size', help="The convolution filter size.")
-    parser.add_argument('--dropout', default=None, type = float, dest='dropout', help="Include a droupout layer with a specific dropout value.")
-    parser.add_argument('--activation', default='relu',dest='activation', help="Activation function.")
-    parser.add_argument('--augmentation', default=None, type = float, dest='augmentation', help="Augmentation factor for the training set.")
-    parser.add_argument('--initialize', default=None, dest='initialize', help="Numpy array for weights initialization.")
-    parser.add_argument('--normalize_mask', action='store_true', dest='normalize_mask', help="Normalize the mask in case of uint8 to 0-1 by dividing by 255.")
-    parser.add_argument('--predict', action='store_true', dest='predict', help="Use the model passed in initialize to perform segmentation")
-    parser.add_argument('--loss_func', default='dice', dest='loss_func', help="Keras supported loss function, or 'dice'. ")
-    parser.add_argument('--last_act', default='sigmoid', dest='last_act', help="The activation function for the last layer.")
-    parser.add_argument('--batch_norm', default=False, action = "store_true", dest='batch_norm', help="Enable batch normalization")
-    parser.add_argument('--lr', default='1e-5', type = float, dest='lr', help="Initial learning rate for the optimizer")
-    parser.add_argument('--rotate', default=False, action = "store_true", dest='rotate', help="")
-
+    parser = arguments.get_unet_parser()
             
     args = parser.parse_args()
     if not args.predict:
