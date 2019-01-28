@@ -5,6 +5,7 @@ import numpy as np
 import cv2
 import matplotlib.pyplot as plt
 from skimage.measure import label, regionprops
+from packaging import version
 def generate_features(mask_image, binary_dt=None):
     """
         Generate the edge and distance transform for the mask image:
@@ -150,15 +151,19 @@ def get_contour(image, origin = None):
 
         #Fill any holes in the max_label_image
         filled_holes = ndimage.binary_fill_holes(max_label_image).astype(image.dtype) 
-        #The contour function deletes an edge from the image. 
+        #The contour function deletes an edge from the image in openCV         
         #I will add a border then substract 1 from all indexes
         border = cv2.copyMakeBorder(filled_holes, 1, 1, 1, 1, cv2.BORDER_CONSTANT, value=0 )
-        contour_indexes, hierarchy = cv2.findContours(border, cv2.RETR_LIST,cv2.CHAIN_APPROX_SIMPLE)
+        correction = 1
+        if version.parse(cv2.__version__) < version.parse("3.2"):
+            contour_indexes, hierarchy = cv2.findContours(border, cv2.RETR_LIST,cv2.CHAIN_APPROX_SIMPLE)
+        else:
+            cv2_image, contour_indexes, hierarchy = cv2.findContours(border, cv2.RETR_LIST,cv2.CHAIN_APPROX_SIMPLE)
     except Exception as e:
             print "Can not calculate contours for region"
             fig, ax = plt.subplots(2,1)
             ax[0].imshow(image)
-            #ax[1].imshow()
+            #ax[1].imshow(border)
             plt.show()
             raise
     n_contours = len(contour_indexes)
@@ -173,7 +178,7 @@ def get_contour(image, origin = None):
     else:
         first_contour = contour_indexes[0]
         #Simplify the contour
-        epsilon = 0.004*cv2.arcLength(first_contour,True)
+        epsilon = 0.00*cv2.arcLength(first_contour,True)
         approx_contour = cv2.approxPolyDP(first_contour,epsilon,True)
         if approx_contour.ndim > 2 :
             approx_contour = np.squeeze(approx_contour)
@@ -185,9 +190,9 @@ def get_contour(image, origin = None):
             if origin != None:
                 n_points = approx_contour.shape[0]
                 #Note the returned contour is transposed, 
-                #I will add the origin in reverse, and substract the 1 I added earlier
-                origin_x = np.ones(n_points, dtype = approx_contour.dtype) * origin[1] - 1
-                origin_y = np.ones(n_points, dtype = approx_contour.dtype) * origin[0] - 1
+                #I will add the origin in reverse, and substract the correction I added earlier
+                origin_x = np.ones(n_points, dtype = approx_contour.dtype) * origin[1] - correction 
+                origin_y = np.ones(n_points, dtype = approx_contour.dtype) * origin[0] - correction 
                 approx_contour = approx_contour + np.stack((origin_x, origin_y), axis = -1)
-                print approx_contour.shape
+                #print approx_contour.shape
             return approx_contour
