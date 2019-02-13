@@ -68,7 +68,7 @@ def generate_features(mask_image, binary_dt=None):
             region_contour = get_contour(region_int_image.astype(np.uint8), (min_row, min_col))
             #region_contour = get_contour(region_int_image.astype(np.uint8), (min_row, min_col))
             if region_contour is not  None:                    
-                contours.append((region_contour, region.label))
+                contours.append((region_contour, region.label, region.centroid))
                   
         min_row_b = min_row if min_row == 0 else min_row -1
         max_row_b = max_row - 1 if max_row == (mask_image.shape[0]) else max_row;
@@ -154,11 +154,12 @@ def get_contour(image, origin = None):
         #The contour function deletes an edge from the image in openCV         
         #I will add a border then substract 1 from all indexes
         border = cv2.copyMakeBorder(filled_holes, 1, 1, 1, 1, cv2.BORDER_CONSTANT, value=0 )
-        correction = 1
         if version.parse(cv2.__version__) < version.parse("3.2"):
             contour_indexes, hierarchy = cv2.findContours(border, cv2.RETR_LIST,cv2.CHAIN_APPROX_SIMPLE)
+            correction = 1
         else:
-            cv2_image, contour_indexes, hierarchy = cv2.findContours(border, cv2.RETR_LIST,cv2.CHAIN_APPROX_SIMPLE)
+            cv2_image, contour_indexes, hierarchy = cv2.findContours(filled_holes, cv2.RETR_LIST,cv2.CHAIN_APPROX_SIMPLE)
+            correction = 0
     except Exception as e:
             print "Can not calculate contours for region"
             fig, ax = plt.subplots(2,1)
