@@ -1,4 +1,5 @@
 from generate_supervisely import generate_masks
+import numpy as np
 
 
     
@@ -12,5 +13,6 @@ args = parser.parse_args()
 ann = args.ann
 import cv2
 masks = generate_masks(ann)
+print "Generated {0} objects".format(np.max(masks))
 from skimage.io import imsave
 imsave(args.masks, masks)
