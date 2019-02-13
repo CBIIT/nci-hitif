@@ -62,6 +62,7 @@ def create_polygon(indexes, title):
         except Exception as e:
             print indexes
             print index
+            raise
 
     obj_dict["points"]["exterior"] = poly_list
     obj_dict["classTitle"] = title
