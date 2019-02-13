@@ -50,7 +50,8 @@ def generate_bmp(rgb_image):
     array = np.array(image)
     v_min, v_max = np.percentile(array, (0.2, 99.8))
     from skimage import exposure
-    gray_contrast = exposure.rescale_intensity(array, in_range=(v_min, v_max))
+    #gray_contrast = exposure.rescale_intensity(array, in_range=(v_min, v_max))
+    gray_contrast = exposure.rescale_intensity(array)
     scaled = skimage.img_as_ubyte(gray_contrast)
     return scaled
 
@@ -93,6 +94,11 @@ def process_fov(fov_image, segmentation_output, output_dir, objects_per_patch=50
     
     
     grid_size, id_list = calcuate_grid_size(masks, objects_per_patch)
+
+    #sort the contours based on their centroid. Every ROI will be decomposed of 5 vertical stripes, 
+    #then the objects will be sorted by their horizontal index
+    contours = sorted(contours , key=lambda k: [int(k[2][0] / (grid_size / 5)), -1 * k[2][1]])
+
     processed_ids = set([])
     x_index = 0
     for x_start in range(0, x_dim, grid_size):
