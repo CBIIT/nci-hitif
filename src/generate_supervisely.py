@@ -283,7 +283,7 @@ def generate_project_template(shape="bitmap"):
                 "shape": "rectangle"
             }
         ], 
-        "tags_images": [], 
+        "tags_images": ["corrected"], 
         "tags_objects": []
     }   
     '''
