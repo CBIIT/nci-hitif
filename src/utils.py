@@ -68,7 +68,7 @@ def generate_features(mask_image, binary_dt=None):
             region_contour = get_contour(region_int_image.astype(np.uint8), (min_row, min_col))
             #region_contour = get_contour(region_int_image.astype(np.uint8), (min_row, min_col))
             if region_contour is not  None:                    
-                contours.append((region_contour, region.label, region.centroid))
+                contours.append((region_contour, region.label, region.centroid,region.bbox, region.image))
                   
         min_row_b = min_row if min_row == 0 else min_row -1
         max_row_b = max_row - 1 if max_row == (mask_image.shape[0]) else max_row;

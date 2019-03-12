@@ -1,6 +1,6 @@
 from PIL import Image
 import numpy as np
-from generate_supervisely import create_ann
+from generate_supervisely import create_ann, create_polygon, create_bitmap, generate_project_template
 from utils import generate_features 
 from skimage.color import gray2rgb
 from skimage import io
@@ -56,7 +56,7 @@ def generate_bmp(rgb_image):
     return scaled
 
 
-def process_fov(fov_image, segmentation_output, output_dir, objects_per_patch=50):
+def process_fov(fov_image, segmentation_output, output_dir, objects_per_patch=50, shape="bitmap"):
     """
     Generates the supervisely directory for the given gov.
     
@@ -69,8 +69,9 @@ def process_fov(fov_image, segmentation_output, output_dir, objects_per_patch=50
             The location of the output supervisely folder
         objects_per_patch: int
             Number of objects per supervisely ROI
+        shape: string ["bitmap", "polygon"]
+            The shape of nucleus in the supervisely project. 
     """
-
 
     scaled = generate_bmp(fov_image)
     project_dir = output_dir
@@ -85,9 +86,15 @@ def process_fov(fov_image, segmentation_output, output_dir, objects_per_patch=50
     
     os.mkdir(image_dir)
     os.mkdir(ann_dir)
-    
+
+    #Create the template for the project directory
+    meta_file = os.path.join(project_dir, "..", "meta.json") 
+    meta_json = generate_project_template(shape)
+
+    with open(meta_file, 'w') as outfile:
+        json.dump(meta_json, outfile)
+   
     edges, center_blobs, areas, borders, contours = generate_features(masks)
-    
     
     x_dim = masks.shape[0]
     y_dim = masks.shape[1]
@@ -134,16 +141,22 @@ def process_fov(fov_image, segmentation_output, output_dir, objects_per_patch=50
             print "{0}:{1}, {2}:{3} to process {4}, already_processed: {5}".format(
                 lower_bound, upper_bound, left_bound, right_bound, 
                 len(roi_to_be_processed), len(roi_already_processed))
-            
-            contours_to_process = [cont[0] for cont in contours if cont[1] in roi_to_be_processed]   
-            contours_already_processed = [cont[0] for cont in contours if cont[1] in roi_already_processed]   
-    
+           
+            if shape == "polygon":
+                contours_to_process = [cont[0] for cont in contours if cont[1] in roi_to_be_processed]   
+                contours_already_processed = [cont[0] for cont in contours if cont[1] in roi_already_processed]   
+                object_func = create_polygon
+            elif shape == "bitmap":
+                contours_to_process = [(cont[3], cont[4]) for cont in contours if cont[1] in roi_to_be_processed]   
+                contours_already_processed = [(cont[3], cont[4]) for cont in contours if cont[1] in roi_already_processed]   
+                object_func = create_bitmap
     
             bb = (left_bound, upper_bound, right_bound, lower_bound)
             annotations = create_ann(masks.shape, 
                                      contours_to_process,
-                                     bb,
-                                     contours_already_processed)
+                                     object_func, 
+                                     bb = bb,
+                                     already_processed = contours_already_processed)
     
             result_prefix = "{0}_{1}_{2}_{3}_{4}_{5}".format(
                 x_index, y_index, lower_bound, upper_bound, left_bound, right_bound)
@@ -172,10 +185,13 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description = 'Generate the Supervisely project from an instance segmentation')
     parser.add_argument('fov', help='filename for the gray scale fov')
     parser.add_argument('masks', help='filename for uint image masks')
-    parser.add_argument('--out_dir', default="supervisely_project", help='the supervisely directory')
+    parser.add_argument('--out_dir', default="test_collection", help='The directory name for a collection of images')
     parser.add_argument('--objects_per_roi', type=int, default=50, help='the number of object per supervisely region of interest')
+    parser.add_argument('--shape', type=str, default="bitmap", help='The shape of the nucleus in supervisley. Either "bitmap" or "polygon"')
+      
 
     args = parser.parse_args()
     ouput = Image.open(args.masks)
     masks = np.array(ouput)
-    process_fov(args.fov, masks, args.out_dir, args.objects_per_roi)
+
+    process_fov(args.fov, masks, args.out_dir, args.objects_per_roi, args.shape)
