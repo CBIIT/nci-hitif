@@ -161,7 +161,7 @@ def get_contour(image, origin = None):
             cv2_image, contour_indexes, hierarchy = cv2.findContours(filled_holes, cv2.RETR_LIST,cv2.CHAIN_APPROX_SIMPLE)
             correction = 0
     except Exception as e:
-            print "Can not calculate contours for region"
+            print("Can not calculate contours for region")
             fig, ax = plt.subplots(2,1)
             ax[0].imshow(image)
             #ax[1].imshow(border)
@@ -171,7 +171,7 @@ def get_contour(image, origin = None):
     if n_contours == 0:
         return None
     elif n_contours > 1: 
-        print "Found more thant one contour"
+        print("Found more thant one contour")
         fig, ax = plt.subplots(2,1)
         ax[0].imshow(image)
         ax[1].imshow(max_label_image)
@@ -184,8 +184,8 @@ def get_contour(image, origin = None):
         if approx_contour.ndim > 2 :
             approx_contour = np.squeeze(approx_contour)
         if approx_contour.ndim != 2:
-            print "Ignoring contour that consists of one point"
-            print approx_contour
+            print("Ignoring contour that consists of one point")
+            print(approx_contour)
             return None
         else:        
             if origin != None:

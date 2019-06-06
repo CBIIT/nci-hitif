@@ -66,8 +66,8 @@ def create_polygon(indexes, title):
         try:
             poly_list.append([int(index[0]), int(index[1])]) 
         except Exception as e:
-            print indexes
-            print index
+            print(indexes)
+            print(index)
             raise
 
     obj_dict["points"]["exterior"] = poly_list
@@ -169,14 +169,23 @@ def create_ann(size, objects, dic_generator,  bb=None, already_processed=None):
     return img_dict
 
 
-def generate_masks(annotations):
+def generate_masks(annotations, shape="bitmap"):
     """
     Returns the mask array with every object has a unique id
 
     Arguments
         annotations: foldername
             The folder name where the supervisely annotations exists
+        shape: string
+            The shape of the objects in supervisely. They can be either "bitmap" or "polygon"
+
+    Returns
+        masks: np (uint16)
+            a mask array where the pixels that belong to a given object have a unique uint id. 
     """
+
+    assert ((shape == "bitmap") or (shape == "polygon")), "shape should be either bitmap or polygon. Received:{}".format(shape)
+
 
     #Find all annotations in the annotation folder 
     import cv2
@@ -196,6 +205,7 @@ def generate_masks(annotations):
 
     #Create the numpy array
     masks = np.zeros((height, width), dtype=np.uint16)
+    print(height, width)
 
     #For every file:
     object_id = 1
@@ -211,14 +221,28 @@ def generate_masks(annotations):
             if obj_dict["classTitle"] != "Nucleus":
                 pass
             else:
-                poly_list = obj_dict["points"]["exterior"] 
-                contour_list = [[int(point[0]), int(point[1])] for point in poly_list ]
-                nd_contour = np.array(contour_list).astype("int64")
-                cv2.fillPoly(masks,pts=[nd_contour], color=object_id)
+                if shape == "polygon":
+                    poly_list = obj_dict["points"]["exterior"] 
+                    contour_list = [[int(point[0]), int(point[1])] for point in poly_list ]
+                    nd_contour = np.array(contour_list).astype("int64")
+                    cv2.fillPoly(masks,pts=[nd_contour], color=object_id)
+                elif shape == "bitmap":
+                    supervisely_bitmap = obj_dict["bitmap"]["data"]
+                    bitmap_bool = base64_2_mask(supervisely_bitmap)
+                    origin_x = obj_dict["bitmap"]["origin"][1]
+                    origin_y = obj_dict["bitmap"]["origin"][0]
+                    x_length = bitmap_bool.shape[0] 
+                    y_length = bitmap_bool.shape[1]
+                    print(bitmap_bool.shape)
+                    bitmap_uint16 = np.zeros_like(bitmap_bool, dtype=np.uint16)
+                    bitmap_uint16[bitmap_bool] = object_id
+                    output_loc = masks[origin_x:origin_x + x_length, origin_y: origin_y + y_length]
+                    print(origin_x)
+                    print(output_loc.shape)
+                    np.copyto(output_loc, bitmap_uint16, where = bitmap_bool)
+
                 object_id += 1 
-
-
-
+                print(object_id)
     return masks
 
 def base64_2_mask(s):

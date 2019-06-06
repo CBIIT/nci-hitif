@@ -37,21 +37,18 @@ def generate_bmp(rgb_image):
     Returns the a contrasted bmp image for the original fov
 
     Arugments:
-        rgb_image: filename
-            The fov file name
+        rgb_image: numpy 2D 
+            The FOV gray scale image
 	
     returns ndarray
         The 2d array in 0-255 formate
     """
     import skimage
     from PIL import Image
-
-    image = Image.open(rgb_image)
-    array = np.array(image)
-    v_min, v_max = np.percentile(array, (0.2, 99.8))
+    v_min, v_max = np.percentile(rgb_image, (0.2, 99.8))
     from skimage import exposure
-    #gray_contrast = exposure.rescale_intensity(array, in_range=(v_min, v_max))
-    gray_contrast = exposure.rescale_intensity(array)
+    #gray_contrast = exposure.rescale_intensity(rgb_image, in_range=(v_min, v_max))
+    gray_contrast = exposure.rescale_intensity(rgb_image)
     scaled = skimage.img_as_ubyte(gray_contrast)
     return scaled
 
@@ -61,8 +58,8 @@ def process_fov(fov_image, segmentation_output, output_dir, objects_per_patch=50
     Generates the supervisely directory for the given gov.
     
     Arguments:
-        fov_image: filename 
-            Path to the gray scale FOV. 
+        fov_image: ndarray 2D 
+            Numpy array to the gray scale image 
         segmentation_output: ndarray 2D uint16
             The instance segmentation output. One int id per object.
         output_dir: foldername
@@ -138,9 +135,9 @@ def process_fov(fov_image, segmentation_output, output_dir, objects_per_patch=50
             #id_list = id_list.difference(region_ids_set)
             processed_ids.update(roi_to_be_processed) 
        
-            print "{0}:{1}, {2}:{3} to process {4}, already_processed: {5}".format(
+            print("{0}:{1}, {2}:{3} to process {4}, already_processed: {5}".format(
                 lower_bound, upper_bound, left_bound, right_bound, 
-                len(roi_to_be_processed), len(roi_already_processed))
+                len(roi_to_be_processed), len(roi_already_processed)))
            
             if shape == "polygon":
                 contours_to_process = [cont[0] for cont in contours if cont[1] in roi_to_be_processed]   
@@ -191,7 +188,10 @@ if __name__ == "__main__":
       
 
     args = parser.parse_args()
-    ouput = Image.open(args.masks)
-    masks = np.array(ouput)
+    masks_p = Image.open(args.masks)
+    masks = np.array(masks_p)
 
-    process_fov(args.fov, masks, args.out_dir, args.objects_per_roi, args.shape)
+    image_p = Image.open(args.fov)
+    image = np.array(image_p)
+ 
+    process_fov(image, masks, args.out_dir, args.objects_per_roi, args.shape)
