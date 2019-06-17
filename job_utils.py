@@ -69,5 +69,31 @@ def preprocess_fun(gen_config, experiment, output, h5_exp_file="aug_images.h5"):
     with open(aug_file_name, 'w') as configfile:
         merged_config.write(configfile)  
 
+def train_unet_fpn(work_dir, conf, h5_in, model_h5, model_json):
+    """
+    Train then unet/fpn models
+    Arguments:
+        work_dir:  path
+            the directory where training will take place
+        conf: file_path
+            the input configuration file
+        h5_in: file_path
+            The input and ground truth 
+        model_h5: file_path
+            The location of the trained model weights
+        output_h5: file_path
+            The location of the trained model architecture
+    """
+    #That file should not change
+    dl_config = "my_config.cfg"
+    train_unet_fpn_script = "/data/HiTIF/data/dl_segmentation_paper/code/python/unet_fpn/train_model.sh"
 
-   
+
+    config_file = os.path.join(work_dir, dl_config)
+    os.system("cp {0} {1}".format(conf, config_file))
+    shell_cmd = train_unet_fpn_script + \
+       " --h5fname " +   h5_in +  \
+       " --trained_h5 " + model_h5 + \
+       " --trained_json " + model_json 
+    print(shell_cmd)
+    os.system(shell_cmd)

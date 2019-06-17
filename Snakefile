@@ -1,5 +1,5 @@
 import configparser 
-from job_utils import  preprocess_fun,  get_exp
+from job_utils import  preprocess_fun,  get_exp, train_unet_fpn
 
 
 def get_exp_configurations(wildcards):
@@ -12,11 +12,10 @@ def get_exp_configurations(wildcards):
     print(wildcards.exp)
     exp_tuple = get_exp(wildcards.exp, input_exp) 
     conf_file = exp_tuple[1]
-    print("Here", configuration)
     if not os.path.exists(conf_file):
-        return [configuration]
+        return [gen_aug_config]
     else:
-        return [ configuration, conf_file]
+        return [gen_aug_config, conf_file]
 
 
 my_config = configparser.ConfigParser()
@@ -33,23 +32,50 @@ pipeline_dir = os.path.abspath(my_config["general"]["workdir"])
 #if not os.path.isdir(pipeline_dir):
 workdir: my_config["general"]["workdir"]
 
+configs_dir =  my_config["general"]["configs_dir"]
+
+#preprocess
+gen_aug_config = os.path.join(configs_dir, "imgaug.cfg") 
+
 h5_exp_file = "aug_images.h5"
 aug_config_file = "config.json"
 
 knime_script = "/data/HiTIF/data/dl_segmentation_paper/knime/launch_scripts/launch_knime37x_workflow.sh"
 preprocess_dir = "preprocess"
 
+#Augment
 augment_dir = "augment"
 augment_workflow = "/data/HiTIF/data/dl_segmentation_paper/knime/workflows/HiTIF_AugmentInputGT_H5_OutLoc_JSON.knwf"
 
-combine_script="/data/HiTIF/data/dl_segmentation_paper/code/python/combine-all.py"
-
+#Combine
+combine_script="python /data/HiTIF/data/dl_segmentation_paper/code/python/combine-all.py"
 h5_location = os.path.join(augment_dir, "{exp}", h5_exp_file)
 combined_h5 = os.path.join("combined", h5_exp_file)
-print(h5_location)
-print(combined_h5)
 
-print(h5_location)
+
+#DL commands
+train_dir = "train"
+#That file should not change
+dl_config = "my_config.cfg"
+
+train_unet_fpn_script = "/data/HiTIF/data/dl_segmentation_paper/code/python/unet_fpn/train_model.sh"
+
+#Gaussian training
+gaussian_config = os.path.join(configs_dir, "gaussian-config.cfg") 
+train_gaussian_dir = os.path.join(train_dir, "gaussian")
+
+#edt training
+edt_config = os.path.join(configs_dir, "edt-config.cfg") 
+train_edt_dir = os.path.join(train_dir, "edt")
+
+#mask training
+mask_config = os.path.join(configs_dir, "mask-config.cfg") 
+train_mask_dir = os.path.join(train_dir, "mask")
+
+#outline training
+outline_config = os.path.join(configs_dir, "outline-config.cfg") 
+train_outline_dir = os.path.join(train_dir, "outline")
+
 
 
 rule all:
@@ -69,13 +95,14 @@ rule preprocess:
         exp_tuple = get_exp(exp_name, input_exp)
         output_json = str(output)
         h5_file = h5_location.replace("{exp}", exp_name)
-        preprocess_fun(configuration, exp_tuple, output_json, h5_file)
+        preprocess_fun(gen_aug_config, exp_tuple, output_json, h5_file)
 
 rule augment:
     input: rules.preprocess.output
     output: 
         h5_location 
     run:
+        json_file = os.path.abspath(str(input))
         shell_cmd=knime_script + " " + augment_workflow + " " +  str(input)
         print(shell_cmd)
         shell(shell_cmd)
@@ -86,7 +113,47 @@ rule combine_augment:
     output:
         combined_h5
     run:    
-        combine_cmd = combine_script + " " + input + " " +  output
+        combine_cmd = combine_script + " " + str(input) + " " +  str(output)
         print(combine_cmd)
         shell(combine_cmd)
-       
+      
+rule train_gaussian:
+    input:
+        h5 = combined_h5,
+        cfg = gaussian_config
+    output:
+        h5 = os.path.join(train_gaussian_dir, "trained.h5"),
+        json = os.path.join(train_gaussian_dir,"trained.json")
+    run:
+        train_unet_fpn(train_gaussian_dir, input.cfg, input.h5,output.h5, output.json)
+
+rule train_edt:
+    input:
+        h5 = combined_h5,
+        cfg = edt_config
+    output:
+        h5 = os.path.join(train_edt_dir, "trained.h5"),
+        json = os.path.join(train_edt_dir,"trained.json")
+    run:
+        train_unet_fpn(train_edt_dir, input.cfg, input.h5,output.h5, output.json)
+
+
+rule train_mask:
+    input:
+        h5 = combined_h5,
+        cfg = mask_config
+    output:
+        h5 = os.path.join(train_mask_dir, "trained.h5"),
+        json = os.path.join(train_mask_dir,"trained.json")
+    run:
+        train_unet_fpn(train_mask_dir, input.cfg, input.h5,output.h5, output.json)
+
+rule train_outline:
+    input:
+        h5 = combined_h5,
+        cfg = outline_config
+    output:
+        h5 = os.path.join(train_outline_dir, "trained.h5"),
+        json = os.path.join(train_outline_dir,"trained.json")
+    run:
+        train_unet_fpn(train_outline_dir, input.cfg, input.h5,output.h5, output.json)
