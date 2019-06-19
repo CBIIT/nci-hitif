@@ -76,14 +76,20 @@ train_mask_dir = os.path.join(train_dir, "mask")
 outline_config = os.path.join(configs_dir, "outline-config.cfg") 
 train_outline_dir = os.path.join(train_dir, "outline")
 
+#mrcnn training
+train_mrcnn= "/data/HiTIF/data/dl_segmentation_paper/code/python/mask-rcnn/mask-rcnn-latest/train/train-wrapper.sh"
+mrcnn_config = os.path.join(configs_dir, "mrcnn-config.cfg") 
+train_mrcnn_dir = os.path.join(train_dir, "mrcnn")
 
-
-rule all:
+rule all: 
     input:
         #expand("preprocess/{exp}/config.json", exp=exp_names)
         #expand(h5_location, exp=exp_names)
         combined_h5
-
+        #rules.train_outline.output.h5
+        #rules.train_mask.output.h5,
+        #rules.train_edt.output.h5,
+        #rules.train_gaussian.output.h5
 
 rule preprocess:
     input:
@@ -125,7 +131,7 @@ rule train_gaussian:
         h5 = os.path.join(train_gaussian_dir, "trained.h5"),
         json = os.path.join(train_gaussian_dir,"trained.json")
     run:
-        train_unet_fpn(train_gaussian_dir, input.cfg, input.h5,output.h5, output.json)
+        train_unet_fpn(train_gaussian_dir, input.cfg, input.h5, output.h5, output.json)
 
 rule train_edt:
     input:
@@ -157,3 +163,22 @@ rule train_outline:
         json = os.path.join(train_outline_dir,"trained.json")
     run:
         train_unet_fpn(train_outline_dir, input.cfg, input.h5,output.h5, output.json)
+
+rule train_mrcnn:
+    input:
+        h5 = combined_h5,
+        cfg = mrcnn_config
+    output:
+        model_h5 = os.path.join(train_mrcnn_dir, "last.h5"),
+    run:
+         
+        #dl_config = "my_config.cfg"
+        #config_file = os.path.join(train_mrcnn_dir, dl_config)
+        #os.system("cp {0} {1}".format(input.cfg, config_file))
+        cmd = train_mrcnn +  \
+            " --dataset "  + input.h5 +  \
+            " --logs " +  train_mrcnn_dir + \
+            " --latest  "  + output.model_h5 + \ 
+            " -c " + input.cfg
+        print(cmd)
+        shell(cmd)
