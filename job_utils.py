@@ -85,15 +85,16 @@ def train_unet_fpn(work_dir, conf, h5_in, model_h5, model_json):
             The location of the trained model architecture
     """
     #That file should not change
-    dl_config = "my_config.cfg"
+    #dl_config = "my_config.cfg"
     train_unet_fpn_script = "/data/HiTIF/data/dl_segmentation_paper/code/python/unet_fpn/train_model.sh"
 
-
-    config_file = os.path.join(work_dir, dl_config)
-    os.system("cp {0} {1}".format(conf, config_file))
+    #config_file = os.path.join(work_dir, dl_config)
+    #os.system("cp {0} {1}".format(conf, config_file))
     shell_cmd = train_unet_fpn_script + \
        " --h5fname " +   h5_in +  \
        " --trained_h5 " + model_h5 + \
-       " --trained_json " + model_json 
+       " --trained_json " + model_json + \
+       " -c " + conf
+
     print(shell_cmd)
     os.system(shell_cmd)
