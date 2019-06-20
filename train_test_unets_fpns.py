@@ -410,9 +410,15 @@ if __name__ == '__main__':
     loss_fcn = args.loss_function # 'mean_squared_error', 'mean_absolute_error', 'binary_crossentropy', 'dice_coef_loss_bce'
 
     # Optional, Model (weights ONLY), architecture and training history
-    modelwtsfname = './models/'+prefix_model+'_weightsONLY_'+suffix_model+'.h5'
-    model_json_fname  = './models/'+prefix_model+'_modelarch_'+suffix_model+'.json'
-    csvfname = './history/'+prefix_model+'_history_'+suffix_model+'.csv'
+    #modelwtsfname = './models/'+prefix_model+'_weightsONLY_'+suffix_model+'.h5'
+    #model_json_fname  = './models/'+prefix_model+'_modelarch_'+suffix_model+'.json'
+
+    modelwtsfname = args.trained_h5 
+    model_json_fname  = args.trained_json 
+    history_dir = "history"
+    if not os.path.exists("history"):
+        os.mkdir(history_dir)
+    csvfname = os.path.join(history_dir, prefix_model+'_history_'+suffix_model+'.csv')
 
     # Required, batch sizes for training and prediction
     train_batch_size = args.trainingBatchSize
@@ -486,7 +492,9 @@ if __name__ == '__main__':
 
     ##print the arguments
     print_args()
-    
+  
+    #mode = args.mode
+    # mode ['generate', 'train', 'infer']
     ## Main functions
     save_model_to_json(model_json_fname)
     

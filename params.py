@@ -1,10 +1,16 @@
 from __future__ import print_function
-import argparse
-        
-parser = argparse.ArgumentParser(description='Initailize/Train/Infer a Unet or FPN using backbones based on segmentation_model [https://github.com/qubvel/segmentation_models].')
+import configargparse
+
+
+parser = configargparse.ArgParser(default_config_files=['my_config.cfg'], description='Initailize/Train/Infer a Unet or FPN using backbones based on segmentation_model [https://github.com/qubvel/segmentation_models].')
+
+#arg = parser.add_argument
+arg = parser.add
 
 arg = parser.add_argument
 train_arg = parser.add_argument
+
+arg('-c', is_config_file=True, help='config file path', metavar="/path/to/configargparse file")
 
 arg('--gpuPCIID', type=int, default=0, help="The PCI BUS ID of GPU to use for training.")
 
@@ -29,6 +35,10 @@ arg('--activationFunction', help="Activation function for the last layer. Eg. \"
 arg('--outputModelPrefix', default='IncResV2FPN', help="IncResV2FPN, ResNet152FPN, UIncResV2Net, UResNet152Net")
 
 arg('--outputModelSuffix', default='input_normalizeandscaleUint8_target_mask_normalizeMax_bcedice')
+
+arg('--trained_h5', default='trained.h5', help = "Location of the trained model weights")
+
+arg('--trained_json', default='trained.json', help = "Location of the trained model architecture")
 
 arg('--trainingBatchSize', type=int, default=16)
 
@@ -66,4 +76,9 @@ arg('--testinputnumpyfname', default='/gpfs/gsfs10/users/HiTIF/progs/dl_segmenta
 
 arg('--testpredictnumpyfname', default='/gpfs/gsfs10/users/HiTIF/progs/dl_segmentation/segmentation_models/Sigal_WellE03/input_augmentedintensity_rotations/20180823_075547/WellE03_chunkindex_011_bitmask.npy', help='A numpy file location for saving the prediction of input greysacle testing images.')
 
+
+
 args = parser.parse_args()
+print(args)
+print("----------")
+print(parser.format_values())
