@@ -10,6 +10,7 @@ arg = parser.add
 arg = parser.add_argument
 train_arg = parser.add_argument
 
+arg('mode', type = str, help ="either generate, train, infer")
 arg('-c', is_config_file=True, help='config file path', metavar="/path/to/configargparse file")
 
 arg('--gpuPCIID', type=int, default=0, help="The PCI BUS ID of GPU to use for training.")
