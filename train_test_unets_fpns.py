@@ -31,6 +31,74 @@ import hitif_losses
 K.set_image_data_format('channels_last')  # TF dimension ordering in this code
 
 
+
+def get_checkpoint_path(checkpoint_dir):
+    """
+    Return the path where the model checkpionts will be saved
+    
+    Argument:
+        checkpoint_dir:
+            The directory to save the models
+
+    Returns:
+        checkpoint_path: str
+            The Keras path to save the model.
+    """
+    
+
+    import datetime
+    now = datetime.datetime.now()
+    log_dir = os.path.join(checkpoint_dir, "{}{:%Y%m%dT%H%M}".format(
+        model_name, now))
+
+    # Path to save after each epoch. Include placeholders that get filled by Keras.
+    checkpoint_path = os.path.join(log_dir, "weights_{}_*epoch*.h5".format(
+        model_name))
+    checkpoint_path = checkpoint_path.replace(
+        "*epoch*", "{epoch:04d}")
+
+    return checkpoint_path
+
+def find_last(checkpoint_dir):
+    """Finds the last checkpoint file of the last trained model in the
+    model directory.
+    Argument:
+        checkpoint_dir:
+            The directory to save the models
+
+    Returns:
+        The path of the last checkpoint file
+    """
+    # Get directory names. Each directory corresponds to a model
+
+    checkpoint_dir = os.path.abspath(checkpoint_dir)
+    dir_names = next(os.walk(checkpiont_dir))[1]
+    key = model_name
+    dir_names = filter(lambda f: f.startswith(key), dir_names)
+    dir_names = sorted(dir_names)
+    if not dir_names:
+        import errno
+        raise FileNotFoundError(
+            errno.ENOENT,
+            "Could not find model directory under {}".format(os.path.abspath(checkpoint_dir)))
+    # Pick last directory
+    dir_name = os.path.join(checkpoint_dir, dir_names[-1])
+    # Find the last checkpoint
+    checkpoints = next(os.walk(dir_name))[2]
+    checkpoints = filter(lambda f: f.startswith("weights"), checkpoints)
+    checkpoints = sorted(checkpoints)
+    if not checkpoints:
+        import errno
+        raise FileNotFoundError(
+            errno.ENOENT, "Could not find weight files in {}".format(dir_name))
+    checkpoint = os.path.join(dir_name, checkpoints[-1])
+    return checkpoint
+
+
+def get_latest_model(checkpoint_dir):
+    
+
+
 def setup_one_gpu(gpu_id_idx=0):        
     #assert not 'tensorflow' in sys.modules, "GPU setup must happen before importing TensorFlow"
     os.environ["CUDA_DEVICE_ORDER"]="PCI_BUS_ID"  
@@ -144,6 +212,11 @@ def train_generatorh5(params):
     tmp_modelwtsfname = modelwtsfname.replace(".h5", "{epoch:04d}.h5")
 
     model_checkpoint = ModelCheckpoint(tmp_modelwtsfname, monitor='val_loss', save_best_only=True, save_weights_only=True)
+    # Currently a Keras Bug
+  
+    checkpoint_path = get_checkpoint_path("logs")
+    print("checkpoint_path:", checkpoint_path)
+    model_checkpoint = ModelCheckpoint(checkpoint_path, monitor='val_loss', save_best_only=True, save_weights_only=True)
     reduce_lr = ReduceLROnPlateau(monitor='val_loss', factor=0.1,patience=6, min_lr=1e-6,verbose=1,restore_best_weights=True)
     model_es = EarlyStopping(monitor='val_loss', min_delta=1e-7, patience=12, verbose=1, mode='auto')
     csv_logger = CSVLogger(csvfname, append=True)
@@ -367,6 +440,9 @@ if __name__ == '__main__':
     # Pick a GPU
     setup_one_gpu(gpu_id_idx)
 
+
+    #set up log dir 
+    checkpoint_dir =  "models"
     print("-----------------------------------------------------")
     print("-----------------------------------------------------")  
    	
@@ -493,6 +569,9 @@ if __name__ == '__main__':
     testinputnpyfname = args.testinputnumpyfname
     #Required, Prediction NUMPY
     testpredictnpyfname = args.testpredictnumpyfname
+
+
+    model_name = "unet_fpn" 
 
     ##print the arguments
     print_args()
