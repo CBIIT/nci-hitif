@@ -96,6 +96,7 @@ def find_last(checkpoint_dir):
 
 
 def get_latest_model(checkpoint_dir):
+    pass
     
 
 
