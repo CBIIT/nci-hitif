@@ -208,6 +208,11 @@ def train_generatorh5(params):
           model.load_weights(oldmodelwtsfname)
 
     # Disable model_checkpoint when using multi-threading generator because of issues overwriting .H5 (model or weights_only)
+    # This is currently a Keras Bug, so let's hack it by saving .h5 file for the best epoch and then symlink it towards the end
+    # <<FIXME>>
+    tmp_modelwtsfname = modelwtsfname.replace(".h5", "{epoch:04d}.h5")
+
+    model_checkpoint = ModelCheckpoint(tmp_modelwtsfname, monitor='val_loss', save_best_only=True, save_weights_only=True)
     # Currently a Keras Bug
   
     checkpoint_path = get_checkpoint_path("logs")
@@ -221,16 +226,17 @@ def train_generatorh5(params):
     print('Fitting model...')
     print('-'*30)
     if freezeFlag and num_coldstart_epochs > 0:
-        #model.fit_generator(generator=training_generator, validation_data=validation_generator,use_multiprocessing=True,workers=num_gen_workers,epochs=2,callbacks=[model_checkpoint, reduce_lr, model_es, csv_logger], verbose=1, max_queue_size=num_gen_workers)
-        model.fit_generator(generator=training_generator,validation_data=validation_generator,use_multiprocessing=True,workers=num_gen_workers,epochs=num_coldstart_epochs,callbacks=[reduce_lr, model_es, csv_logger], verbose=1)
+        model.fit_generator(generator=training_generator,validation_data=validation_generator,use_multiprocessing=True,workers=num_gen_workers,epochs=num_coldstart_epochs,callbacks=[model_checkpoint, reduce_lr, model_es, csv_logger], verbose=2)
 
     # release all layers for training
     set_trainable(model) # set all layers trainable and recompile model
 
     ## Retrain after the cold-start
-    #model.fit_generator(generator=training_generator, validation_data=validation_generator,use_multiprocessing=True,workers=num_gen_workers,epochs=25,callbacks=[model_checkpoint, reduce_lr, model_es, csv_logger], verbose=1, max_queue_size=num_gen_workers)
-    model.fit_generator(generator=training_generator,validation_data=validation_generator,use_multiprocessing=True,workers=num_gen_workers,epochs=num_finetuning_epochs,callbacks=[reduce_lr, model_es, csv_logger], verbose=1)
-    model.save_weights(modelwtsfname)
+    model.fit_generator(generator=training_generator,validation_data=validation_generator,use_multiprocessing=True,workers=num_gen_workers,epochs=num_finetuning_epochs,callbacks=[model_checkpoint,reduce_lr, model_es, csv_logger], verbose=2)
+    ## <<FIXME>>: GZ will work on it.
+    # Find the last best epoch model weights and then symlink it to the modelwtsfname
+    # Note that the symlink will have issues on NON-Linux OS.	
+    # os.symlink(<last_best_h5>, modelwtsfname)
 
 def rotateandflipimages(img):
     assert(img.shape[0] == img.shape[1])
@@ -571,15 +577,15 @@ if __name__ == '__main__':
     ##print the arguments
     print_args()
   
-    #mode = args.mode
+    mode = args.mode
     # mode ['generate', 'train', 'infer']
     ## Main functions
-    save_model_to_json(model_json_fname)
-    
-    train_generatorh5(h5generator_params)
-
-    if predictTTAFlag:
-       predicttta(model_json_fname, modelwtsfname)
-    else:
-       predict(model_json_fname, modelwtsfname)
-    
+    if mode == "generate":
+       save_model_to_json(model_json_fname)
+    elif mode == "train":
+       train_generatorh5(h5generator_params)
+    elif mode == "infer":
+       if predictTTAFlag:
+          predicttta(model_json_fname, modelwtsfname)
+       else:
+          predict(model_json_fname, modelwtsfname)   
