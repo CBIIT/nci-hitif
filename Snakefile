@@ -1,8 +1,31 @@
 import configparser 
-from job_utils import  preprocess_fun,  get_exp, train_unet_fpn
+from job_utils import  preprocess_fun,get_exp,train_unet_fpn,watershed_2_fun, get_merged_config
 
 
-def get_exp_configurations(wildcards):
+def get_exp_configurations(wildcards, general_config,experiments):
+    """ 
+    Returns the configuration file related to a given experiments
+    Arguments:
+        wildcards: str
+            The snakemake value for the wildcard for a given rule 
+        general_config: path 
+            The general configuration file for the rule
+        experiments: list(tuples)
+            The list 
+    """
+    print(wildcards.exp)
+    #If exp is a directory, remove the forward slash
+    
+    experiment_name = wildcards.exp.replace("/", "")
+    exp_tuple = get_exp(experiment_name, experiments) 
+    conf_file = exp_tuple[1]
+    if not os.path.exists(conf_file):
+        return [general_config]
+    else:
+        return [general_config, conf_file]
+
+
+def get_input_exp_configurations(wildcards):
     """ 
     Returns the configuration file related to a given experiment
     Arguments:
@@ -10,12 +33,36 @@ def get_exp_configurations(wildcards):
             The snakemake value for the wildcard for a given rule 
     """
     print(wildcards.exp)
-    exp_tuple = get_exp(wildcards.exp, input_exp) 
-    conf_file = exp_tuple[1]
-    if not os.path.exists(conf_file):
-        return [gen_aug_config]
-    else:
-        return [gen_aug_config, conf_file]
+    return get_exp_configurations(wildcards, gen_aug_config, input_exp)
+
+
+def get_watershed_2_exp_configurations(wildcards):
+    """ 
+    Returns the configuration file related to a given experiment
+    Arguments:
+        wildcards: str
+            The snakemake value for the wildcard for a given rule 
+    """
+    print(wildcards.exp)
+    return get_exp_configurations(wildcards, watershed_2_config, inference_exp)
+   
+
+def get_inference_images(wildcards):
+    exp_name = wildcards.exp
+    exp_name, exp_config = get_exp(exp_name, inference_exp)
+    merged_config = get_merged_config(watershed_2_config, exp_config)
+    knime_sec = "GBDMsWS_KNIMEWorkflow" 
+    input_dir = merged_config[knime_sec]["inputDirectory"].replace('"','')
+    input_regex = merged_config[knime_sec]["inputRegexSelectionStr"].replace('"','')
+    import glob
+    joined_regex = os.path.join(input_dir, input_regex)
+    print(joined_regex)
+    input_files = glob.glob(joined_regex)
+    print(input_files)
+    input_pathes = [os.path.join(watershed_2_loc, exp_name, tif)
+        for tif in input_files]
+    print(input_pathes)
+    return input_files
 
 
 my_config = configparser.ConfigParser()
@@ -24,7 +71,7 @@ my_config.read(configuration)
 
 #Find all the input experiment names
 input_exp = eval(my_config["general"]["experiments"])
-exp_names = [exp[0] for exp in input_exp]
+input_exp_names = [exp[0] for exp in input_exp]
 exp_config = [exp[1] for exp in input_exp if os.path.exists(exp[1])]
 
 #Find the work dir
@@ -81,19 +128,40 @@ train_mrcnn= "/data/HiTIF/data/dl_segmentation_paper/code/python/mask-rcnn/mask-
 mrcnn_config = os.path.join(configs_dir, "mrcnn-config.cfg") 
 train_mrcnn_dir = os.path.join(train_dir, "mrcnn")
 
+
+#inference
+
+inference_exp = eval(my_config["general"]["infer_experiments"])
+inference_exp_names = [exp[0] for exp in inference_exp]
+inference_dir = "inference"
+
+#watershed_2 inference
+
+watershed_2_config = os.path.join(configs_dir, "watershed-2-config.cfg") 
+watershed_2_loc = os.path.join(inference_dir, "watershed-2") 
+watershed_2_exp = os.path.join(watershed_2_loc, "{exp}")
+watershed_2_knime_json = os.path.join(watershed_2_exp, "knime.json")
+watershed_2_cfg = os.path.join(watershed_2_exp, "config.cfg")
+
+watershed_2_workflow = "/data/HiTIF/data/dl_segmentation_paper/knime/workflows/HiTIF_CV7000_Nucleus_Segmentation_DeepLearning_IncResV2FPN_GBDMsWS_nonSLURM_37X_OutLoc_JSON.knwf"
+
+
 rule all: 
     input:
-        #expand("preprocess/{exp}/config.json", exp=exp_names)
-        #expand(h5_location, exp=exp_names)
-        combined_h5
-        #rules.train_outline.output.h5
-        #rules.train_mask.output.h5,
-        #rules.train_edt.output.h5,
-        #rules.train_gaussian.output.h5
+#        pass
+#        #expand("preprocess/{exp}/config.json", exp=input_exp_names)
+#        #expand(h5_location, exp=input_exp_names)
+#         expand(watershed_2_knime_json, exp=inference_exp_names)
+         expand(os.path.join(watershed_2_exp, "images"), exp=inference_exp_names)
+#        #combined_h5
+#        #rules.train_outline.output.h5
+#        #rules.train_mask.output.h5,
+#        #rules.train_edt.output.h5,
+#        #rules.train_gaussian.output.h5
 
 rule preprocess:
     input:
-        get_exp_configurations
+        get_input_exp_configurations
     output:
         preprocess_dir + "/{exp}/" + aug_config_file
     run:
@@ -109,13 +177,13 @@ rule augment:
         h5_location 
     run:
         json_file = os.path.abspath(str(input))
-        shell_cmd=knime_script + " " + augment_workflow + " " +  str(input)
+        shell_cmd = knime_script + " " + augment_workflow + " " +  str(input)
         print(shell_cmd)
         shell(shell_cmd)
 
 rule combine_augment:
     input: 
-        expand(h5_location, exp=exp_names)
+        expand(h5_location, exp=input_exp_names)
     output:
         combined_h5
     run:    
@@ -152,6 +220,7 @@ rule train_mask:
         h5 = os.path.join(train_mask_dir, "trained.h5"),
         json = os.path.join(train_mask_dir,"trained.json")
     run:
+        print(os.path.abspath(output.json))
         train_unet_fpn(train_mask_dir, input.cfg, input.h5,output.h5, output.json)
 
 rule train_outline:
@@ -163,6 +232,47 @@ rule train_outline:
         json = os.path.join(train_outline_dir,"trained.json")
     run:
         train_unet_fpn(train_outline_dir, input.cfg, input.h5,output.h5, output.json)
+
+rule watershed_2_prep:
+    input:
+        gaussian_h5 = rules.train_gaussian.output.h5,
+        gaussian_json = rules.train_gaussian.output.json,
+
+        edt_h5 = rules.train_edt.output.h5,
+        edt_json = rules.train_edt.output.json,
+
+        exp_directories = get_watershed_2_exp_configurations
+    output:    
+        knime_json = watershed_2_knime_json, 
+        config = watershed_2_cfg
+    run:
+
+        exp_name = wildcards.exp.replace("/", "")
+        exp_tuple = get_exp(exp_name, inference_exp)
+        #Generate the combined configuration file
+
+        watershed_2_fun(watershed_2_config,  
+                        exp_tuple,
+                        str(output.knime_json), 
+                        str(output.config), 
+                        str(input.gaussian_h5),
+                        str(input.gaussian_json),
+                        str(input.edt_h5),
+                        str(input.edt_json)
+                        )
+
+rule watershed_2_execute:
+    input:
+        images = get_inference_images,
+        knime_json = rules.watershed_2_prep.output.knime_json,
+        conf = rules.watershed_2_prep.output.config
+    output: 
+        directory(os.path.join(watershed_2_exp,"images"))
+    run:
+        print(str(output))
+        shell_cmd = knime_script + " " + watershed_2_workflow + " " + input.knime_json
+        print(shell_cmd)
+        shell(shell_cmd)
 
 rule train_mrcnn:
     input:

@@ -18,9 +18,75 @@ def get_exp(experiment_name, experiments):
     exp_tuple = [i for i in experiments if i[0] == experiment_name][0]
 
     return exp_tuple
-     
-
     
+
+def get_merged_config(general_config, experiment_config):
+    """
+        Returns the merged configuration file
+        
+        Arguments:
+            general_config: path 
+                Path to the general configuration file
+            experiment_config: path
+                Path to the per experiment configuration file
+
+        Returns
+            merged: configparser
+    """
+
+    merged_config = configparser.ConfigParser()
+    merged_config.optionxform = str
+    merged_config.read([experiment_config, general_config])
+    return merged_config
+
+def watershed_2_fun(gen_config, 
+                   experiment,
+                   output_json, 
+                   output_cfg, 
+                   gaussian_h5,
+                   gaussian_json,
+                   edt_h5,
+                   edt_json,
+                   ):
+    """
+    Generate the knime augmentation json file
+    Arguments:
+        gen_config: dict
+            The general watershed_2 parameters
+        experiment: tuple(2)
+            experiment_name, and config file
+        output: dirpath 
+            Path to output directory 
+    """
+    knime_sec = "GBDMsWS_KNIMEWorkflow"
+
+    conf_dir = os.path.abspath(os.path.dirname(output_json))
+    watershed_2_cfg = os.path.abspath(output_cfg)
+    exp_name, exp_config_path = experiment
+
+    merged_conifg = get_merged_config(gen_config, exp_config_path) 
+
+    knime_params = merged_config[knime_sec]
+ 
+    knime_params["deeplearningGBModelJSONFname"] = os.path.abspath(gaussian_json)
+    knime_params["deeplearningGBModelFname"] = os.path.abspath(gaussian_h5)
+    knime_params["deeplearningDMModelJSONFname"] = os.path.abspath(edt_json )
+    knime_params["deeplearningDMModelFname"] = os.path.abspath(edt_h5)
+
+    knime_params["outDirectoryvar"] = os.path.join(conf_dir, "images")
+    knime_dict = dict(merged_config.items(knime_sec))
+    for item in knime_dict.keys():
+        clean_string = knime_dict[item].replace('"', "")
+        try:
+           value = eval(clean_string) 
+           knime_dict[item]  = value
+        except:
+            knime_dict[item] = clean_string
+    with open(output_json, 'w') as json_output:
+       json.dump(knime_dict, json_output, indent=2 ) 
+    
+    with open(watershed_2_cfg, 'w') as configfile:
+        merged_config.write(configfile)  
 
 def preprocess_fun(gen_config, experiment, output, h5_exp_file="aug_images.h5"):
     """
@@ -84,13 +150,18 @@ def train_unet_fpn(work_dir, conf, h5_in, model_h5, model_json):
         output_h5: file_path
             The location of the trained model architecture
     """
-    #That file should not change
-    #dl_config = "my_config.cfg"
+    
+    h5_in = os.path.abspath(h5_in) 
+    model_h5 = os.path.abspath(model_h5) 
+    model_json = os.path.abspath(model_json) 
+    conf = os.path.abspath(conf)
+    top_dir = os.getcwd()
+    os.chdir(work_dir)
     train_unet_fpn_script = "/data/HiTIF/data/dl_segmentation_paper/code/python/unet_fpn/train_model.sh"
-
     #config_file = os.path.join(work_dir, dl_config)
     #os.system("cp {0} {1}".format(conf, config_file))
     shell_cmd = train_unet_fpn_script + \
+       " train " + \
        " --h5fname " +   h5_in +  \
        " --trained_h5 " + model_h5 + \
        " --trained_json " + model_json + \
@@ -98,3 +169,5 @@ def train_unet_fpn(work_dir, conf, h5_in, model_h5, model_json):
 
     print(shell_cmd)
     os.system(shell_cmd)
+    os.chdir(top_dir)
+    
