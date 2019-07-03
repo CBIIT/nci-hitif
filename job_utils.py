@@ -64,9 +64,9 @@ def watershed_2_fun(gen_config,
     watershed_2_cfg = os.path.abspath(output_cfg)
     exp_name, exp_config_path = experiment
 
-    merged_conifg = get_merged_config(gen_config, exp_config_path) 
+    merged_config = get_merged_config(gen_config, exp_config_path) 
 
-    knime_params = merged_config[knime_sec]
+    knime_params = merged_config [knime_sec]
  
     knime_params["deeplearningGBModelJSONFname"] = os.path.abspath(gaussian_json)
     knime_params["deeplearningGBModelFname"] = os.path.abspath(gaussian_h5)
