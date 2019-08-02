@@ -1,6 +1,5 @@
 import configparser 
-from job_utils import  preprocess_fun,get_exp,train_unet_fpn,watershed_2_fun, get_merged_config
-
+from job_utils import  preprocess_fun,get_exp,train_unet_fpn,watershed_2_fun, get_merged_config, maps_fun
 
 def get_exp_configurations(wildcards, general_config,experiments):
     """ 
@@ -12,6 +11,12 @@ def get_exp_configurations(wildcards, general_config,experiments):
             The general configuration file for the rule
         experiments: list(tuples)
             The list 
+
+    Returns:
+        [general_configuration]
+            If experiment does not have a specific configuration file
+        [general_configuration, exoperiment_configuration]
+            If experiment has a specific configuration file
     """
     print(wildcards.exp)
     #If exp is a directory, remove the forward slash
@@ -36,7 +41,7 @@ def get_input_exp_configurations(wildcards):
     return get_exp_configurations(wildcards, gen_aug_config, input_exp)
 
 
-def get_watershed_2_exp_configurations(wildcards):
+def get_inference_exp_configurations(wildcards):
     """ 
     Returns the configuration file related to a given experiment
     Arguments:
@@ -44,25 +49,104 @@ def get_watershed_2_exp_configurations(wildcards):
             The snakemake value for the wildcard for a given rule 
     """
     print(wildcards.exp)
-    return get_exp_configurations(wildcards, watershed_2_config, inference_exp)
-   
+    return get_exp_configurations(wildcards, inference_config, inference_exp)
 
-def get_inference_images(wildcards):
-    exp_name = wildcards.exp
+
+def get_inference_images_paths(exp_name, folder):
+    """
+    Returns a list of images names of an ground truth experiment
+    Arguemnts:
+        exp_name: str
+            The ground truth experiment name mentioned in global config 
+        folder: str
+            Can either be "ground_truth" or "gray_scale" 
+
+    Returns: list
+    """
+
     exp_name, exp_config = get_exp(exp_name, inference_exp)
-    merged_config = get_merged_config(watershed_2_config, exp_config)
-    knime_sec = "GBDMsWS_KNIMEWorkflow" 
-    input_dir = merged_config[knime_sec]["inputDirectory"].replace('"','')
-    input_regex = merged_config[knime_sec]["inputRegexSelectionStr"].replace('"','')
+    merged_config = get_merged_config(inference_config, exp_config)
+    general_sec = "general" 
+    if folder == "ground_truth":
+        dir_attribute = "ground_truth_directory"
+    elif folder == "gray_scale":
+        dir_attribute = "input_dir"
+    else:
+        raise Exception("The folder value:{0} is incorrect".format(folder)) 
+
+    input_dir = merged_config[general_sec][dir_attribute].replace('"','')
+    input_regex = merged_config[general_sec]["input_regex"].replace('"','')
+
     import glob
     joined_regex = os.path.join(input_dir, input_regex)
-    print(joined_regex)
+    print("{0} Regex:".format(folder), joined_regex)
     input_files = glob.glob(joined_regex)
-    print(input_files)
-    input_pathes = [os.path.join(watershed_2_loc, exp_name, tif)
-        for tif in input_files]
-    print(input_pathes)
+    print("{0} Input files".format(folder), input_files)
     return input_files
+ 
+
+def get_inference_gray_images(wildcards):
+    """
+    Returns a list of full path of the inference images per experiment
+    Arguemnts:
+        wildcards: contains "exp"
+            The inference experiment name
+
+    Returns: list
+    """
+    exp_name = wildcards.exp
+    return get_inference_images_paths(exp_name, "gray_scale")
+
+
+def get_inference_ground_truth_images(wildcards):
+    """
+    Returns a list of full path of the ground truth images per experiment
+    Arguments:
+        wildcards: contains "exp"
+            The inference experiment name
+
+    Returns: list
+    """
+    exp_name = wildcards.exp
+    return get_inference_images_paths(exp_name, "ground_truth")
+
+
+def get_method_inference_dir(method_name):
+    """
+    Returns the inference directory defined in the method 
+    Arguments:
+        method_name: str
+            The method can point to any of the three techniques["watershed-2", "watershed-4", "mrcnn"]
+    """
+
+    if method_name == "watershed-2":
+        inference_dir = rules.watershed_2_execute.output.out_dir
+    else: 
+        raise Exception("Method {0} not implemented".format(method_name))
+
+    return inference_dir
+
+
+def get_map_images(wildcards):
+    """
+    Returns a tuple of two lists of the all images required to calculate maps:
+        a- The ground truth images
+        b- The inference results
+
+    Arguments:
+        wildcards: contains "exp", and "method"
+        The method can point to any of the three techniques["watershed-2", "watershed-4", "mrcnn"]
+    """
+    exp_name = wildcards.exp
+    method_name = wildcards.method
+    ground_truth_files = get_inference_images_paths(exp_name, "ground_truth")
+
+    inference_dir = get_method_inference_dir(method_name)
+    #Get the image names
+    image_names = [os.path.basename(image) for image in ground_truth_files]
+    inference_results =[os.path.join(inference_dir,image) for image in image_names]
+    print(inference_results)
+    return ground_truth_files + inference_results
 
 
 my_config = configparser.ConfigParser()
@@ -73,6 +157,7 @@ my_config.read(configuration)
 input_exp = eval(my_config["general"]["experiments"])
 input_exp_names = [exp[0] for exp in input_exp]
 exp_config = [exp[1] for exp in input_exp if os.path.exists(exp[1])]
+
 
 #Find the work dir
 pipeline_dir = os.path.abspath(my_config["general"]["workdir"])
@@ -134,16 +219,24 @@ train_mrcnn_dir = os.path.join(train_dir, "mrcnn")
 inference_exp = eval(my_config["general"]["infer_experiments"])
 inference_exp_names = [exp[0] for exp in inference_exp]
 inference_dir = "inference"
+inference_config = os.path.join(configs_dir, "inference-config.cfg") 
 
 #watershed_2 inference
-
-watershed_2_config = os.path.join(configs_dir, "watershed-2-config.cfg") 
 watershed_2_loc = os.path.join(inference_dir, "watershed-2") 
 watershed_2_exp = os.path.join(watershed_2_loc, "{exp}")
 watershed_2_knime_json = os.path.join(watershed_2_exp, "knime.json")
 watershed_2_cfg = os.path.join(watershed_2_exp, "config.cfg")
 
-watershed_2_workflow = "/data/HiTIF/data/dl_segmentation_paper/knime/workflows/HiTIF_CV7000_Nucleus_Segmentation_DeepLearning_IncResV2FPN_GBDMsWS_nonSLURM_37X_OutLoc_JSON.knwf"
+#watershed_2_workflow = "/data/HiTIF/data/dl_segmentation_paper/knime/workflows/HiTIF_CV7000_Nucleus_Segmentation_DeepLearning_IncResV2FPN_GBDMsWS_nonSLURM_37X_OutLoc_JSON.knwf"
+watershed_2_workflow = "/data/HiTIF/data/dl_segmentation_paper/knime/workflows/HiTIF_CV7000_Nucleus_Segmentation_DeepLearning_IncResV2FPN_watershed2_serial.knwf"
+
+#Mean Average Precision
+
+maps_dir = "mean-average-precision"
+#Define a method widlcard that can point to ["watershed-2", "watershed-4", "mrcnn"] 
+maps_exp_dir = os.path.join(maps_dir, "{method}", "{exp}")
+maps_output_file = os.path.join(maps_exp_dir,"maps.csv")
+maps_workflow = "/data/HiTIF/data/dl_segmentation_paper/knime/workflows/HiTIF_Calculate_mAP_GTvsInference_Python_3Inputs_OutLoc_JSON.knwf"
 
 
 rule all: 
@@ -152,7 +245,8 @@ rule all:
 #        #expand("preprocess/{exp}/config.json", exp=input_exp_names)
 #        #expand(h5_location, exp=input_exp_names)
 #         expand(watershed_2_knime_json, exp=inference_exp_names)
-         expand(os.path.join(watershed_2_exp, "images"), exp=inference_exp_names)
+#         expand(os.path.join(watershed_2_exp, "images"), exp=inference_exp_names)
+         expand(maps_output_file, exp=inference_exp_names, method = "watershed-2")
 #        #combined_h5
 #        #rules.train_outline.output.h5
 #        #rules.train_mask.output.h5,
@@ -241,7 +335,8 @@ rule watershed_2_prep:
         edt_h5 = rules.train_edt.output.h5,
         edt_json = rules.train_edt.output.json,
 
-        exp_directories = get_watershed_2_exp_configurations
+        #The prep is based on the configuration files
+        exp_config = get_inference_exp_configurations
     output:    
         knime_json = watershed_2_knime_json, 
         config = watershed_2_cfg
@@ -251,7 +346,7 @@ rule watershed_2_prep:
         exp_tuple = get_exp(exp_name, inference_exp)
         #Generate the combined configuration file
 
-        watershed_2_fun(watershed_2_config,  
+        watershed_2_fun(inference_config,  
                         exp_tuple,
                         str(output.knime_json), 
                         str(output.config), 
@@ -263,16 +358,43 @@ rule watershed_2_prep:
 
 rule watershed_2_execute:
     input:
-        images = get_inference_images,
+        images = get_inference_gray_images,
         knime_json = rules.watershed_2_prep.output.knime_json,
         conf = rules.watershed_2_prep.output.config
     output: 
-        directory(os.path.join(watershed_2_exp,"images"))
+        out_dir = directory(os.path.join(watershed_2_exp,"images"))
     run:
+        #print("Here", str(input.images))
         print(str(output))
-        shell_cmd = knime_script + " " + watershed_2_workflow + " " + input.knime_json
+        shell_cmd = knime_script + " " + watershed_2_workflow + " " + os.path.abspath(input.knime_json)
         print(shell_cmd)
         shell(shell_cmd)
+
+
+rule map_execute:
+    input:
+       images = get_map_images
+    output:
+        #out_dir = directory(maps_exp_dir) 
+        out_file = maps_output_file
+    run:
+        print("MAPS:", str(input.images))
+        print("MAPS:", str(output.out_file))
+        exp_name = wildcards.exp.replace("/", "")
+        exp_name, exp_config_path = get_exp(exp_name, inference_exp)
+        merged_config = get_merged_config(inference_config, exp_config_path ) 
+        #Get the inference directory for the method 
+        method_name = wildcards.method.replace("/", "")
+        inference_dir = os.path.abspath(get_method_inference_dir(method_name).replace("{exp}", exp_name))
+        knime_json = maps_fun(merged_config,inference_dir,str(output.out_file))
+
+        shell_cmd = knime_script + " " + maps_workflow + " " + os.path.abspath(knime_json)
+        print(shell_cmd)
+        shell(shell_cmd)
+
+
+
+    
 
 rule train_mrcnn:
     input:
