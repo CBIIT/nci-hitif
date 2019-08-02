@@ -1,7 +1,6 @@
 import configparser 
 from job_utils import  preprocess_fun,get_exp,train_unet_fpn,watershed_2_fun, get_merged_config
 
-
 def get_exp_configurations(wildcards, general_config,experiments):
     """ 
     Returns the configuration file related to a given experiments
@@ -45,24 +44,81 @@ def get_watershed_2_exp_configurations(wildcards):
     """
     print(wildcards.exp)
     return get_exp_configurations(wildcards, watershed_2_config, inference_exp)
-   
 
-def get_inference_images(wildcards):
-    exp_name = wildcards.exp
+
+def get_gt_images_paths(exp_name):
+    """
+    Returns a list of images names of an ground truth experiment
+    Arguemnts:
+        exp_name: str
+            The ground truth experiment name mentioned in global config 
+
+    Returns: list
+    """
+    exp_name, exp_config = get_exp(exp_name, gt_exp)
+    merged_config = get_merged_config(maps_config, exp_config)
+    knime_sec = "calculate_mAP_KNIMEWorkflow" 
+    input_dir = merged_config[knime_sec]["gtimagesrootInputFolder"].replace('"','')
+    input_regex = merged_config[knime_sec]["gtregexFileSelectionStr"].replace('"','').replace('.', '')
+    import glob
+    joined_regex = os.path.join(input_dir, input_regex)
+    print("GT Regex:", joined_regex)
+    input_files = glob.glob(joined_regex)
+    print("GT Input files", input_files)
+    return input_files
+ 
+
+def get_inference_images_paths(exp_name):
+    """
+    Returns a list of images names of an inference experiment
+    Arguemnts:
+        exp_name: str
+            The inference experiment name mentioned in global config 
+
+    Returns: list
+    """
     exp_name, exp_config = get_exp(exp_name, inference_exp)
     merged_config = get_merged_config(watershed_2_config, exp_config)
     knime_sec = "GBDMsWS_KNIMEWorkflow" 
+
+    #Replace inputDirectory and input regex for the values in maps calculation
+
     input_dir = merged_config[knime_sec]["inputDirectory"].replace('"','')
-    input_regex = merged_config[knime_sec]["inputRegexSelectionStr"].replace('"','')
+    input_regex = merged_config[knime_sec]["inputRegexSelectionStr"].replace('"','').replace('.', '')
     import glob
     joined_regex = os.path.join(input_dir, input_regex)
-    print(joined_regex)
+    print("Regex:", joined_regex)
     input_files = glob.glob(joined_regex)
-    print(input_files)
-    input_pathes = [os.path.join(watershed_2_loc, exp_name, tif)
-        for tif in input_files]
-    print(input_pathes)
+    print("Input files", input_files)
     return input_files
+ 
+def get_inference_gray_images(wildcards):
+    """
+    Returns a list of full path of the inference images per experiment
+    Arguemnts:
+        wildcards: contains "exp"
+            The inference experiment name
+
+    Returns: list
+    """
+    exp_name = wildcards.exp
+    return get_inference_images_paths(exp_name)
+
+
+def get_inference_bitmasks(wildcards):
+    """
+    Returns a list of full path of the ground truth images per experiment
+    Arguemnts:
+        wildcards: contains "exp"
+            The inference experiment name
+
+    Returns: list
+    """
+    exp_name = wildcards.exp
+    input_files = get_inference_images_names(exp_name)
+    input_paths = [os.path.join(watershed_2_loc, exp_name, os.path.basename(tif))
+        for tif in input_files]
+    return input_paths
 
 
 my_config = configparser.ConfigParser()
@@ -73,6 +129,7 @@ my_config.read(configuration)
 input_exp = eval(my_config["general"]["experiments"])
 input_exp_names = [exp[0] for exp in input_exp]
 exp_config = [exp[1] for exp in input_exp if os.path.exists(exp[1])]
+
 
 #Find the work dir
 pipeline_dir = os.path.abspath(my_config["general"]["workdir"])
@@ -143,7 +200,20 @@ watershed_2_exp = os.path.join(watershed_2_loc, "{exp}")
 watershed_2_knime_json = os.path.join(watershed_2_exp, "knime.json")
 watershed_2_cfg = os.path.join(watershed_2_exp, "config.cfg")
 
-watershed_2_workflow = "/data/HiTIF/data/dl_segmentation_paper/knime/workflows/HiTIF_CV7000_Nucleus_Segmentation_DeepLearning_IncResV2FPN_GBDMsWS_nonSLURM_37X_OutLoc_JSON.knwf"
+#watershed_2_workflow = "/data/HiTIF/data/dl_segmentation_paper/knime/workflows/HiTIF_CV7000_Nucleus_Segmentation_DeepLearning_IncResV2FPN_GBDMsWS_nonSLURM_37X_OutLoc_JSON.knwf"
+watershed_2_workflow = "/data/HiTIF/data/dl_segmentation_paper/knime/workflows/HiTIF_CV7000_Nucleus_Segmentation_DeepLearning_IncResV2FPN_watershed2_serial.knwf"
+
+#Mean Average Precision
+
+#Find all the ground truth experiment names
+#gt_exp = eval(my_config["general"]["ground_truth_experiments"])
+#gt_exp_names = [exp[0] for exp in gt_exp]
+#maps_dir = "mean-average-precision"
+
+#maps_config = os.path.join(configs_dir, "map-config.cfg") 
+#maps_exp = os.path.join(maps_dir, "{exp}")
+#maps_knime_json = os.path.join(maps_exp, "knime.json")
+#maps_cfg = os.path.join(maps_exp, "config.cfg")
 
 
 rule all: 
@@ -263,16 +333,27 @@ rule watershed_2_prep:
 
 rule watershed_2_execute:
     input:
-        images = get_inference_images,
+        images = get_inference_gray_images,
         knime_json = rules.watershed_2_prep.output.knime_json,
         conf = rules.watershed_2_prep.output.config
     output: 
         directory(os.path.join(watershed_2_exp,"images"))
     run:
+        #print("Here", str(input.images))
         print(str(output))
-        shell_cmd = knime_script + " " + watershed_2_workflow + " " + input.knime_json
+        shell_cmd = knime_script + " " + watershed_2_workflow + " " + os.path.abspath(input.knime_json)
         print(shell_cmd)
         shell(shell_cmd)
+
+
+#rule map_execute:
+#    input:
+#       get_inference_bitmasks,
+#    output:
+#        map_execute
+#    run:
+#        print(str(input))
+    
 
 rule train_mrcnn:
     input:
