@@ -117,7 +117,7 @@ def preprocess_fun(gen_config, experiment, output, h5_exp_file="aug_images.h5"):
     knime_params["outDirectoryvar"] = os.path.abspath(aug_dir)
     knime_params["outputh5fname"] = os.path.basename(aug_h5)
     knime_dict = dict(merged_config.items(knime_sec))
-    write_dict_to_knime_json(knime_dict, json_output)
+    write_dict_to_knime_json(knime_dict, output)
     with open(aug_file_name, 'w') as configfile:
         merged_config.write(configfile)  
 
