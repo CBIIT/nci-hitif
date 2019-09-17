@@ -223,6 +223,7 @@ train_mrcnn= "/data/HiTIF/data/dl_segmentation_paper/code/python/mask-rcnn/mask-
 mrcnn_config = os.path.join(configs_dir, "mrcnn-config.cfg") 
 train_mrcnn_dir = os.path.join(train_dir, "mrcnn")
 model_h5_file = os.path.join(train_mrcnn_dir, "last.h5")
+mrcnn_train_log = os.path.join(train_mrcnn_dir, "mrcnn_train.log")
 
 
 #inference
@@ -254,8 +255,9 @@ watershed_2_workflow = "/data/HiTIF/data/dl_segmentation_paper/knime/workflows/H
 
 #mrcnn_infernce
 mrcnn_images_dir=os.path.join(inference_dir, "mrcnn","{exp}")
-infer_mrcnn="/gpfs/gsfs11/users/zakigf/mask-rcnn-with-augmented-images/Mask_RCNN/images/cell-images/inference/hitif_ml_segmentation/utils/run_hitif_inference.sh"
-#infer_mrcnn="/data/HiTIF/data/dl_segmentation_paper/code/python/mask-rcnn/mask-rcnn-latest/inference/run_hitif_inference.sh"
+#infer_mrcnn="/gpfs/gsfs11/users/zakigf/mask-rcnn-with-augmented-images/Mask_RCNN/images/cell-images/inference/hitif_ml_segmentation/utils/run_hitif_inference.sh"
+infer_mrcnn="/data/HiTIF/data/dl_segmentation_paper/code/python/mask-rcnn/mask-rcnn-latest/inference/run_hitif_inference.sh"
+mrcnn_infer_log = os.path.join(inference_dir, "mrcnn", "mrcnn_inference.log")
 
 #Mean Average Precision
 
@@ -453,6 +455,8 @@ rule train_mrcnn:
         cfg = mrcnn_config
     output:
         model_h5 = model_h5_file
+    log:
+        mrcnn_train_log
     run:
          
         #dl_config = "my_config.cfg"
@@ -462,7 +466,8 @@ rule train_mrcnn:
             " --dataset "  + input.h5 +  \
             " --logs " +  train_mrcnn_dir + \
             " --latest  "  + output.model_h5 + \ 
-            " -c " + input.cfg
+            " -c " + input.cfg \
+            + " &> {0}".format(str(log))
         print(cmd)
         shell(cmd)
 
@@ -474,6 +479,8 @@ rule infer_mrcnn:
         config = rules.inference_prep.output
     output:
         out_dir = directory(mrcnn_images_dir)
+    log: 
+        mrcnn_infer_log
     run:
 
         #Get the inference parameters
@@ -490,13 +497,14 @@ rule infer_mrcnn:
         os.mkdir(output.out_dir)
         for image in input.images:
             cmd = infer_mrcnn +  \
-                ' "{0}" "{1}" "{2}" "{3}" "{4}" "{5}"'.format( \
+                ' "{0}" "{1}" "{2}" "{3}" "{4}" "{5}" &>> {6}'.format( \
                 os.path.abspath(image), \
                 os.path.abspath(str(output.out_dir)), \
                 os.path.abspath(str(input.model_h5)), \
                 cropsize, \
                 padding, \
-                threshold)
+                threshold,
+                str(log))
             print(cmd)
             shell(cmd)
 
