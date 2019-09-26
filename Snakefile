@@ -174,6 +174,11 @@ workdir: my_config["general"]["workdir"]
 
 configs_dir =  my_config["general"]["configs_dir"]
 
+#Create a log dir
+log_dir = os.path.join(pipeline_dir, "log")
+if not os.path.isdir(log_dir):
+    os.mkdir(log_dir)
+
 #preprocess
 gen_aug_config = os.path.join(configs_dir, "imgaug.cfg") 
 
@@ -257,7 +262,7 @@ watershed_2_workflow = "/data/HiTIF/data/dl_segmentation_paper/knime/workflows/H
 mrcnn_images_dir=os.path.join(inference_dir, "mrcnn","{exp}")
 #infer_mrcnn="/gpfs/gsfs11/users/zakigf/mask-rcnn-with-augmented-images/Mask_RCNN/images/cell-images/inference/hitif_ml_segmentation/utils/run_hitif_inference.sh"
 infer_mrcnn="/data/HiTIF/data/dl_segmentation_paper/code/python/mask-rcnn/mask-rcnn-latest/inference/run_hitif_inference.sh"
-mrcnn_infer_log = os.path.join(inference_dir, "mrcnn", "mrcnn_inference.log")
+mrcnn_infer_log = os.path.join(inference_dir, "mrcnn", "mrcnn_inference-{exp}.log")
 
 #Mean Average Precision
 
@@ -267,6 +272,9 @@ maps_exp_dir = os.path.join(maps_dir, "{method}", "{exp}")
 maps_output_file = os.path.join(maps_exp_dir,"maps.csv")
 maps_workflow = "/data/HiTIF/data/dl_segmentation_paper/knime/workflows/HiTIF_Calculate_mAP_GTvsInference_Python_3Inputs_OutLoc_JSON.knwf"
 
+
+#define local rules that will not be submitted to the cluster
+localrules: all, preprocess, combine_augment, inference_prep, watershed_2_prep
 
 rule all: 
     input:
@@ -467,7 +475,7 @@ rule train_mrcnn:
             " --logs " +  train_mrcnn_dir + \
             " --latest  "  + output.model_h5 + \ 
             " -c " + input.cfg \
-            + " &> {0}".format(str(log))
+            + " &>> {0}".format(str(log))
         print(cmd)
         shell(cmd)
 
