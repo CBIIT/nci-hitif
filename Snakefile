@@ -1,5 +1,6 @@
 import configparser 
 from job_utils import  preprocess_fun,get_exp,train_unet_fpn,watershed_2_fun, get_merged_config, maps_fun
+from shutil import copyfile
 
 def get_exp_configurations(wildcards, general_config,experiments):
     """ 
@@ -18,7 +19,7 @@ def get_exp_configurations(wildcards, general_config,experiments):
         [general_configuration, exoperiment_configuration]
             If experiment has a specific configuration file
     """
-    print(wildcards.exp)
+    #print(wildcards.exp)
     #If exp is a directory, remove the forward slash
     
     experiment_name = wildcards.exp.replace("/", "")
@@ -37,7 +38,7 @@ def get_input_exp_configurations(wildcards):
         wildcards: str
             The snakemake value for the wildcard for a given rule 
     """
-    print(wildcards.exp)
+    #print(wildcards.exp)
     return get_exp_configurations(wildcards, gen_aug_config, input_exp)
 
 
@@ -48,7 +49,7 @@ def get_inference_exp_configurations(wildcards):
         wildcards: str
             The snakemake value for the wildcard for a given rule 
     """
-    print(wildcards.exp)
+    #print(wildcards.exp)
     return get_exp_configurations(wildcards, inference_config, inference_exp)
 
 
@@ -70,18 +71,19 @@ def get_inference_images_paths(exp_name, folder):
     if folder == "ground_truth":
         dir_attribute = "ground_truth_directory"
     elif folder == "gray_scale":
-        dir_attribute = "input_dir"
+        dir_attribute = "input_directory"
     else:
         raise Exception("The folder value:{0} is incorrect".format(folder)) 
 
+    #print(merged_config[general_sec])
     input_dir = merged_config[general_sec][dir_attribute].replace('"','')
     input_regex = merged_config[general_sec]["input_regex"].replace('"','')
 
     import glob
     joined_regex = os.path.join(input_dir, input_regex)
-    print("{0} Regex:".format(folder), joined_regex)
+    #print("{0} Regex:".format(folder), joined_regex)
     input_files = glob.glob(joined_regex)
-    print("{0} Input files".format(folder), input_files)
+    #print("{0} Input files".format(folder), input_files)
     return input_files
  
 
@@ -121,11 +123,16 @@ def get_method_inference_dir(method_name):
 
     if method_name == "watershed-2":
         inference_dir = rules.watershed_2_execute.output.out_dir
-    else: 
+    elif method_name == "mrcnn":
+        inference_dir = rules.infer_mrcnn.output.out_dir
+    else:
         raise Exception("Method {0} not implemented".format(method_name))
 
     return inference_dir
 
+def get_wildcard_method_inf_dir(wildcards):
+    method_name = wildcards.method
+    return get_method_inference_dir(method_name)
 
 def get_map_images(wildcards):
     """
@@ -145,8 +152,9 @@ def get_map_images(wildcards):
     #Get the image names
     image_names = [os.path.basename(image) for image in ground_truth_files]
     inference_results =[os.path.join(inference_dir,image) for image in image_names]
-    print(inference_results)
-    return ground_truth_files + inference_results
+    #print(inference_results)
+    #return ground_truth_files + inference_results
+    return ground_truth_files #+ inference_results
 
 
 my_config = configparser.ConfigParser()
@@ -166,6 +174,11 @@ workdir: my_config["general"]["workdir"]
 
 configs_dir =  my_config["general"]["configs_dir"]
 
+#Create a log dir
+log_dir = os.path.join(pipeline_dir, "log")
+if not os.path.isdir(log_dir):
+    os.mkdir(log_dir)
+
 #preprocess
 gen_aug_config = os.path.join(configs_dir, "imgaug.cfg") 
 
@@ -178,11 +191,13 @@ preprocess_dir = "preprocess"
 #Augment
 augment_dir = "augment"
 augment_workflow = "/data/HiTIF/data/dl_segmentation_paper/knime/workflows/HiTIF_AugmentInputGT_H5_OutLoc_JSON.knwf"
+augment_log = os.path.join(augment_dir, "{exp}", "augment.log")
 
 #Combine
 combine_script="python /data/HiTIF/data/dl_segmentation_paper/code/python/combine-all.py"
 h5_location = os.path.join(augment_dir, "{exp}", h5_exp_file)
 combined_h5 = os.path.join("combined", h5_exp_file)
+combined_log = os.path.join("combined", "combine.log")
 
 
 #DL commands
@@ -212,6 +227,8 @@ train_outline_dir = os.path.join(train_dir, "outline")
 train_mrcnn= "/data/HiTIF/data/dl_segmentation_paper/code/python/mask-rcnn/mask-rcnn-latest/train/train-wrapper.sh"
 mrcnn_config = os.path.join(configs_dir, "mrcnn-config.cfg") 
 train_mrcnn_dir = os.path.join(train_dir, "mrcnn")
+model_h5_file = os.path.join(train_mrcnn_dir, "last.h5")
+mrcnn_train_log = os.path.join(train_mrcnn_dir, "mrcnn_train.log")
 
 
 #inference
@@ -221,14 +238,31 @@ inference_exp_names = [exp[0] for exp in inference_exp]
 inference_dir = "inference"
 inference_config = os.path.join(configs_dir, "inference-config.cfg") 
 
+
+#inference preparation
+exp_merged_config = os.path.join(inference_dir, "preprocess", "{exp}", "config.cfg")
+
+
 #watershed_2 inference
 watershed_2_loc = os.path.join(inference_dir, "watershed-2") 
 watershed_2_exp = os.path.join(watershed_2_loc, "{exp}")
+
+#Watershed outputs
 watershed_2_knime_json = os.path.join(watershed_2_exp, "knime.json")
 watershed_2_cfg = os.path.join(watershed_2_exp, "config.cfg")
+watershed_2_images_dir = os.path.join(watershed_2_exp,"images")
+#print("DIR:{0}".format(watershed_2_images_dir ))
+
 
 #watershed_2_workflow = "/data/HiTIF/data/dl_segmentation_paper/knime/workflows/HiTIF_CV7000_Nucleus_Segmentation_DeepLearning_IncResV2FPN_GBDMsWS_nonSLURM_37X_OutLoc_JSON.knwf"
 watershed_2_workflow = "/data/HiTIF/data/dl_segmentation_paper/knime/workflows/HiTIF_CV7000_Nucleus_Segmentation_DeepLearning_IncResV2FPN_watershed2_serial.knwf"
+
+
+#mrcnn_infernce
+mrcnn_images_dir=os.path.join(inference_dir, "mrcnn","{exp}")
+#infer_mrcnn="/gpfs/gsfs11/users/zakigf/mask-rcnn-with-augmented-images/Mask_RCNN/images/cell-images/inference/hitif_ml_segmentation/utils/run_hitif_inference.sh"
+infer_mrcnn="/data/HiTIF/data/dl_segmentation_paper/code/python/mask-rcnn/mask-rcnn-latest/inference/run_hitif_inference.sh"
+mrcnn_infer_log = os.path.join(inference_dir, "mrcnn", "mrcnn_inference-{exp}.log")
 
 #Mean Average Precision
 
@@ -239,6 +273,9 @@ maps_output_file = os.path.join(maps_exp_dir,"maps.csv")
 maps_workflow = "/data/HiTIF/data/dl_segmentation_paper/knime/workflows/HiTIF_Calculate_mAP_GTvsInference_Python_3Inputs_OutLoc_JSON.knwf"
 
 
+#define local rules that will not be submitted to the cluster
+localrules: all, preprocess, combine_augment, inference_prep, watershed_2_prep
+
 rule all: 
     input:
 #        pass
@@ -246,7 +283,10 @@ rule all:
 #        #expand(h5_location, exp=input_exp_names)
 #         expand(watershed_2_knime_json, exp=inference_exp_names)
 #         expand(os.path.join(watershed_2_exp, "images"), exp=inference_exp_names)
-         expand(maps_output_file, exp=inference_exp_names, method = "watershed-2")
+         #expand(maps_output_file, exp=inference_exp_names, method = ["mrcnn"]),
+         expand(maps_output_file, exp=inference_exp_names, method = ["watershed-2", "mrcnn"]),
+         #expand(exp_merged_config, exp = inference_exp_names) 
+
 #        #combined_h5
 #        #rules.train_outline.output.h5
 #        #rules.train_mask.output.h5,
@@ -258,6 +298,8 @@ rule preprocess:
         get_input_exp_configurations
     output:
         preprocess_dir + "/{exp}/" + aug_config_file
+    log:
+        preprocess_dir + "/{exp}/" + "log.log"
     run:
         exp_name = wildcards.exp
         exp_tuple = get_exp(exp_name, input_exp)
@@ -269,9 +311,11 @@ rule augment:
     input: rules.preprocess.output
     output: 
         h5_location 
+    log:
+        augment_log   
     run:
         json_file = os.path.abspath(str(input))
-        shell_cmd = knime_script + " " + augment_workflow + " " +  str(input)
+        shell_cmd = knime_script + " " + augment_workflow + " " +  str(input) + " &> " + str(log)
         print(shell_cmd)
         shell(shell_cmd)
 
@@ -280,8 +324,10 @@ rule combine_augment:
         expand(h5_location, exp=input_exp_names)
     output:
         combined_h5
+    log:
+        combined_log
     run:    
-        combine_cmd = combine_script + " " + str(input) + " " +  str(output)
+        combine_cmd = combine_script + " " + str(input) + " " +  str(output) + " &> " + str(log)
         print(combine_cmd)
         shell(combine_cmd)
       
@@ -327,6 +373,20 @@ rule train_outline:
     run:
         train_unet_fpn(train_outline_dir, input.cfg, input.h5,output.h5, output.json)
 
+
+rule inference_prep:
+    input:
+        exp_config = get_inference_exp_configurations
+    output:
+        exp_merged_config
+    run:
+        if len(input.exp_config) == 1:
+            copyfile(str(input.exp_config[0]), str(output))
+        else:
+            exp_config = get_merged_config(str(input.exp_config[0]),str(input.exp_config[1])) 
+            with open(str(output), 'w') as configfile:
+                exp_config.write(configfile)  
+
 rule watershed_2_prep:
     input:
         gaussian_h5 = rules.train_gaussian.output.h5,
@@ -362,10 +422,13 @@ rule watershed_2_execute:
         knime_json = rules.watershed_2_prep.output.knime_json,
         conf = rules.watershed_2_prep.output.config
     output: 
-        out_dir = directory(os.path.join(watershed_2_exp,"images"))
+        out_dir = directory(watershed_2_images_dir),
+        #images = os.path.join(watershed_2_images_dir,"AUTO0496_N14_T0001F002L01A01Z01C01.tif")
+        #images = os.path.join(watershed_2_images_dir,"{image}.tif")
+
     run:
         #print("Here", str(input.images))
-        print(str(output))
+        #print(str(output))
         shell_cmd = knime_script + " " + watershed_2_workflow + " " + os.path.abspath(input.knime_json)
         print(shell_cmd)
         shell(shell_cmd)
@@ -373,13 +436,14 @@ rule watershed_2_execute:
 
 rule map_execute:
     input:
-       images = get_map_images
+       images = get_map_images,
+       inf_dir = get_wildcard_method_inf_dir
     output:
         #out_dir = directory(maps_exp_dir) 
         out_file = maps_output_file
     run:
-        print("MAPS:", str(input.images))
-        print("MAPS:", str(output.out_file))
+        #print("MAPS:", str(input.images))
+        #print("MAPS:", str(output.out_file))
         exp_name = wildcards.exp.replace("/", "")
         exp_name, exp_config_path = get_exp(exp_name, inference_exp)
         merged_config = get_merged_config(inference_config, exp_config_path ) 
@@ -392,14 +456,14 @@ rule map_execute:
         print(shell_cmd)
         shell(shell_cmd)
 
-    
-
 rule train_mrcnn:
     input:
         h5 = combined_h5,
         cfg = mrcnn_config
     output:
-        model_h5 = os.path.join(train_mrcnn_dir, "last.h5"),
+        model_h5 = model_h5_file
+    log:
+        mrcnn_train_log
     run:
          
         #dl_config = "my_config.cfg"
@@ -409,6 +473,45 @@ rule train_mrcnn:
             " --dataset "  + input.h5 +  \
             " --logs " +  train_mrcnn_dir + \
             " --latest  "  + output.model_h5 + \ 
-            " -c " + input.cfg
+            " -c " + input.cfg \
+            + " &>> {0}".format(str(log))
         print(cmd)
         shell(cmd)
+
+
+rule infer_mrcnn:
+    input:
+        model_h5 = rules.train_mrcnn.output.model_h5, 
+        images = get_inference_gray_images,
+        config = rules.inference_prep.output
+    output:
+        out_dir = directory(mrcnn_images_dir)
+    log: 
+        mrcnn_infer_log
+    run:
+
+        #Get the inference parameters
+        config = configparser.ConfigParser()
+        config.optionxform = str
+        config.read(input.config)
+        mrcnn_sec = "mrcnn"
+        mrcnn_params = config[mrcnn_sec] 
+
+        threshold = config.getint(mrcnn_sec, "threshold")
+        cropsize = config.getint(mrcnn_sec, "cropsize")
+        padding = config.getint(mrcnn_sec, "padding")
+
+        os.mkdir(output.out_dir)
+        for image in input.images:
+            cmd = infer_mrcnn +  \
+                ' "{0}" "{1}" "{2}" "{3}" "{4}" "{5}" &>> {6}'.format( \
+                os.path.abspath(image), \
+                os.path.abspath(str(output.out_dir)), \
+                os.path.abspath(str(input.model_h5)), \
+                cropsize, \
+                padding, \
+                threshold,
+                str(log))
+            print(cmd)
+            shell(cmd)
+
