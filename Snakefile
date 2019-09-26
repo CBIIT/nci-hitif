@@ -19,7 +19,7 @@ def get_exp_configurations(wildcards, general_config,experiments):
         [general_configuration, exoperiment_configuration]
             If experiment has a specific configuration file
     """
-    print(wildcards.exp)
+    #print(wildcards.exp)
     #If exp is a directory, remove the forward slash
     
     experiment_name = wildcards.exp.replace("/", "")
@@ -38,7 +38,7 @@ def get_input_exp_configurations(wildcards):
         wildcards: str
             The snakemake value for the wildcard for a given rule 
     """
-    print(wildcards.exp)
+    #print(wildcards.exp)
     return get_exp_configurations(wildcards, gen_aug_config, input_exp)
 
 
@@ -49,7 +49,7 @@ def get_inference_exp_configurations(wildcards):
         wildcards: str
             The snakemake value for the wildcard for a given rule 
     """
-    print(wildcards.exp)
+    #print(wildcards.exp)
     return get_exp_configurations(wildcards, inference_config, inference_exp)
 
 
@@ -75,15 +75,15 @@ def get_inference_images_paths(exp_name, folder):
     else:
         raise Exception("The folder value:{0} is incorrect".format(folder)) 
 
-    print(merged_config[general_sec])
+    #print(merged_config[general_sec])
     input_dir = merged_config[general_sec][dir_attribute].replace('"','')
     input_regex = merged_config[general_sec]["input_regex"].replace('"','')
 
     import glob
     joined_regex = os.path.join(input_dir, input_regex)
-    print("{0} Regex:".format(folder), joined_regex)
+    #print("{0} Regex:".format(folder), joined_regex)
     input_files = glob.glob(joined_regex)
-    print("{0} Input files".format(folder), input_files)
+    #print("{0} Input files".format(folder), input_files)
     return input_files
  
 
@@ -152,7 +152,7 @@ def get_map_images(wildcards):
     #Get the image names
     image_names = [os.path.basename(image) for image in ground_truth_files]
     inference_results =[os.path.join(inference_dir,image) for image in image_names]
-    print(inference_results)
+    #print(inference_results)
     #return ground_truth_files + inference_results
     return ground_truth_files #+ inference_results
 
@@ -251,7 +251,7 @@ watershed_2_exp = os.path.join(watershed_2_loc, "{exp}")
 watershed_2_knime_json = os.path.join(watershed_2_exp, "knime.json")
 watershed_2_cfg = os.path.join(watershed_2_exp, "config.cfg")
 watershed_2_images_dir = os.path.join(watershed_2_exp,"images")
-print("DIR:{0}".format(watershed_2_images_dir ))
+#print("DIR:{0}".format(watershed_2_images_dir ))
 
 
 #watershed_2_workflow = "/data/HiTIF/data/dl_segmentation_paper/knime/workflows/HiTIF_CV7000_Nucleus_Segmentation_DeepLearning_IncResV2FPN_GBDMsWS_nonSLURM_37X_OutLoc_JSON.knwf"
@@ -428,7 +428,7 @@ rule watershed_2_execute:
 
     run:
         #print("Here", str(input.images))
-        print(str(output))
+        #print(str(output))
         shell_cmd = knime_script + " " + watershed_2_workflow + " " + os.path.abspath(input.knime_json)
         print(shell_cmd)
         shell(shell_cmd)
@@ -442,8 +442,8 @@ rule map_execute:
         #out_dir = directory(maps_exp_dir) 
         out_file = maps_output_file
     run:
-        print("MAPS:", str(input.images))
-        print("MAPS:", str(output.out_file))
+        #print("MAPS:", str(input.images))
+        #print("MAPS:", str(output.out_file))
         exp_name = wildcards.exp.replace("/", "")
         exp_name, exp_config_path = get_exp(exp_name, inference_exp)
         merged_config = get_merged_config(inference_config, exp_config_path ) 
