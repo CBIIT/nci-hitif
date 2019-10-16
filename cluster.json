@@ -15,40 +15,13 @@
         "time" : "10:00:00",
         "jobname": "hitif-augment"
     },
-    "train_gaussian" :
+    "train_unet" :
     {
         "time" : "3-00:00",
-        "jobname": "hitif-gaussian",
+        "jobname": "hitif-unet",
         "partition" : "gpu", 
         "extras": "--gres=lscratch:50,gpu:p100:1",
         "cpus"  : "8"
-    },
-    "train_edt" :
-    {
-        "time" : "3-00:00",
-        "jobname": "hitif-edt",
-        "partition" : "gpu", 
-        "extras": "--gres=lscratch:50,gpu:p100:1",
-        "cpus"  : "8"
-
-    },
-    "train_mask" :
-    {
-        "time" : "3-00:00",
-        "jobname": "hitif-mask",
-        "partition" : "gpu", 
-        "extras": "--gres=lscratch:50,gpu:p100:1",
-        "cpus"  : "8"
-
-    },
-    "train_outline" :
-    {
-        "time" : "3-00:00",
-        "jobname": "hitif-outline",
-        "partition" : "gpu", 
-        "extras": "--gres=lscratch:50,gpu:p100:1",
-        "cpus"  : "8"
-
     },
     "train_mrcnn" :
     {
@@ -60,6 +33,8 @@
     },
     "infer_mrcnn" :
     {
+        "out"  : "log/{rule}_{wildcards.exp}-%j.out",
+        "err"  : "log/{rule}_{wildcards.exp}-%j.err",
         "time" : "2:00:00",
         "jobname": "hitif-mrcnn-infer",
         "partition" : "gpu", 

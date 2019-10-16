@@ -73,7 +73,7 @@ def watershed_2_fun(gen_config,
     knime_params = merged_config[watershed_2_knime_sec]
 
     #Set the input files and output directory
-    knime_params["inputDirectory"] = general_params["input_directory"]
+    knime_params["inputDirectory"] = os.path.abspath(general_params["input_directory"].replace('"', ''))
     knime_params["inputRegexSelectionStr"] = general_params["input_regex"]
     knime_params["outDirectoryvar"] = os.path.join(conf_dir, "images")
 

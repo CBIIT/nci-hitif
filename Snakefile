@@ -76,8 +76,12 @@ def get_inference_images_paths(exp_name, folder):
         raise Exception("The folder value:{0} is incorrect".format(folder)) 
 
     #print(merged_config[general_sec])
-    input_dir = merged_config[general_sec][dir_attribute].replace('"','')
-    input_regex = merged_config[general_sec]["input_regex"].replace('"','')
+    try:
+        input_dir = merged_config[general_sec][dir_attribute].replace('"','')
+        input_regex = merged_config[general_sec]["input_regex"].replace('"','').replace(".", "*")
+    except Exception as e:
+        print("Unable to generate the directory or the regex for this experiment")
+        raise e 
 
     import glob
     joined_regex = os.path.join(input_dir, input_regex)
@@ -120,7 +124,6 @@ def get_method_inference_dir(method_name):
         method_name: str
             The method can point to any of the three techniques["watershed-2", "watershed-4", "mrcnn"]
     """
-
     if method_name == "watershed-2":
         inference_dir = rules.watershed_2_execute.output.out_dir
     elif method_name == "mrcnn":
@@ -155,6 +158,53 @@ def get_map_images(wildcards):
     #print(inference_results)
     #return ground_truth_files + inference_results
     return ground_truth_files #+ inference_results
+
+def verify_map_inference_images(exp_name, method_name):
+    """
+    Verifies the list of all inference images required to calculate maps:
+
+    Arguments:
+        wildcards: contains "exp", and "method"
+        The method can point to any of the three techniques["watershed-2", "watershed-4", "mrcnn"]
+    """
+    ground_truth_files = get_inference_images_paths(exp_name, "ground_truth")
+
+    inference_dir = get_method_inference_dir(method_name).replace("{exp}", exp_name)
+    #Get the image names
+    image_names = [os.path.basename(image) for image in ground_truth_files]
+    inference_results =[os.path.join(inference_dir,image) for image in image_names]
+    missing = []
+    for image in inference_results:
+        if not os.path.exists(image):
+            missing.append(image)
+    if len(missing) != 0:        
+        error = "These inference images are missing:{0}".format("\n".join(missing))
+        print(error)
+
+
+def get_model(config_attribute, train_file):
+    """
+        Checks if models will be trained or linked from a previous training
+
+        Arguments:
+            config_attribute: str
+                If the models will be linked, this attributed should be in the
+                general section of the configuration file
+            train_file: str
+                The filename that should be produced if the model is trained. 
+
+            returns:
+                model_file
+    """
+    try:
+        model_file = my_config["general"][config_attribute]
+    except:        
+        model_file = "" 
+
+    if os.path.exists(model_file):
+        return model_file
+    else:
+        return train_file 
 
 
 my_config = configparser.ConfigParser()
@@ -205,31 +255,29 @@ train_dir = "train"
 #That file should not change
 dl_config = "my_config.cfg"
 
+#U-Nets training
 train_unet_fpn_script = "/data/HiTIF/data/dl_segmentation_paper/code/python/unet_fpn/train_model.sh"
 
-#Gaussian training
-gaussian_config = os.path.join(configs_dir, "gaussian-config.cfg") 
-train_gaussian_dir = os.path.join(train_dir, "gaussian")
+train_unet_dir = os.path.join(train_dir, "{output}")
+train_unet_h5 = os.path.join(train_unet_dir, "trained.h5")
+train_unet_json = os.path.join(train_unet_dir,"trained.json")
 
-#edt training
-edt_config = os.path.join(configs_dir, "edt-config.cfg") 
-train_edt_dir = os.path.join(train_dir, "edt")
+gaussian_h5 = get_model("gaussian_h5", expand(train_unet_h5, output = ["gaussian"]))
+gaussian_json = get_model("gaussian_json", expand(train_unet_json, output = ["gaussian"]))
 
-#mask training
-mask_config = os.path.join(configs_dir, "mask-config.cfg") 
-train_mask_dir = os.path.join(train_dir, "mask")
+edt_h5 = get_model("edt_h5", expand(train_unet_h5, output = ["edt"]))
+edt_json = get_model("edt_json", expand(train_unet_json, output = ["edt"]))
 
-#outline training
-outline_config = os.path.join(configs_dir, "outline-config.cfg") 
-train_outline_dir = os.path.join(train_dir, "outline")
+mask_h5 = get_model("mask_h5", expand(train_unet_h5, output = ["mask"]))
+mask_json = get_model("mask_json", expand(train_unet_json, output = ["mask"]))
 
-#mrcnn training
-train_mrcnn= "/data/HiTIF/data/dl_segmentation_paper/code/python/mask-rcnn/mask-rcnn-latest/train/train-wrapper.sh"
-mrcnn_config = os.path.join(configs_dir, "mrcnn-config.cfg") 
+outline_h5 = get_model("outline_h5", expand(train_unet_h5, output = ["outline"]))
+outline_json = get_model("outline_json", expand(train_unet_json, output = ["outline"]))
+
+#MRCNN training
 train_mrcnn_dir = os.path.join(train_dir, "mrcnn")
-model_h5_file = os.path.join(train_mrcnn_dir, "last.h5")
-mrcnn_train_log = os.path.join(train_mrcnn_dir, "mrcnn_train.log")
-
+train_mrcnn_model_h5_file = os.path.join(train_mrcnn_dir, "last.h5")
+mrcnn_model_h5_file =  get_model("mrcnn_model", train_mrcnn_model_h5_file)
 
 #inference
 
@@ -256,13 +304,6 @@ watershed_2_images_dir = os.path.join(watershed_2_exp,"images")
 
 #watershed_2_workflow = "/data/HiTIF/data/dl_segmentation_paper/knime/workflows/HiTIF_CV7000_Nucleus_Segmentation_DeepLearning_IncResV2FPN_GBDMsWS_nonSLURM_37X_OutLoc_JSON.knwf"
 watershed_2_workflow = "/data/HiTIF/data/dl_segmentation_paper/knime/workflows/HiTIF_CV7000_Nucleus_Segmentation_DeepLearning_IncResV2FPN_watershed2_serial.knwf"
-
-
-#mrcnn_infernce
-mrcnn_images_dir=os.path.join(inference_dir, "mrcnn","{exp}")
-#infer_mrcnn="/gpfs/gsfs11/users/zakigf/mask-rcnn-with-augmented-images/Mask_RCNN/images/cell-images/inference/hitif_ml_segmentation/utils/run_hitif_inference.sh"
-infer_mrcnn="/data/HiTIF/data/dl_segmentation_paper/code/python/mask-rcnn/mask-rcnn-latest/inference/run_hitif_inference.sh"
-mrcnn_infer_log = os.path.join(inference_dir, "mrcnn", "mrcnn_inference-{exp}.log")
 
 #Mean Average Precision
 
@@ -330,48 +371,8 @@ rule combine_augment:
         combine_cmd = combine_script + " " + str(input) + " " +  str(output) + " &> " + str(log)
         print(combine_cmd)
         shell(combine_cmd)
-      
-rule train_gaussian:
-    input:
-        h5 = combined_h5,
-        cfg = gaussian_config
-    output:
-        h5 = os.path.join(train_gaussian_dir, "trained.h5"),
-        json = os.path.join(train_gaussian_dir,"trained.json")
-    run:
-        train_unet_fpn(train_gaussian_dir, input.cfg, input.h5, output.h5, output.json)
-
-rule train_edt:
-    input:
-        h5 = combined_h5,
-        cfg = edt_config
-    output:
-        h5 = os.path.join(train_edt_dir, "trained.h5"),
-        json = os.path.join(train_edt_dir,"trained.json")
-    run:
-        train_unet_fpn(train_edt_dir, input.cfg, input.h5,output.h5, output.json)
-
-
-rule train_mask:
-    input:
-        h5 = combined_h5,
-        cfg = mask_config
-    output:
-        h5 = os.path.join(train_mask_dir, "trained.h5"),
-        json = os.path.join(train_mask_dir,"trained.json")
-    run:
-        print(os.path.abspath(output.json))
-        train_unet_fpn(train_mask_dir, input.cfg, input.h5,output.h5, output.json)
-
-rule train_outline:
-    input:
-        h5 = combined_h5,
-        cfg = outline_config
-    output:
-        h5 = os.path.join(train_outline_dir, "trained.h5"),
-        json = os.path.join(train_outline_dir,"trained.json")
-    run:
-        train_unet_fpn(train_outline_dir, input.cfg, input.h5,output.h5, output.json)
+     
+include: "./rules/train-unet.smk"
 
 
 rule inference_prep:
@@ -389,11 +390,11 @@ rule inference_prep:
 
 rule watershed_2_prep:
     input:
-        gaussian_h5 = rules.train_gaussian.output.h5,
-        gaussian_json = rules.train_gaussian.output.json,
+        gaussian_h5 = gaussian_h5, 
+        gaussian_json = gaussian_json,
 
-        edt_h5 = rules.train_edt.output.h5,
-        edt_json = rules.train_edt.output.json,
+        edt_h5 = edt_h5,
+        edt_json = edt_json,
 
         #The prep is based on the configuration files
         exp_config = get_inference_exp_configurations
@@ -449,70 +450,18 @@ rule map_execute:
         merged_config = get_merged_config(inference_config, exp_config_path ) 
         #Get the inference directory for the method 
         method_name = wildcards.method.replace("/", "")
+        verify_map_inference_images(exp_name, method_name)
         inference_dir = os.path.abspath(get_method_inference_dir(method_name).replace("{exp}", exp_name))
-        knime_json = maps_fun(merged_config,inference_dir,str(output.out_file))
+        output_file = str(output.out_file)
+        out_dir, filename = os.path.split(os.path.abspath(output_file))
+        log_file = os.path.join(out_dir, "log-{0}-{1}.log".format(method_name, exp_name))
+        knime_json = maps_fun(merged_config,inference_dir,output_file)
 
-        shell_cmd = knime_script + " " + maps_workflow + " " + os.path.abspath(knime_json)
+        shell_cmd = knime_script + " " + maps_workflow + " " + os.path.abspath(knime_json) + " &>> " + log_file
         print(shell_cmd)
         shell(shell_cmd)
 
 
-rule train_mrcnn:
-    input:
-        h5 = combined_h5,
-        cfg = mrcnn_config
-    output:
-        model_h5 = model_h5_file
-    log:
-        mrcnn_train_log
-    run:
-         
-        #dl_config = "my_config.cfg"
-        #config_file = os.path.join(train_mrcnn_dir, dl_config)
-        #os.system("cp {0} {1}".format(input.cfg, config_file))
-        cmd = train_mrcnn +  \
-            " --dataset "  + input.h5 +  \
-            " --logs " +  train_mrcnn_dir + \
-            " --latest  "  + output.model_h5 + \ 
-            " -c " + input.cfg \
-            + " &>> {0}".format(str(log))
-        print(cmd)
-        shell(cmd)
 
-
-rule infer_mrcnn:
-    input:
-        model_h5 = rules.train_mrcnn.output.model_h5, 
-        images = get_inference_gray_images,
-        config = rules.inference_prep.output
-    output:
-        out_dir = directory(mrcnn_images_dir)
-    log: 
-        mrcnn_infer_log
-    run:
-
-        #Get the inference parameters
-        config = configparser.ConfigParser()
-        config.optionxform = str
-        config.read(input.config)
-        mrcnn_sec = "mrcnn"
-        mrcnn_params = config[mrcnn_sec] 
-
-        threshold = config.getint(mrcnn_sec, "threshold")
-        cropsize = config.getint(mrcnn_sec, "cropsize")
-        padding = config.getint(mrcnn_sec, "padding")
-
-        os.mkdir(output.out_dir)
-        for image in input.images:
-            cmd = infer_mrcnn +  \
-                ' "{0}" "{1}" "{2}" "{3}" "{4}" "{5}" &>> {6}'.format( \
-                os.path.abspath(image), \
-                os.path.abspath(str(output.out_dir)), \
-                os.path.abspath(str(input.model_h5)), \
-                cropsize, \
-                padding, \
-                threshold,
-                str(log))
-            print(cmd)
-            shell(cmd)
-
+include: "./rules/infer_mrcnn.smk"
+include: "./rules/train_mrcnn.smk"
