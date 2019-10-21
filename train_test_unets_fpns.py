@@ -44,12 +44,16 @@ def get_checkpoint_path(checkpoint_dir):
         checkpoint_path: str
             The Keras path to save the model.
     """
-    
+   
 
     import datetime
     now = datetime.datetime.now()
     log_dir = os.path.join(checkpoint_dir, "{}{:%Y%m%dT%H%M}".format(
         model_name, now))
+
+
+    if not os.path.exists(log_dir):
+        os.makedirs(log_dir)
 
     # Path to save after each epoch. Include placeholders that get filled by Keras.
     checkpoint_path = os.path.join(log_dir, "weights_{}_*epoch*.h5".format(
@@ -72,7 +76,7 @@ def find_last(checkpoint_dir):
     # Get directory names. Each directory corresponds to a model
 
     checkpoint_dir = os.path.abspath(checkpoint_dir)
-    dir_names = next(os.walk(checkpiont_dir))[1]
+    dir_names = next(os.walk(checkpoint_dir))[1]
     key = model_name
     dir_names = filter(lambda f: f.startswith(key), dir_names)
     dir_names = sorted(dir_names)
@@ -94,10 +98,6 @@ def find_last(checkpoint_dir):
     checkpoint = os.path.join(dir_name, checkpoints[-1])
     return checkpoint
 
-
-def get_latest_model(checkpoint_dir):
-    pass
-    
 
 
 def setup_one_gpu(gpu_id_idx=0):        
@@ -156,7 +156,10 @@ def get_model(model_json_fname, model_wts_fname):
 
 def save_model_to_json(modeljsonfname):
     layers = get_feature_layers(backbone_name, 4)
-    model = FPN(input_shape=(None, None, num_channels), classes=num_mask_channels,encoder_weights=encoder_weights,backbone_name=backbone_name,activation=act_fcn,encoder_features=layers)
+    if backbone_type == 'FPN':
+       model = FPN(input_shape=(None, None, num_channels), classes=num_mask_channels,encoder_weights=encoder_weights,backbone_name=backbone_name,activation=act_fcn,encoder_features=layers)
+    elif backbone_type == 'Unet':
+       model = Unet(input_shape=(None, None, num_channels), classes=num_mask_channels,encoder_weights=encoder_weights,backbone_name=backbone_name,activation=act_fcn, encoder_features=layers)
     #model.summary()
     # serialize model to JSON
     model_json = model.to_json()
@@ -165,6 +168,7 @@ def save_model_to_json(modeljsonfname):
 
 def train_generatorh5(params):
     from hitif_losses import dice_coef_loss_bce
+    from hitif_losses import double_head_loss
 	
     print('-'*30)
     print('Loading and preprocessing train data...')
@@ -190,13 +194,15 @@ def train_generatorh5(params):
     if backbone_type == 'FPN': 
        model = FPN(input_shape=(None, None, num_channels), classes=num_mask_channels,encoder_weights=encoder_weights,encoder_freeze=freezeFlag,backbone_name=backbone_name,activation=act_fcn, encoder_features=layers)
     elif backbone_type == 'Unet':
-         model = Unet(input_shape=(None, None, num_channels), classes=num_mask_channels,encoder_weights=encoder_weights,encoder_freeze=freezeFlag,backbone_name=backbone_name,activation=act_fcn, encoder_features=layers)
-    model.summary()
+       model = Unet(input_shape=(None, None, num_channels), classes=num_mask_channels,encoder_weights=encoder_weights,encoder_freeze=freezeFlag,backbone_name=backbone_name,activation=act_fcn, encoder_features=layers)
+    #model.summary()
     #model.compile(optimizer=Adam(lr=1e-5), loss='binary_crossentropy', metrics=['binary_crossentropy','mean_squared_error',dice_coef, dice_coef_batch, dice_coef_loss_bce,focal_loss()])
     #model.compile(optimizer=Adam(lr=1e-3), loss=dice_coef_loss_bce, metrics=['binary_crossentropy','mean_squared_error',dice_coef, dice_coef_batch,focal_loss()])
     #model.compile(optimizer=Adam(lr=1e-3), loss=loss_fcn, metrics=['binary_crossentropy','mean_squared_error',dice_coef, dice_coef_batch,focal_loss()])
     if loss_fcn == 'dice_coef_loss_bce':
         model.compile(optimizer=Adam(lr=1e-3), loss=dice_coef_loss_bce)
+    elif loss_fcn == 'double_head_loss':
+        model.compile(optimizer=Adam(lr=1e-3), loss=double_head_loss)
     else:
         model.compile(optimizer=Adam(lr=1e-3), loss=loss_fcn)
 
@@ -207,36 +213,46 @@ def train_generatorh5(params):
           print('Loading previous weights ...')
           model.load_weights(oldmodelwtsfname)
 
-    # Disable model_checkpoint when using multi-threading generator because of issues overwriting .H5 (model or weights_only)
-    # This is currently a Keras Bug, so let's hack it by saving .h5 file for the best epoch and then symlink it towards the end
-    # <<FIXME>>
-    tmp_modelwtsfname = modelwtsfname.replace(".h5", "{epoch:04d}.h5")
-
-    model_checkpoint = ModelCheckpoint(tmp_modelwtsfname, monitor='val_loss', save_best_only=True, save_weights_only=True)
-    # Currently a Keras Bug
   
-    checkpoint_path = get_checkpoint_path("logs")
+    checkpoint_path = get_checkpoint_path(log_dir_name)
     print("checkpoint_path:", checkpoint_path)
     model_checkpoint = ModelCheckpoint(checkpoint_path, monitor='val_loss', save_best_only=True, save_weights_only=True)
-    reduce_lr = ReduceLROnPlateau(monitor='val_loss', factor=0.1,patience=6, min_lr=1e-6,verbose=1,restore_best_weights=True)
-    model_es = EarlyStopping(monitor='val_loss', min_delta=1e-7, patience=12, verbose=1, mode='auto')
+    reduce_lr = ReduceLROnPlateau(monitor='val_loss', factor=0.1,patience=25, min_lr=1e-6,verbose=1,restore_best_weights=True)
+    model_es = EarlyStopping(monitor='val_loss', min_delta=1e-7, patience=15, verbose=1, mode='auto')
     csv_logger = CSVLogger(csvfname, append=True)
 
+    my_callbacks = [reduce_lr, model_es, csv_logger]
+    #my_callbacks = [model_checkpoint, reduce_lr, model_es, csv_logger]
     print('-'*30)
-    print('Fitting model...')
+    print('Fitting model encoder freeze...')
     print('-'*30)
     if freezeFlag and num_coldstart_epochs > 0:
-        model.fit_generator(generator=training_generator,validation_data=validation_generator,use_multiprocessing=True,workers=num_gen_workers,epochs=num_coldstart_epochs,callbacks=[model_checkpoint, reduce_lr, model_es, csv_logger], verbose=2)
+        model.fit_generator(generator=training_generator,validation_data=validation_generator,use_multiprocessing=True,workers=num_gen_workers,epochs=num_coldstart_epochs,callbacks= my_callbacks, verbose=2)
 
     # release all layers for training
     set_trainable(model) # set all layers trainable and recompile model
+    #model.summary()
+
+    print('-'*30)
+    print('Fitting full model...')
+    print('-'*30)
 
     ## Retrain after the cold-start
-    model.fit_generator(generator=training_generator,validation_data=validation_generator,use_multiprocessing=True,workers=num_gen_workers,epochs=num_finetuning_epochs,callbacks=[model_checkpoint,reduce_lr, model_es, csv_logger], verbose=2)
+    model.fit_generator(generator=training_generator,validation_data=validation_generator,use_multiprocessing=True,workers=num_gen_workers,epochs=num_finetuning_epochs,callbacks=my_callbacks, verbose=2)
+
+    model.save_weights(modelwtsfname)
+
     ## <<FIXME>>: GZ will work on it.
     # Find the last best epoch model weights and then symlink it to the modelwtsfname
-    # Note that the symlink will have issues on NON-Linux OS.	
-    # os.symlink(<last_best_h5>, modelwtsfname)
+    # Note that the symlink will have issues on NON-Linux OS so it is better to copy.
+    '''
+    os.symlink(<last_best_h5>, modelwtsfname)
+    # Or copy last best weights
+    last_best_modelwts_fname = find_last(log_dir_name)
+    from shutil import copyfile
+    copyfile(last_best_modelwts_fname, modelwtsnfname)
+    '''
+    # end
 
 def rotateandflipimages(img):
     assert(img.shape[0] == img.shape[1])
@@ -459,7 +475,9 @@ if __name__ == '__main__':
 
     # Required, number of target channels
     num_mask_channels = args.numberofTargetChannels
-
+    # For h5 generator constructor
+    n_in_channels = num_channels
+    n_out_channels = num_mask_channels
 
     ##
     # Required backbone weights
@@ -532,6 +550,7 @@ if __name__ == '__main__':
     print("-----------------------------------------------------")  
     src_dset_shape, src_dset_type = geth5datasetshape(h5fname, src_datasetname)
     tar_dset_shape, tar_dset_type = geth5datasetshape(h5fname, tar_datasetname)
+    tar_datasetname = list(tar_datasetname)
     
     number_of_imgs = src_dset_shape[0]
     img_rows = src_dset_shape[1]
@@ -552,6 +571,7 @@ if __name__ == '__main__':
           'target_datasetname': tar_datasetname,          
           'batch_size': train_batch_size,
           'n_in_channels': num_channels,
+          'n_out_channels': num_mask_channels,
           'scale_source': scale_source_Flag,
           'scale_target': scale_target_Flag,
           'target_abs_value': target_abs_value_Flag,
@@ -573,6 +593,8 @@ if __name__ == '__main__':
 
 
     model_name = "unet_fpn" 
+    slurm_job_id = os.environ['SLURM_JOB_ID']
+    log_dir_name = os.path.join("/lscratch", slurm_job_id, "logs")
 
     ##print the arguments
     print_args()
@@ -583,7 +605,13 @@ if __name__ == '__main__':
     if mode == "generate":
        save_model_to_json(model_json_fname)
     elif mode == "train":
+       save_model_to_json(model_json_fname)
        train_generatorh5(h5generator_params)
+       #best_model = os.path.abspath(find_last(log_dir_name))
+       #from shutil import copyfile
+       #copyfile(best_model,modelwtsfname)
+       #print('\n Best model {0} symlinked to {1}'.format(best_model, modelwtsfname))
+       print('\n Last model {0} saved'.format(modelwtsfname))
     elif mode == "infer":
        if predictTTAFlag:
           predicttta(model_json_fname, modelwtsfname)
