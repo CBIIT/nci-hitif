@@ -100,6 +100,7 @@ def preprocess_fun(gen_config, experiment, output, h5_exp_file="aug_images.h5"):
             Path to output json file
     """
     aug_sec = "augmentation"
+    general_sec = "general"
     knime_sec = "generate_augmented_H5_KNIMEWorkflow"
     conf_dir = os.path.abspath(os.path.dirname(output))
     aug_file_name = os.path.join(conf_dir, "augment.cfg")
@@ -110,8 +111,15 @@ def preprocess_fun(gen_config, experiment, output, h5_exp_file="aug_images.h5"):
     merged_config.optionxform = str
     merged_config.read([exp_config_path, gen_config])
 
+    
     knime_params = merged_config[knime_sec]
- 
+    general_params = merged_config[general_sec]
+
+    #Convert the image regex and directories to Knime params
+    knime_params["greyimagesrootInputFolder"]  = general_params["input_directory"]
+    knime_params["gtimagesrootInputFolder"] = general_params["ground_truth_directory"]
+    knime_params["gtregexFileSelectionStr"] = general_params["input_regex"]
+    knime_params["greyregexFileSelectionStr"] = general_params["input_regex"]
     knime_params["imgaugconfigfilepath"] = aug_file_name
     aug_dir, aug_h5 = os.path.split(h5_exp_file)
     knime_params["outDirectoryvar"] = os.path.abspath(aug_dir)
@@ -223,3 +231,5 @@ def maps_fun(
         merged_config.write(configfile)  
 
     return knime_json_output
+
+

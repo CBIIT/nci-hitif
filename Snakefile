@@ -212,10 +212,12 @@ configuration = os.path.abspath(config["conf"])
 my_config.read(configuration)
 
 #Find all the input experiment names
-input_exp = eval(my_config["general"]["experiments"])
+input_exp = eval(my_config["general"]["input_experiments"])
 input_exp_names = [exp[0] for exp in input_exp]
 exp_config = [exp[1] for exp in input_exp if os.path.exists(exp[1])]
 
+#Which ML methods to use
+methods = eval(my_config["general"]["methods"])
 
 #Find the work dir
 pipeline_dir = os.path.abspath(my_config["general"]["workdir"])
@@ -309,13 +311,16 @@ watershed_2_workflow = "/data/HiTIF/data/dl_segmentation_paper/knime/workflows/H
 
 maps_dir = "mean-average-precision"
 #Define a method widlcard that can point to ["watershed-2", "watershed-4", "mrcnn"] 
-maps_exp_dir = os.path.join(maps_dir, "{method}", "{exp}")
+maps_method_dir  = os.path.join(maps_dir, "{method}")
+maps_exp_dir = os.path.join(maps_method_dir, "{exp}")
 maps_output_file = os.path.join(maps_exp_dir,"maps.csv")
+maps_output_df = os.path.join(maps_exp_dir,"maps.df")
 maps_workflow = "/data/HiTIF/data/dl_segmentation_paper/knime/workflows/HiTIF_Calculate_mAP_GTvsInference_Python_3Inputs_OutLoc_JSON.knwf"
 
+maps_method_dataframe = os.path.join(maps_method_dir, "maps.df")
 
 #define local rules that will not be submitted to the cluster
-localrules: all, preprocess, combine_augment, inference_prep, watershed_2_prep
+localrules: all, preprocess, combine_augment, inference_prep, watershed_2_prep, map_combine
 
 rule all: 
     input:
@@ -325,7 +330,8 @@ rule all:
 #         expand(watershed_2_knime_json, exp=inference_exp_names)
 #         expand(os.path.join(watershed_2_exp, "images"), exp=inference_exp_names)
          #expand(maps_output_file, exp=inference_exp_names, method = ["mrcnn"]),
-         expand(maps_output_file, exp=inference_exp_names, method = ["watershed-2", "mrcnn"]),
+         #expand(maps_output_file, exp=inference_exp_names, method = methods),
+         expand(maps_method_dataframe, method = methods),
          #expand(exp_merged_config, exp = inference_exp_names) 
 
 #        #combined_h5
@@ -441,7 +447,8 @@ rule map_execute:
        inf_dir = get_wildcard_method_inf_dir
     output:
         #out_dir = directory(maps_exp_dir) 
-        out_file = maps_output_file
+        out_file = maps_output_file,
+        out_df = maps_output_df
     run:
         #print("MAPS:", str(input.images))
         #print("MAPS:", str(output.out_file))
@@ -461,7 +468,28 @@ rule map_execute:
         print(shell_cmd)
         shell(shell_cmd)
 
+        import pandas as pd
+        data = pd.read_csv(output.out_file, index_col=0)
+        exp_series = []
+        exp_series.append(data['AP'].rename("{0}-{1}".format(method_name, exp_name)))
+        df = pd.concat(exp_series, axis=1, keys=[s.name for s in exp_series])
+        df.to_csv(output.out_df)
+         
 
+
+rule map_combine:
+    input:
+        input_maps = expand(maps_output_df.replace("{method}", "{{method}}"), exp=inference_exp_names)
+    output:
+        method_csv = maps_method_dataframe  
+    run:     
+        import pandas as pd 
+        exp_series = []
+        for maps in input.input_maps:
+            data = pd.read_csv(maps, index_col=0)
+            exp_series.append(data)
+        df = pd.concat(exp_series, axis=1)
+        df.to_csv(output.method_csv)
 
 include: "./rules/infer_mrcnn.smk"
 include: "./rules/train_mrcnn.smk"
