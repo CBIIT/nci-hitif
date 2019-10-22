@@ -461,7 +461,5 @@ rule map_execute:
         print(shell_cmd)
         shell(shell_cmd)
 
-
-
 include: "./rules/infer_mrcnn.smk"
 include: "./rules/train_mrcnn.smk"
