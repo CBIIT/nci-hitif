@@ -261,7 +261,7 @@ dl_config = "my_config.cfg"
 train_unet_fpn_script = "/data/HiTIF/data/dl_segmentation_paper/code/python/unet_fpn/train_model.sh"
 
 train_unet_dir = os.path.join(train_dir, "{output}")
-train_unet_h5 = os.path.join(train_unet_dir, "trained.h5")
+train_unet_h5 = os.path.join(train_unet_dir, "trained.npy")
 train_unet_json = os.path.join(train_unet_dir,"trained.json")
 
 gaussian_h5 = get_model("gaussian_h5", expand(train_unet_h5, output = ["gaussian"]))
@@ -305,7 +305,8 @@ watershed_2_images_dir = os.path.join(watershed_2_exp,"images")
 
 
 #watershed_2_workflow = "/data/HiTIF/data/dl_segmentation_paper/knime/workflows/HiTIF_CV7000_Nucleus_Segmentation_DeepLearning_IncResV2FPN_GBDMsWS_nonSLURM_37X_OutLoc_JSON.knwf"
-watershed_2_workflow = "/data/HiTIF/data/dl_segmentation_paper/knime/workflows/HiTIF_CV7000_Nucleus_Segmentation_DeepLearning_IncResV2FPN_watershed2_serial.knwf"
+watershed_2_workflow = "/data/HiTIF/data/dl_segmentation_paper/knime/workflows/HiTIF_CV7000_Nucleus_Segmentation_DeepLearning_IncResV2FPN_watershed2_serial_npy.knwf"
+#watershed_2_workflow = "/data/HiTIF/data/dl_segmentation_paper/test-knime/watershed-2/knime/HiTIF_CV7000_Nucleus_Segmentation_DeepLearning_IncResV2FPN_watershed2_serial_npy.knwf"
 
 #Mean Average Precision
 
