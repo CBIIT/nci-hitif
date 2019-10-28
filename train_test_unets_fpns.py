@@ -28,6 +28,7 @@ from segmentation_models.backbones import get_feature_layers
 
 from generator_h5_multioutput import DataGeneratorH5
 import hitif_losses
+from utils import Checkpoints
 K.set_image_data_format('channels_last')  # TF dimension ordering in this code
 
 
@@ -151,7 +152,9 @@ def get_model(model_json_fname, model_wts_fname):
             model = model_from_json(f.read())    
     #model.summary()     
     # Load weights into the new model
-    model.load_weights(model_wts_fname)
+    weights = np.load(model_wts_fname, allow_pickle=True)
+    model.set_weights(weights)
+    #model.load_weights(model_wts_fname)
     return model      
 
 def save_model_to_json(modeljsonfname):
@@ -211,18 +214,23 @@ def train_generatorh5(params):
        if os.path.isfile(oldmodelwtsfname) and reloadFlag :
           print('-'*30)
           print('Loading previous weights ...')
-          model.load_weights(oldmodelwtsfname)
+
+          weights = np.load(model_wts_fname, allow_pickle=True)
+          model.set_weights(weights)
+          #model.load_weights(oldmodelwtsfname)
 
   
     checkpoint_path = get_checkpoint_path(log_dir_name)
     print("checkpoint_path:", checkpoint_path)
     model_checkpoint = ModelCheckpoint(checkpoint_path, monitor='val_loss', save_best_only=True, save_weights_only=True)
+    custom_checkpoint = Checkpoints(checkpoint_path, monitor='val_loss', verbose = 1)
     reduce_lr = ReduceLROnPlateau(monitor='val_loss', factor=0.1,patience=25, min_lr=1e-6,verbose=1,restore_best_weights=True)
     model_es = EarlyStopping(monitor='val_loss', min_delta=1e-7, patience=15, verbose=1, mode='auto')
     csv_logger = CSVLogger(csvfname, append=True)
 
-    my_callbacks = [reduce_lr, model_es, csv_logger]
+    #my_callbacks = [reduce_lr, model_es, csv_logger]
     #my_callbacks = [model_checkpoint, reduce_lr, model_es, csv_logger]
+    my_callbacks = [custom_checkpoint, reduce_lr, model_es, csv_logger]
     print('-'*30)
     print('Fitting model encoder freeze...')
     print('-'*30)
@@ -239,8 +247,6 @@ def train_generatorh5(params):
 
     ## Retrain after the cold-start
     model.fit_generator(generator=training_generator,validation_data=validation_generator,use_multiprocessing=True,workers=num_gen_workers,epochs=num_finetuning_epochs,callbacks=my_callbacks, verbose=2)
-
-    model.save_weights(modelwtsfname)
 
     ## <<FIXME>>: GZ will work on it.
     # Find the last best epoch model weights and then symlink it to the modelwtsfname
@@ -594,7 +600,8 @@ if __name__ == '__main__':
 
     model_name = "unet_fpn" 
     slurm_job_id = os.environ['SLURM_JOB_ID']
-    log_dir_name = os.path.join("/lscratch", slurm_job_id, "logs")
+    #log_dir_name = os.path.join("/lscratch", slurm_job_id, "logs")
+    log_dir_name = os.path.join(os.path.abspath("."))
 
     ##print the arguments
     print_args()
@@ -607,11 +614,13 @@ if __name__ == '__main__':
     elif mode == "train":
        save_model_to_json(model_json_fname)
        train_generatorh5(h5generator_params)
-       #best_model = os.path.abspath(find_last(log_dir_name))
-       #from shutil import copyfile
+       best_model = os.path.abspath(find_last(log_dir_name))
+       from shutil import copyfile
+       os.symlink(best_model, modelwtsfname)
+       print('\n Best model {0} symlinked to {1}'.format(best_model, modelwtsfname))
+       exit(0)
        #copyfile(best_model,modelwtsfname)
-       #print('\n Best model {0} symlinked to {1}'.format(best_model, modelwtsfname))
-       print('\n Last model {0} saved'.format(modelwtsfname))
+       #print('\n Last model {0} saved'.format(modelwtsfname))
     elif mode == "infer":
        if predictTTAFlag:
           predicttta(model_json_fname, modelwtsfname)
