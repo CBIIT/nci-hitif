@@ -36,7 +36,7 @@ def get_merged_config(general_config, experiment_config):
 
     merged_config = configparser.ConfigParser()
     merged_config.optionxform = str
-    merged_config.read([experiment_config, general_config])
+    merged_config.read([general_config, experiment_config])
     return merged_config
 
 def watershed_2_fun(gen_config, 
@@ -109,7 +109,7 @@ def preprocess_fun(gen_config, experiment, output, h5_exp_file="aug_images.h5"):
 
     merged_config = configparser.ConfigParser()
     merged_config.optionxform = str
-    merged_config.read([exp_config_path, gen_config])
+    merged_config.read([gen_config, exp_config_path])
 
     
     knime_params = merged_config[knime_sec]
