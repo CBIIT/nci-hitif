@@ -215,7 +215,7 @@ def train_generatorh5(params):
           print('-'*30)
           print('Loading previous weights ...')
 
-          weights = np.load(model_wts_fname, allow_pickle=True)
+          weights = np.load(oldmodelwtsfname, allow_pickle=True)
           model.set_weights(weights)
           #model.load_weights(oldmodelwtsfname)
 
@@ -506,6 +506,8 @@ if __name__ == '__main__':
     backbone_type = args.architectureType # "FPN" or "Unet"
     backbone_name =  args.backboneName # "inceptionresnetv2", "resnet152"
     encoder_weights =  args.backboneEncoderWeightsName # "imagenet", "None", "imagenet11k"
+    if encoder_weights == "None":
+        encoder_weights = None
     act_fcn = args.activationFunction # "linear", "sigmoid" "softmax", "tanh", etc.
     prefix_model= args.outputModelPrefix # "IncResV2FPN", "ResNet152FPN", UIncResV2Net, UResNet152Net
     suffix_model=args.outputModelSuffix
