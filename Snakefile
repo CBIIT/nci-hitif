@@ -237,7 +237,8 @@ gen_aug_config = os.path.join(configs_dir, "imgaug.cfg")
 h5_exp_file = "aug_images.h5"
 aug_config_file = "config.json"
 
-knime_script = "/data/HiTIF/data/dl_segmentation_paper/knime/launch_scripts/launch_knime37x_workflow.sh"
+#knime_script = "/data/HiTIF/data/dl_segmentation_paper/knime/launch_scripts/launch_knime37x_workflow.sh"
+knime_script = "/data/HiTIF/data/dl_segmentation_paper/knime/launch_scripts/launch_knime37x_workflow_py27.sh"
 preprocess_dir = "preprocess"
 
 #Augment
@@ -246,7 +247,7 @@ augment_workflow = "/data/HiTIF/data/dl_segmentation_paper/knime/workflows/HiTIF
 augment_log = os.path.join(augment_dir, "{exp}", "augment.log")
 
 #Combine
-combine_script="python /data/HiTIF/data/dl_segmentation_paper/code/python/combine-all.py"
+combine_script="source /data/HiTIF/progs/miniconda/miniconda2/bin/activate segmentation_model; python /data/HiTIF/data/dl_segmentation_paper/code/python/combine-all.py"
 h5_location = os.path.join(augment_dir, "{exp}", h5_exp_file)
 combined_h5 = os.path.join("combined", h5_exp_file)
 combined_log = os.path.join("combined", "combine.log")
