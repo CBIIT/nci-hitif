@@ -22,6 +22,7 @@ import keras.backend as K
 import keras.layers as KL
 import keras.engine as KE
 import keras.models as KM
+import time
 
 from mrcnn import utils
 
@@ -1684,11 +1685,26 @@ def data_generator(dataset, config, shuffle=True, augment=False, augmentation=No
                                              backbone_shapes,
                                              config.BACKBONE_STRIDES,
                                              config.RPN_ANCHOR_STRIDE)
+    #GZ
+    #print("GZ generator initialization done once")
+    #dataset.saved_batch = False
+
 
     # Keras requires a generator to run indefinitely.
     while True:
         try:
+
+            #GZ To profile data loading overhead. Comment if not needed
+            #if  dataset.saved_batch:
+                #print("GZ using cached data")
+            #    yield dataset.cached_inputs, dataset.cached_outputs
+            #    continue
+
             # Increment index to pick next image. Shuffle if at the start of an epoch.
+
+            #GZ
+            #t1s = time.time()
+
             image_index = (image_index + 1) % len(image_ids)
             if shuffle and image_index == 0:
                 np.random.shuffle(image_ids)
@@ -1703,20 +1719,30 @@ def data_generator(dataset, config, shuffle=True, augment=False, augmentation=No
                               augmentation=None,
                               use_mini_mask=config.USE_MINI_MASK)
             else:
+
                 image, image_meta, gt_class_ids, gt_boxes, gt_masks = \
                     load_image_gt(dataset, config, image_id, augment=augment,
                                 augmentation=augmentation,
                                 use_mini_mask=config.USE_MINI_MASK)
 
             # Skip images that have no instances. This can happen in cases
+
             # where we train on a subset of classes and the image doesn't
             # have any of the classes we care about.
             if not np.any(gt_class_ids > 0):
                 continue
 
+            #GZ
+            #t1e = time.time()
+            #print("GZ Load image time:{0}".format(t1e-t1s))
+            #t1s = time.time()
+
             # RPN Targets
             rpn_match, rpn_bbox = build_rpn_targets(image.shape, anchors,
                                                     gt_class_ids, gt_boxes, config)
+
+
+
 
             # Mask R-CNN Targets
             if random_rois:
@@ -1797,7 +1823,12 @@ def data_generator(dataset, config, shuffle=True, augment=False, augmentation=No
                             batch_mrcnn_class_ids, -1)
                         outputs.extend(
                             [batch_mrcnn_class_ids, batch_mrcnn_bbox, batch_mrcnn_mask])
-
+                #GZ
+                #import copy
+                #dataset.cached_inputs = copy.deepcopy(inputs)
+                #dataset.cached_outputs = copy.deepcopy(outputs)
+                #dataset.saved_batch = True
+                #print("GZ: Reaching original yield")
                 yield inputs, outputs
 
                 # start a new batch
@@ -2081,6 +2112,7 @@ class MaskRCNN():
                 "Could not find model directory under {}".format(self.model_dir))
         # Pick last directory
         dir_name = os.path.join(self.model_dir, dir_names[-1])
+
         # Find the last checkpoint
         checkpoints = next(os.walk(dir_name))[2]
         checkpoints = filter(lambda f: f.startswith("mask_rcnn"), checkpoints)
@@ -2092,7 +2124,8 @@ class MaskRCNN():
         checkpoint = os.path.join(dir_name, checkpoints[-1])
         return checkpoint
 
-    def load_weights(self, filepath, by_name=False, exclude=None):
+    #def load_weights(self, filepath, by_name=False, exclude=None):
+    def load_weights(self, filepath, by_name=False, exclude=None, reset_init_epoch=False):
         """Modified version of the corresponding Keras function with
         the addition of multi-GPU support and the ability to exclude
         some layers from loading.
@@ -2134,7 +2167,8 @@ class MaskRCNN():
             f.close()
 
         # Update the log directory
-        self.set_log_dir(filepath)
+        #self.set_log_dir(filepath)
+        self.set_log_dir(filepath, reset_epoch = reset_init_epoch)
 
     def get_imagenet_weights(self):
         """Downloads ImageNet trained weights from Keras.
@@ -2235,7 +2269,8 @@ class MaskRCNN():
                 log("{}{:20}   ({})".format(" " * indent, layer.name,
                                             layer.__class__.__name__))
 
-    def set_log_dir(self, model_path=None):
+    #def set_log_dir(self, model_path=None):
+    def set_log_dir(self, model_path=None, reset_epoch=False):
         """Sets the model log directory and epoch counter.
 
         model_path: If None, or a format different from what this code uses
@@ -2260,7 +2295,11 @@ class MaskRCNN():
                                         int(m.group(4)), int(m.group(5)))
                 # Epoch number in file is 1-based, and in Keras code it's 0-based.
                 # So, adjust for that then increment by one to start from the next epoch
-                self.epoch = int(m.group(6)) - 1 + 1
+                if reset_epoch: 
+                    self.epoch = 0
+                else:
+                    self.epoch = int(m.group(6)) - 1 + 1
+                #self.epoch = int(m.group(6)) - 1 + 1
                 print('Re-starting from epoch %d' % self.epoch)
 
         # Directory for training logs
@@ -2340,7 +2379,8 @@ class MaskRCNN():
             keras.callbacks.TensorBoard(log_dir=self.log_dir,
                                         histogram_freq=0, write_graph=True, write_images=False),
             keras.callbacks.ModelCheckpoint(self.checkpoint_path,
-                                            verbose=0, save_weights_only=True),
+                                            save_best_only=True, 
+                                            verbose=1, save_weights_only=True),
         ]
 
         # Add custom callbacks to the list
@@ -2361,6 +2401,9 @@ class MaskRCNN():
         else:
             workers = multiprocessing.cpu_count()
 
+        workers = 1
+        print("Data generator workers:", workers)
+
         self.keras_model.fit_generator(
             train_generator,
             initial_epoch=self.epoch,
@@ -2369,9 +2412,12 @@ class MaskRCNN():
             callbacks=callbacks,
             validation_data=val_generator,
             validation_steps=self.config.VALIDATION_STEPS,
-            max_queue_size=100,
+            #GZ queue size was 20
+            max_queue_size=20,
             workers=workers,
-            use_multiprocessing=True,
+            #GZ reversed to false
+            use_multiprocessing=False,
+            verbose = 1
         )
         self.epoch = max(self.epoch, epochs)
 
