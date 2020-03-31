@@ -74,7 +74,7 @@ def find_last(checkpoint_dir):
     Returns:
         The path of the last checkpoint file
     """
-    # Get directory names. Each directory corresponds to a model
+    # Get directory names. 
 
     checkpoint_dir = os.path.abspath(checkpoint_dir)
     dir_names = next(os.walk(checkpoint_dir))[1]
