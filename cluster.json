@@ -1,0 +1,62 @@
+{
+    "__default__" :
+    {
+        "mem"  : "50g",
+        "cpus" : "16", 
+        "out"  : "log/{rule}-%j.out",
+        "err"  : "log/{rule}-%j.err",
+        "partition" : "norm",
+        "extras": "--gres=lscratch:50",
+    },
+    "augment" :
+    {
+        "out"  : "log/{rule}_{wildcards.exp}-%j.out",
+        "err"  : "log/{rule}_{wildcards.exp}-%j.err",
+        "time" : "10:00:00",
+        "jobname": "hitif-augment"
+    },
+    "train_unet" :
+    {
+        "time" : "6-00:00",
+        "jobname": "hitif-unet",
+        "partition" : "gpu", 
+        "extras": "--gres=lscratch:50,gpu:p100:1",
+        "cpus"  : "8"
+    },
+    "train_mrcnn" :
+    {
+        "time" : "8-00:00",
+        "jobname": "hitif-mrcnn-train",
+        "partition" : "gpu", 
+        "extras": "--gres=gpu:p100:1",
+        "cpus" : "8"
+    },
+    "infer_mrcnn" :
+    {
+        "out"  : "log/{rule}_{wildcards.exp}-%j.out",
+        "err"  : "log/{rule}_{wildcards.exp}-%j.err",
+        "time" : "2:00:00",
+        "jobname": "hitif-mrcnn-infer",
+        "partition" : "gpu", 
+        "extras": "--gres=gpu:p100:1",
+        "cpus" : "4"
+    },
+    "watershed_2_execute" :
+    {
+        "out"  : "log/{rule}_{wildcards.exp}-%j.out",
+        "err"  : "log/{rule}_{wildcards.exp}-%j.err",
+        "time" : "2:00:00",
+        "jobname": "hitif-watershed2",
+        "partition" : "gpu", 
+        "extras": "--gres=lscratch:50,gpu:p100:1",
+        "cpus" : "8"
+    },
+    "map_execute" :
+    {
+
+        "out"  : "log/{rule}_{wildcards.method}_{wildcards.exp}-%j.out",
+        "err"  : "log/{rule}_{wildcards.method}_{wildcards.exp}-%j.err",
+        "time" : "1:00:00",
+        "jobname": "hitif-map-execute"
+    }
+}
