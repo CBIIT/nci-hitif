@@ -1,0 +1,74 @@
+---
+title: "Generation of the Figures for the DL Nuclear Segmentation Manuscript"
+date: "Apr 2 2020"
+output: html_document
+---
+
+### Analysis initialization
+Load the required libraries
+```{r}
+library(tidyverse)
+library(readr)
+library(fs)
+library(curl)
+library(ggthemes)
+```
+
+Set `knitr` and `ggplot2` options.
+```{r}
+knitr::opts_chunk$set(
+    cache = FALSE,
+    fig.path = "Output/",
+    dev = c("pdf", "png"),
+    message = FALSE,
+    warning = FALSE
+    )
+
+theme_set(theme_bw())
+
+theme_update(
+  axis.text.x = element_text(
+    angle = -45,
+    hjust = 0,
+    vjust = 0.5
+  ),
+  axis.text.y = element_text(hjust = 0)
+)
+```
+
+### Read and process data and metadata
+Define a function to calculate the F1 score based on the number of true positives, false positives and false negatives.
+```{r}
+calculate_F1 <- function(tp, fn, fp){
+  tp/(tp + (fn + fp)/2)
+}
+```
+
+Download unzip the input results of the inference experiments from Figshare.
+```{r}
+URL <- "https://ndownloader.figshare.com/files/22179732"
+curl_download(URL, "data.zip")
+unzip("data.zip")
+```
+
+Recursively read ands process all the data from all the paper runs. 
+```{r message=FALSE}
+raw_tbl <- dir_ls("Data", 
+                  recurse = T,
+                  glob = "*.csv") %>%
+  set_names() %>%
+  map_df(read_csv, .id = "filename") %>%
+  select(filename, 
+         thres = `IoU(Threshold)`,
+         TP = `Sum(all_tp)`,
+         FP = `Sum(all_fp)`,
+         FN = `Sum(all_fn)`,
+         mAP = AP) %>%
+  mutate(F1 = calculate_F1(tp = TP,
+                           fn = FN,
+                           fp = FP))
+```
+
+```{r}
+glimpse(raw_tbl)
+```

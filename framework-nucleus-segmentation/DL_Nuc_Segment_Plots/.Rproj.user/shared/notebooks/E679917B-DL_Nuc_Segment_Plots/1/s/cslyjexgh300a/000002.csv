@@ -1,0 +1,31 @@
+"0","md_tbl <- read_csv(""Metadata/Metadata.csv"")"
+"2","Parsed with column specification:
+cols(
+  run = [32mcol_double()[39m,
+  train_set = [31mcol_character()[39m,
+  train_size = [31mcol_character()[39m,
+  aug = [31mcol_character()[39m,
+  epochs = [31mcol_character()[39m,
+  model = [31mcol_character()[39m,
+  initialization = [31mcol_character()[39m
+)
+"
+"0","glimpse(md_tbl)"
+"1","Rows: 83"
+"1",""
+"1","
+"
+"1","Columns: 7"
+"1",""
+"1","
+"
+"1","$ run            [3m[90m<dbl>[39m[23m 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37…
+$ train_set      [3m[90m<chr>[39m[23m ""MCF10A"", ""MCF10A"", ""MCF10A"", ""MCF10A"", ""MCF10A"", ""All"", ""All"", ""All"", ""All"", ""All"", ""All"", ""All"", ""All"", ""All"", ""Eosinophils"", ""All"", ""A…
+$ train_size     [3m[90m<chr>[39m[23m ""1X"", ""1X"", ""1X"", ""1X"", ""1X"", ""1X"", ""1X"", ""1X"", ""1X"", ""1X"", ""2X"", ""1X"", ""2X"", ""1X"", ""0.25X"", ""1X"", ""1X"", ""1X"", ""0.5X"", ""2X"", ""1X"", ""1X"", …
+$ aug            [3m[90m<chr>[39m[23m ""Full"", ""Full"", ""Full"", ""Full"", ""Full"", ""Full"", ""Full"", ""Full"", ""Full"", ""Full"", ""Full"", ""Full"", ""Full"", ""Full"", ""Full"", ""Full"", ""Full"", ""…
+$ epochs         [3m[90m<chr>[39m[23m ""1X"", ""1X"", ""1X"", ""1X"", ""1X"", ""1X"", ""1X"", ""1X"", ""1X"", ""1X"", ""1X"", ""0.5X"", ""1X"", ""0.5X"", ""1X"", ""0.25X"", ""0.5X"", ""0.75X"", ""1X"", ""1X"", ""1X"",…
+$ model          [3m[90m<chr>[39m[23m ""MRCNN"", ""Kaggle_5th"", ""MRCNN"", ""FPN2-WS"", ""FPN2-WS"", ""MRCNN"", ""Kaggle_5th"", ""MRCNN"", ""FPN2-WS"", ""FPN2-WS"", ""FPN2-WS"", ""FPN2-WS"", ""FPN2-W…
+$ initialization [3m[90m<chr>[39m[23m ""Pre-initialized"", ""Random"", ""Random"", ""Random"", ""Pre-initialized"", ""Pre-initialized"", ""Pre-initialized"", ""Random"", ""Random"", ""Pre-initia…"
+"1",""
+"1","
+"

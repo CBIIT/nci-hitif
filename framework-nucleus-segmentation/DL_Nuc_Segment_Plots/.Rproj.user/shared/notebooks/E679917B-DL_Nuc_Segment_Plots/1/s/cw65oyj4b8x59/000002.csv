@@ -1,0 +1,3 @@
+"0","calculate_F1 <- function(tp, fn, fp){"
+"0","  tp/(tp + (fn + fp)/2)"
+"0","}"

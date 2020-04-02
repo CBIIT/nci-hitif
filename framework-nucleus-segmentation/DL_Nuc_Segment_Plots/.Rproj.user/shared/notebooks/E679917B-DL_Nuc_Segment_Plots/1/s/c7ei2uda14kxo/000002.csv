@@ -1,0 +1,1 @@
+"0","training_set <- F1_07_tbl %>% filter(run %in% c(1, 5, 6, 10, 29, 30, 65, 66))"

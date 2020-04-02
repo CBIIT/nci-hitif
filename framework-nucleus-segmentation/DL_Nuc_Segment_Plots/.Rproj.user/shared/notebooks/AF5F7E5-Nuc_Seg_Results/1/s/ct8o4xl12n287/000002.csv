@@ -1,0 +1,45 @@
+"0","levs3 <- c(""Random"", ""Pre-initialized"")"
+"0","levs4 <- c(""MCF10A"",""Eosinophils"", ""MCF10A_HCT116"", ""MCF10A_HCT116_U2OS"", ""All"", ""BBBC038"")"
+"0","levs5 <- c(""MRCNN"", ""FPN2-WS"", ""Jacobkie"", ""Kaggle_5th"")"
+"0",""
+"0",""
+"0","scores_tbl <- raw_tbl %>% "
+"0","           left_join(md_tbl, by = c(""run"")) %>%"
+"0","           mutate(initialization = factor(initialization, levels = levs3),"
+"0","                  train_set = factor(train_set, levels = levs4),"
+"0","                  train_size = factor(train_size),"
+"0","                  run = factor(run),"
+"0","                  aug = factor(aug),"
+"0","                  epochs = factor(epochs),"
+"0","                  model = factor(model, levels = levs5)) %>%"
+"0","           filter(replicate != ""Original"" ) %>%"
+"0","           filter(!(cell_line == ""MCF10A"" & replicate == ""Technical""))"
+"0",""
+"0","glimpse(scores_tbl)"
+"1","Rows: 3,260"
+"1",""
+"1","
+"
+"1","Columns: 16"
+"1",""
+"1","
+"
+"1","$ filename       [3m[90m<chr>[39m[23m ""Data/run001/mean-average-precision/mrcnn/MCF10A_Biological/maps.csv"", ""Data/run001/mean-average-precision/mrcnn/MCF10A_Biological/maps.c…
+$ thres          [3m[90m<dbl>[39m[23m 0.50, 0.55, 0.60, 0.65, 0.70, 0.75, 0.80, 0.85, 0.90, 0.95, 0.50, 0.55, 0.60, 0.65, 0.70, 0.75, 0.80, 0.85, 0.90, 0.95, 0.50, 0.55, 0.60,…
+$ TP             [3m[90m<dbl>[39m[23m 1116, 1113, 1113, 1111, 1109, 1105, 1103, 1097, 1089, 919, 1300, 1289, 1274, 1261, 1235, 1191, 1115, 947, 491, 33, 485, 484, 484, 484, 48…
+$ FP             [3m[90m<dbl>[39m[23m 28, 31, 31, 33, 35, 39, 41, 47, 55, 225, 83, 94, 109, 122, 148, 192, 268, 436, 892, 1350, 14, 15, 15, 15, 16, 16, 20, 26, 29, 114, 110, 1…
+$ FN             [3m[90m<dbl>[39m[23m 23, 26, 26, 28, 30, 34, 36, 42, 50, 220, 133, 144, 159, 172, 198, 242, 318, 486, 942, 1400, 11, 12, 12, 12, 13, 13, 17, 23, 26, 111, 42, …
+$ mAP            [3m[90m<dbl>[39m[23m 0.95629820, 0.95128205, 0.95128205, 0.94795222, 0.94463373, 0.93803056, 0.93474576, 0.92495784, 0.91206030, 0.67375367, 0.85751979, 0.844…
+$ F1             [3m[90m<dbl>[39m[23m 0.97766097, 0.97503285, 0.97503285, 0.97328077, 0.97152869, 0.96802453, 0.96627245, 0.96101621, 0.95400788, 0.80508103, 0.92329545, 0.915…
+$ run            [3m[90m<fct>[39m[23m 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2,…
+$ cell_line      [3m[90m<fct>[39m[23m MCF10A, MCF10A, MCF10A, MCF10A, MCF10A, MCF10A, MCF10A, MCF10A, MCF10A, MCF10A, HCT116, HCT116, HCT116, HCT116, HCT116, HCT116, HCT116, H…
+$ replicate      [3m[90m<fct>[39m[23m Biological, Biological, Biological, Biological, Biological, Biological, Biological, Biological, Biological, Biological, Biological, Biolo…
+$ train_set      [3m[90m<fct>[39m[23m MCF10A, MCF10A, MCF10A, MCF10A, MCF10A, MCF10A, MCF10A, MCF10A, MCF10A, MCF10A, MCF10A, MCF10A, MCF10A, MCF10A, MCF10A, MCF10A, MCF10A, M…
+$ train_size     [3m[90m<fct>[39m[23m 1X, 1X, 1X, 1X, 1X, 1X, 1X, 1X, 1X, 1X, 1X, 1X, 1X, 1X, 1X, 1X, 1X, 1X, 1X, 1X, 1X, 1X, 1X, 1X, 1X, 1X, 1X, 1X, 1X, 1X, 1X, 1X, 1X, 1X, 1…
+$ aug            [3m[90m<fct>[39m[23m Full, Full, Full, Full, Full, Full, Full, Full, Full, Full, Full, Full, Full, Full, Full, Full, Full, Full, Full, Full, Full, Full, Full,…
+$ epochs         [3m[90m<fct>[39m[23m 1X, 1X, 1X, 1X, 1X, 1X, 1X, 1X, 1X, 1X, 1X, 1X, 1X, 1X, 1X, 1X, 1X, 1X, 1X, 1X, 1X, 1X, 1X, 1X, 1X, 1X, 1X, 1X, 1X, 1X, 1X, 1X, 1X, 1X, 1…
+$ model          [3m[90m<fct>[39m[23m MRCNN, MRCNN, MRCNN, MRCNN, MRCNN, MRCNN, MRCNN, MRCNN, MRCNN, MRCNN, MRCNN, MRCNN, MRCNN, MRCNN, MRCNN, MRCNN, MRCNN, MRCNN, MRCNN, MRCN…
+$ initialization [3m[90m<fct>[39m[23m Pre-initialized, Pre-initialized, Pre-initialized, Pre-initialized, Pre-initialized, Pre-initialized, Pre-initialized, Pre-initialized, P…"
+"1",""
+"1","
+"

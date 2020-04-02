@@ -1,0 +1,25 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1585855035922.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "F9DF81F6",
+    "lastKnownWriteTime" : 1585855293,
+    "last_content_update" : 1585855293040,
+    "path" : "~/National Institutes of Health/NCI-CCR HiTIF (O365) - image segmentation/Manuscript/DL_Nuc_Segment_Plots/DL_Nuc_Seg_Results.Rmd",
+    "project_path" : "DL_Nuc_Seg_Results.Rmd",
+    "properties" : {
+        "cursorPosition" : "13,6",
+        "scrollLine" : "0"
+    },
+    "read_only" : false,
+    "read_only_alternatives" : [
+    ],
+    "relative_order" : 1,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_markdown"
+}

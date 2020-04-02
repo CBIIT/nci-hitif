@@ -1,0 +1,2 @@
+"0","md_explore <- md_tbl %>% select(model, initialization, train_set, train_size, epochs, aug, run) %>%"
+"0","  arrange(model, initialization, train_set, train_size, epochs, aug, run)"
