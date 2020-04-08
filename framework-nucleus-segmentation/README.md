@@ -5,8 +5,11 @@ Deep learning is rapidly becoming the technique of choice for automated segmenta
 
 ### This repo:
 Different parts of the pipeline are shared as a reference implementation in this github. 
-The inference and visualization directories can run on typical laptop.
+The inference, visualization, and Supervisely directories can run on typical laptop.
 
 Here is the description of the repo:
 
-* [Supervisely Wrapper](./supervisely-wrapper): contains the code required for exporting/importing preminelary annotation and ground truth from supervisely
+* [Supervisely Wrapper](./supervisely-wrapper): contains the code required for exporting/importing preminelary annotation and ground truth from supervisely.
+
+* [mrcnn](./mrcnn): containes a forked version of Matterport with addition of the models we used for training, and the postprocessing done for inference. The inference part is demonstrated in the [inference](./inference) directory.
+
