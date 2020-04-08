@@ -5,7 +5,7 @@ Deep learning is rapidly becoming the technique of choice for automated segmenta
 
 ### This repo:
 Different parts of the pipeline are shared as a reference implementation in this github. 
-The inference, visualization, and Supervisely directories can run on typical laptop.
+The [inference](./inference), [visualization](./visualization), and [supervisely](./supervisely-wrapper) directories can run on typical laptop.
 
 Here is the description of the repo:
 
