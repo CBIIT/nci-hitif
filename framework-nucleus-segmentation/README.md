@@ -11,5 +11,11 @@ Here is the description of the repo:
 
 * [Supervisely Wrapper](./supervisely-wrapper): contains the code required for exporting/importing preminelary annotation and ground truth from supervisely.
 
-* [mrcnn](./mrcnn): containes a forked version of Matterport with addition of the models we used for training, and the postprocessing done for inference. The inference part is demonstrated in the [inference](./inference) directory.
+* [Image Augmentation](image-augmentation): contains a the configurable augmentation wrapper implemented around imgaug.
+
+* [mrcnn](./mrcnn): containes a forked version of Matterport MRCNN implemenation with our addition for the model's parameter we used for training, and the postprocessing pipeline after inference. The inference part is demonstrated in the [inference](./inference) directory.
+
+* [Feature Pyramid Netwoks](./fpn): contains a configurable wrappers, generators, and training around models we used to predict the distance transform and the blurred contour. Used used the [segmenation-models](https://github.com/qubvel/segmentation_models) library.
+
+
 
