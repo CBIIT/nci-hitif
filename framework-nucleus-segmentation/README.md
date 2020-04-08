@@ -17,7 +17,7 @@ Here is the description of the repo:
 
 * [Feature Pyramid Netwoks](./fpn): contains a configurable wrappers, generators, and training around models we used to predict the distance transform and the blurred contour. Used used the [segmenation-models](https://github.com/qubvel/segmentation_models) library.
 
-* [Pipeline](./pipeline): Contains the Snakemake pipeline that we used to conduct our experiments on NIH Biowulf HPC cluster. This implementation is provided for reference only.
+* [Pipeline](./pipeline): Contains the Snakemake pipeline that we used to conduct our experiments on [NIH Biowulf](https://hpc.nih.gov/) HPC cluster. Some of the rules in the pipeline uses [Knime](https://www.knime.com/) workflows shown in this [directory](./knime) This implementation is provided for reference only. 
 
 
 
