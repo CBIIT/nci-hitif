@@ -9,4 +9,4 @@ The inference and visualization directories can run on typical laptop.
 
 Here is the description of the repo:
 
-* [Supervisely Wrapper](https://github.com/CBIIT/nci-hitif/tree/master/framework-nucleus-segmentation/supervisely-wrapper) contains the code required for exporting/importing preminelary annotation and ground truth from supervisely
+* [Supervisely Wrapper](https://github.com/CBIIT/nci-hitif/tree/master/framework-nucleus-segmentation/supervisely-wrapper): contains the code required for exporting/importing preminelary annotation and ground truth from supervisely
