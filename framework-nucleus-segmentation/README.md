@@ -13,9 +13,11 @@ Here is the description of the repo:
 
 * [Image Augmentation](image-augmentation): contains a the configurable augmentation wrapper implemented around imgaug.
 
-* [mrcnn](./mrcnn): containes a forked version of Matterport MRCNN implemenation with our addition for the model's parameter we used for training, and the postprocessing pipeline after inference. The inference part is demonstrated in the [inference](./inference) directory.
+* [MRCNN](./mrcnn): containes a forked version of Matterport MRCNN implemenation with our addition for the model's parameter we used for training, and the postprocessing pipeline after inference. The inference part is demonstrated in the [inference](./inference) directory.
 
 * [Feature Pyramid Netwoks](./fpn): contains a configurable wrappers, generators, and training around models we used to predict the distance transform and the blurred contour. Used used the [segmenation-models](https://github.com/qubvel/segmentation_models) library.
+
+* [Pipeline](./pipeline): Contains the Snakemake pipeline that we used to conduct our experiments on NIH Biowulf HPC cluster. This implementation is provided for reference only.
 
 
 
