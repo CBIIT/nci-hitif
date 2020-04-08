@@ -1,2 +1,0 @@
-"0","F1_07_tbl <- scores_tbl %>%"
-"0","             filter(round(thres, digits = 2) == 0.70)"

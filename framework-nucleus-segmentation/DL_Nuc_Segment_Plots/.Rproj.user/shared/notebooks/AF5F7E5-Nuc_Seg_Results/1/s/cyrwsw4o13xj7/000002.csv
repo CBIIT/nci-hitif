@@ -1,1 +1,0 @@
-"0","train_size_set <- F1_07_tbl %>% filter(run %in% c(6, 10, 11, 19, 20, 45:49))"
