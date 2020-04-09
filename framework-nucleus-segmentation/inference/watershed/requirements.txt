@@ -1,0 +1,9 @@
+matplotlib==2.2.4
+scikit_image==0.15.0
+skimage==0.0
+Keras==2.3.1
+scikit_image==0.15.0
+numpy==1.17.3
+tensorflow==1.14.0
+segmentation_models==0.2.1
+opencv_python==4.1.1.26
