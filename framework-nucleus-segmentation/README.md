@@ -11,7 +11,7 @@ The [inference](./inference), [visualization](./visualization), and [supervisely
 
 Here is the description of the repo:
 
-* [Inference](./inference): examples on how to use the models in inference mode.
+* [Inference](./inference): examples on how to use the models in inference mode for [mrcnn](./inference/mrcnn/demo/demo.ipynb) and [FPN+watershed](inference/watershed/demo/demo.ipynb)
 
 * [Supervisely Wrapper](./supervisely-wrapper): code required for exporting/importing preminelary annotation and ground truth from supervisely.
 
