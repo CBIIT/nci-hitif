@@ -22,7 +22,7 @@ C) Schematic of the FPN2-WS architecture.The FPN2-WS architecture uses two deep 
 
 Nuclear segmentation inference performance of the optimized training strategy for the MRCNN and FPN2-WS model architectures, and comparison to the pre-trained Jacobkie  model  architecture. The  images below represent pseudocolored nuclear labels for the ground truth (GT) annotations and for the models inference  results.  Additionally,  the  GT  XOR  Inference  panels  represent  pseudocolored full labels for false negatives at an Intersection over Union (IoU) threshold of 0.7. For true positiveand false positive objects at the same threshold, only the difference at the pixel level between GT and inference labels is shown in magenta.  Scale bar: 20 μm.
 
-![Fig5A](./figures/5A.jpg)
+![Fig5A](./figures/5A.jpg =200x)
 
 
 ### Repo description:
