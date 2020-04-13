@@ -8,15 +8,8 @@ from skimage.color import label2rgb
 import configparser
 import skimage
 import numpy as np
-# Disable Printout
-def blockPrint():
-    sys.stdout = open(os.devnull, 'w')
-# Restore Printout
-def enablePrint():
-    sys.stdout = sys.__stdout__
 
 def mrcnn_infer(img, mrcnn_model_path, config_file_path):
-    blockPrint()
     # Config File Parser
     config = configparser.ConfigParser()
     config.read(config_file_path)
@@ -42,5 +35,4 @@ def mrcnn_infer(img, mrcnn_model_path, config_file_path):
 
         my_mask = masks.getMasks().astype("int16")
         mask[i, :, :] = my_mask
-    enablePrint()
     return mask

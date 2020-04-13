@@ -5,7 +5,7 @@ import numpy as np
 from PIL import Image
 
 def get_mrcnn_model():
-	_URL = 'https://ndownloader.figshare.com/files/22236213?private_link=dd27a1ea28ce434aa7d4'
+	_URL = 'https://ndownloader.figshare.com/files/22276530?private_link=dd27a1ea28ce434aa7d4'
 	open('mask_rcnn_cells_0194.h5', 'wb').write((requests.get(_URL, allow_redirects=True)).content)
 
 def get_sample_images():
