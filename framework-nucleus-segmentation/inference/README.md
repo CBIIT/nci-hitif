@@ -7,3 +7,14 @@ The folder includes:
 
 # Getting Started
 
+# Installation
+1. Clone this repository
+```bash
+   pip3 install -r requirements.txt
+   ```
+2. Install dependency
+
+2. Download datasets. To download dataset, please run this Jupyter Notebook:
+[Here](https://github.com/CBIIT/nci-hitif/blob/master/framework-nucleus-segmentation/visualization/Download-and-Unzip.ipynb)
+3. 
+
