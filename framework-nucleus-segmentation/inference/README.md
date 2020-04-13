@@ -27,7 +27,7 @@ The folder includes:
   python3 setup.py install
   cd ../..
    ```
-4. Download datasets.
+4. Download datasets. Downloaded dataset will be located at framework-nucleus-segmentation/visualization
 ```bash
    python3 framework-nucleus-segmentation/visualization/Download-and-Unzip.py
    ```
