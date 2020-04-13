@@ -5,16 +5,26 @@ The folder includes:
 * Jupyter notebooks of inference built on [MRCNN](https://arxiv.org/abs/1703.06870).
 * Jupyter notebooks of inference built on Gaussian Blurred border and Distance Map Models.
 
-# Getting Started
-
 # Installation
 1. Clone this repository
 ```bash
-   pip3 install -r requirements.txt
+   git@github.com:CBIIT/nci-hitif.git
    ```
-2. Install dependency
+2. Install dependencies
+```bash
+   pip3 install -r framework-nucleus-segmentation/mrcnn/requirements.txt
+   ```
+3. Download datasets.
+```bash
+   python3 framework-nucleus-segmentation/visualization/Download-and-Unzip.py
+   ```
 
-2. Download datasets. To download dataset, please run this Jupyter Notebook:
-[Here](https://github.com/CBIIT/nci-hitif/blob/master/framework-nucleus-segmentation/visualization/Download-and-Unzip.ipynb)
-3. 
+# Getting Started
+* Jupyter notebook (MRCNN):
+nci-hitif/framework-nucleus-segmentation/inference/mrcnn/demo/demo.ipynb
+
+* Jupyter notebook (Watershed):
+nci-hitif/framework-nucleus-segmentation/inference/watershed/demo/demo.ipynb
+
+
 
