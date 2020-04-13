@@ -14,6 +14,7 @@ The folder includes:
 1. Clone this repository
 ```bash
   git clone git@github.com:CBIIT/nci-hitif.git
+  cd nci-hitif
    ```
 2. Install dependencies
 ```bash
