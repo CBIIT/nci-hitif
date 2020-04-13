@@ -1,9 +1,26 @@
 # Practical Deep Learning for Nucleus Segmentation
 
 ### Abstract:
-<div style="text-align: justify">
 Deep learning is rapidly becoming the technique of choice for automated segmentation of nuclei in biological image analysis workflows. In order to improve and understand the training parameters that drive the performance of deep learning models trained on small, custom annotated image datasets, we have designed a computational pipeline to systematically test different nuclear segmentation model architectures and model training strategies. Using this approach, we demonstrate that transfer learning and tuning of training parameters, such as the training image dataset composition, size and pre-processing, can lead to robust nuclear segmentation models, which match, and often exceed, the performance of existing, state-of-the-art deep learning models pre-trained on large image datasets. Our work provides computational tools and a practical framework for the improvement of deep learning-based biological image segmentation using small annotated image datasets. 
-</div>
+
+### Pipeline:
+
+A)Schematic representation of the  computational  pipeline  used  to  train  deep  learning  nuclear  instance  segmentation models  and  to  use  these  to  predict  nucleus  labels.  When  present,  nuclear  labels  are pseudocolored to represent different instances.
+![Fig1A](./figures/1A.jpg)
+
+B) Image augmentation strategy. Random overlapping patches are oversampled from full Fields of View (FOV) of grayscale images and of nuclear labels images. These patches are then augmented by randomly applying a variety of affine, translational, intensity and blurring transformations. The augmented dataset  is  then  used  for  supervised  training  of the  deep  learning  nuclear  segmentation models.
+![Fig1B](./figures/1B.jpg)
+
+C) Schematic of the FPN2-WS architecture.The FPN2-WS architecture uses two deep learning models to predict a normalized nucleus distance transform image, and a blurred nucleus border image. These images are then used as the seed and border for a traditional watershed segmentation algorithm. 
+![Fig1c](./figures/1C.jpg)
+
+
+### Results Highlights:
+
+Nuclear segmentation inference performance of the optimized training strategy for the MRCNN and FPN2-WS model architectures, and comparison to the pre-trained Jacobkie  model  architecture. The  images below represent pseudocolored nuclear labels for the ground truth (GT) annotations and for the models inference  results.  Additionally,  the  GT  XOR  Inference  panels  represent  pseudocolored full labels for false negatives at an Intersection over Union (IoU) threshold of 0.7. For true positiveand false positive objects at the same threshold, only the difference at the pixel level between GT and inference labels is shown in magenta.  Scale bar: 20 μm.
+
+![Fig5A](./figures/5A.jpg)
+
 
 ### Repo description:
 The pipeline is shared as a reference implementation in this repo. 
