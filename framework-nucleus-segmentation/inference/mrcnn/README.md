@@ -1,1 +1,1 @@
-# watershed-infer Inference Code and Demo.
+# MRCNN Inference Code and Demo.
