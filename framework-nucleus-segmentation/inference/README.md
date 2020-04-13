@@ -18,8 +18,8 @@ The folder includes:
    ```
 2. Install dependencies
 ```bash
-   pip3 install -r framework-nucleus-segmentation/mrcnn/requirements.txt
-   pip3 install opencv-python
+   sudo pip3 install -r framework-nucleus-segmentation/mrcnn/requirements.txt
+   sudo pip3 install opencv-python
    ```
 3. Run Dependency (MRCNN Package) setup from the MRCNN directory:
 ```bash
