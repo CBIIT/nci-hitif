@@ -7,22 +7,22 @@ Deep learning is rapidly becoming the technique of choice for automated segmenta
 
 A)Schematic representation of the  computational  pipeline  used  to  train  deep  learning  nuclear  instance  segmentation models  and  to  use  these  to  predict  nucleus  labels.  When  present,  nuclear  labels  are pseudocolored to represent different instances.
 
-![Fig1A](./figures/1A.jpg)
+<img src="./figures/1A.jpg" alt="Fig1A" width="700"/>
 
 B) Image augmentation strategy. Random overlapping patches are oversampled from full Fields of View (FOV) of grayscale images and of nuclear labels images. These patches are then augmented by randomly applying a variety of affine, translational, intensity and blurring transformations. The augmented dataset  is  then  used  for  supervised  training  of the  deep  learning  nuclear  segmentation models.
 
-![Fig1B](./figures/1B.jpg)
+<img src="./figures/1B.jpg" alt="Fig1B" width="700"/>
 
 C) Schematic of the FPN2-WS architecture.The FPN2-WS architecture uses two deep learning models to predict a normalized nucleus distance transform image, and a blurred nucleus border image. These images are then used as the seed and border for a traditional watershed segmentation algorithm. 
 
-![Fig1c](./figures/1C.jpg)
+<img src="./figures/1C.jpg" alt="Fig1C" width="600"/>
 
 
 ### Results Highlights:
 
 Nuclear segmentation inference performance of the optimized training strategy for the MRCNN and FPN2-WS model architectures, and comparison to the pre-trained Jacobkie  model  architecture. The  images below represent pseudocolored nuclear labels for the ground truth (GT) annotations and for the models inference  results.  Additionally,  the  GT  XOR  Inference  panels  represent  pseudocolored full labels for false negatives at an Intersection over Union (IoU) threshold of 0.7. For true positiveand false positive objects at the same threshold, only the difference at the pixel level between GT and inference labels is shown in magenta.  Scale bar: 20 μm.
 
-![Fig5A](./figures/5A.jpg =200x)
+<img src="./figures/5A.jpg" alt="Inference results" width="800"/>
 
 
 ### Repo description:
