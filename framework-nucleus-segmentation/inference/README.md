@@ -18,11 +18,20 @@ The folder includes:
 2. Install dependencies
 ```bash
    pip3 install -r framework-nucleus-segmentation/mrcnn/requirements.txt
+   pip3 install opencv-python
    ```
-3. Download datasets.
+3. Run Dependency (MRCNN Package) setup from the MRCNN directory:
+```bash
+  cd framework-nucleus-segmentation/mrcnn
+  python3 setup.py install
+  cd ../..
+   ```
+4. Download datasets.
 ```bash
    python3 framework-nucleus-segmentation/visualization/Download-and-Unzip.py
    ```
+5. Now, you are ready for running demos.
+
 # Source Code:
 ## MRCNN Inference:
 ```bash
