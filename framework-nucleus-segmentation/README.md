@@ -1,22 +1,22 @@
 # Practical Deep Learning for Nucleus Segmentation
 
 ### Abstract:
+
 Deep learning is rapidly becoming the technique of choice for automated segmentation of nuclei in biological image analysis workflows. In order to improve and understand the training parameters that drive the performance of deep learning models trained on small, custom annotated image datasets, we have designed a computational pipeline to systematically test different nuclear segmentation model architectures and model training strategies. Using this approach, we demonstrate that transfer learning and tuning of training parameters, such as the training image dataset composition, size and pre-processing, can lead to robust nuclear segmentation models, which match, and often exceed, the performance of existing, state-of-the-art deep learning models pre-trained on large image datasets. Our work provides computational tools and a practical framework for the improvement of deep learning-based biological image segmentation using small annotated image datasets. 
 
 ### Pipeline:
 
-A)Schematic representation of the  computational  pipeline  used  to  train  deep  learning  nuclear  instance  segmentation models  and  to  use  these  to  predict  nucleus  labels.  When  present,  nuclear  labels  are pseudocolored to represent different instances.
+Schematic representation of the  computational  pipeline  used  to  train  deep  learning  nuclear  instance  segmentation models  and  to  use  these  to  predict  nucleus  labels.  When  present,  nuclear  labels  are pseudocolored to represent different instances.
 
 <img src="./figures/1A.jpg" alt="Fig1A" width="700"/>
 
-B) Image augmentation strategy. Random overlapping patches are oversampled from full Fields of View (FOV) of grayscale images and of nuclear labels images. These patches are then augmented by randomly applying a variety of affine, translational, intensity and blurring transformations. The augmented dataset  is  then  used  for  supervised  training  of the  deep  learning  nuclear  segmentation models.
+Image augmentation strategy. Random overlapping patches are oversampled from full Fields of View (FOV) of grayscale images and of nuclear labels images. These patches are then augmented by randomly applying a variety of affine, translational, intensity and blurring transformations. The augmented dataset  is  then  used  for  supervised  training  of the  deep  learning  nuclear  segmentation models.
 
 <img src="./figures/1B.jpg" alt="Fig1B" width="700"/>
 
-C) Schematic of the FPN2-WS architecture.The FPN2-WS architecture uses two deep learning models to predict a normalized nucleus distance transform image, and a blurred nucleus border image. These images are then used as the seed and border for a traditional watershed segmentation algorithm. 
+Schematic of the FPN2-WS architecture.The FPN2-WS architecture uses two deep learning models to predict a normalized nucleus distance transform image, and a blurred nucleus border image. These images are then used as the seed and border for a traditional watershed segmentation algorithm. 
 
 <img src="./figures/1C.jpg" alt="Fig1C" width="600"/>
-
 
 ### Results Highlights:
 
@@ -24,8 +24,8 @@ Nuclear segmentation inference performance of the optimized training strategy fo
 
 <img src="./figures/5A.jpg" alt="Inference results" width="800"/>
 
-
 ### Repo description:
+
 The pipeline is shared as a reference implementation in this repo. 
 The [inference](./inference), [visualization](./visualization), and [supervisely](./supervisely-wrapper) scripts can run on typical laptop.
 
@@ -42,6 +42,3 @@ Here is the description of the repo:
 * [Feature Pyramid Netwoks](./fpn): configurable wrappers, generators, and training around models we used to predict the distance transform and the blurred contour. Used used the [segmenation-models](https://github.com/qubvel/segmentation_models) library.
 
 * [Pipeline](./pipeline): the Snakemake pipeline that we used to conduct our experiments on [NIH Biowulf](https://hpc.nih.gov/) HPC cluster. Some of the rules in the pipeline uses [Knime](https://www.knime.com/) workflows shown in this [directory](./knime) This implementation is provided for reference only. 
-
-
-
