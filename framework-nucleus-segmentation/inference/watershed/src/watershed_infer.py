@@ -5,32 +5,16 @@ from skimage.measure import label
 from skimage.morphology import closing, disk
 from skimage.transform import resize
 import configparser
-import logging
-import tensorflow as tf
+# import tensorflow as tf
 from keras.models import Model
 from keras.layers import Input, concatenate, Conv2D, MaxPooling2D, Conv2DTranspose
 from keras.optimizers import Adam
 from keras import backend as K
 from segmentation_models.common.layers import ResizeImage
-import os, sys, gc
+import os
 import numpy as np
 import cv2
-from timeit import default_timer as timer
 from keras.models import model_from_json
-
-# Disable Tensorflow Warning.
-def set_tf_loglevel(level):
-    if level >= logging.FATAL:
-        os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
-    if level >= logging.ERROR:
-        os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
-    if level >= logging.WARNING:
-        os.environ['TF_CPP_MIN_LOG_LEVEL'] = '1'
-    else:
-        os.environ['TF_CPP_MIN_LOG_LEVEL'] = '0'
-    logging.getLogger('tensorflow').setLevel(level)
-
-set_tf_loglevel(logging.FATAL)
 
 # Function for reading pre-trained model.
 def get_model(modeljsonfname,modelwtsfname):
@@ -57,11 +41,7 @@ def unet_predict(model, batch_size, imgs_test):
         imgs_test = np.stack((imgs_test,) * model_input_channelSize, -1)
     elif model_input_channelSize == 1:
         imgs_test = np.expand_dims(imgs_test, 3)
-    # print('Load data of shape ', imgs_test.shape)
-
-    start = timer()
     imgs_mask_test = model.predict(imgs_test, batch_size=batch_size, verbose=1)
-    print("Time For Predicting = ", timer() - start)
 
     return (imgs_mask_test)
 
@@ -70,7 +50,6 @@ def model_prediction(img,model,param):
 
     # Change the datatype with normalization. (u16 -> ubyte)
     img = cv2.normalize(src=img, dst=None, alpha=0, beta=255, norm_type=cv2.NORM_MINMAX, dtype=cv2.CV_8U)
-    # img = np.reshape(img, (1, img.shape[0], img.shape[1]))
 
     # Change the input resolution into padded resolution.
     dim1 = param['padded_width']
@@ -83,13 +62,6 @@ def model_prediction(img,model,param):
     batch_size = param['batch_size']
     imagesNP = np.zeros([noofImages, imshape[0], imshape[1]], dtype=np.float32)
 
-    # Padding 
-    # if dim_original_width > dim1 or dim_original_height > dim2:
-    #     # imagesNP = img
-    #     for index in range(len(img)):
-    #         # imagesNP[index, :, :] = cv2.resize(img[index,:,:], imshape, interpolation=cv2.INTER_AREA)
-    #         imagesNP[index, :, :] = resize(img[index,:,:], imshape,anti_aliasing=True)
-    # else:
     for index in range(len(img)):
         input_cell = img[index, :, :]
         im_in = input_cell.astype('float32')
@@ -119,15 +91,6 @@ def model_prediction(img,model,param):
 
     result = np.zeros((noofImages, dim_original_height, dim_original_width))
 
-    ## Offsetting to original dimension
-    # if dim_original_width > dim1 or dim_original_height > dim2:
-    #     result = img
-        # for index in range(len(img)):
-        #     # result[index, :, :] = cv2.resize(img[index,:,:], [dim_original_height, dim_original_width], interpolation=cv2.INTER_AREA)
-        #     # result[index, :, :] = resize(img[index, :, :], [dim_original_height, dim_original_width], anti_aliasing=True)
-        #     result[index, :, :] = resize(img[index, :, :], [dim_original_height, dim_original_width],
-        #                                  anti_aliasing=False)
-    # else:
     for i in range(noofImages):
         yoffset = int((dim2 - dim_original_height) / 2)
         xoffset = int((dim1 - dim_original_width) / 2)
