@@ -6,12 +6,15 @@ Deep learning is rapidly becoming the technique of choice for automated segmenta
 ### Pipeline:
 
 A)Schematic representation of the  computational  pipeline  used  to  train  deep  learning  nuclear  instance  segmentation models  and  to  use  these  to  predict  nucleus  labels.  When  present,  nuclear  labels  are pseudocolored to represent different instances.
+
 ![Fig1A](./figures/1A.jpg)
 
 B) Image augmentation strategy. Random overlapping patches are oversampled from full Fields of View (FOV) of grayscale images and of nuclear labels images. These patches are then augmented by randomly applying a variety of affine, translational, intensity and blurring transformations. The augmented dataset  is  then  used  for  supervised  training  of the  deep  learning  nuclear  segmentation models.
+
 ![Fig1B](./figures/1B.jpg)
 
 C) Schematic of the FPN2-WS architecture.The FPN2-WS architecture uses two deep learning models to predict a normalized nucleus distance transform image, and a blurred nucleus border image. These images are then used as the seed and border for a traditional watershed segmentation algorithm. 
+
 ![Fig1c](./figures/1C.jpg)
 
 
