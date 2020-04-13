@@ -33,6 +33,8 @@ Here is the description of the repo:
 
 * [Inference](./inference): examples on how to use the models in inference mode for [mrcnn](./inference/mrcnn/demo/demo.ipynb) and [FPN+watershed](inference/watershed/demo/demo.ipynb)
 
+* [Visualization](./visualization): Regenerate the [figures](./visualization/highlight-inference.ipynb) and [plots](./visualization/DL_Nuc_Segment_Plots/DL_Nuc_Seg_Results.md) shown in the paper. 
+
 * [Supervisely Wrapper](./supervisely-wrapper): code required for exporting/importing preminelary annotation and ground truth from supervisely.
 
 * [Image Augmentation](image-augmentation): configurable augmentation wrapper implemented around imgaug.
