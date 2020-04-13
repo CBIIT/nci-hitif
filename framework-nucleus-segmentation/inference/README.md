@@ -13,7 +13,7 @@ The folder includes:
 # Installation
 1. Clone this repository
 ```bash
-   git@github.com:CBIIT/nci-hitif.git
+  git clone git@github.com:CBIIT/nci-hitif.git
    ```
 2. Install dependencies
 ```bash
