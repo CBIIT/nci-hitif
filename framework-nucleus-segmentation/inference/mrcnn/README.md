@@ -1,1 +1,1 @@
-# watershed-infer Inference Code.
+# watershed-infer Inference Code and Demo.
