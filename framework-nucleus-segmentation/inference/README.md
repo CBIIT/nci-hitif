@@ -20,11 +20,6 @@ The folder includes:
    ```
 
 # Getting Started
-* Jupyter notebook (MRCNN):
-nci-hitif/framework-nucleus-segmentation/inference/mrcnn/demo/demo.ipynb
+* Jupyter notebook (MRCNN):[Here](https://github.com/CBIIT/nci-hitif/blob/master/framework-nucleus-segmentation/inference/mrcnn/demo/demo.ipynb)
 
-* Jupyter notebook (Watershed):
-nci-hitif/framework-nucleus-segmentation/inference/watershed/demo/demo.ipynb
-
-
-
+* Jupyter notebook (Watershed):[Here](https://github.com/CBIIT/nci-hitif/blob/master/framework-nucleus-segmentation/inference/watershed/demo/demo.ipynb)
