@@ -38,7 +38,7 @@ The folder includes:
 ```bash
    nci-hitif/framework-nucleus-segmentation/inference/mrcnn/src/mrcnn_infer.py
    ```
-## Watershed Inference:
+## FPN-Watershed Inference:
 ```bash
    nci-hitif/framework-nucleus-segmentation/inference/watershed/src/watershed_infer.py
    ```
@@ -47,4 +47,4 @@ The folder includes:
 # Demo
 * Jupyter notebook (MRCNN): [Here](https://github.com/CBIIT/nci-hitif/blob/master/framework-nucleus-segmentation/inference/mrcnn/demo/demo.ipynb)
 
-* Jupyter notebook (Watershed): [Here](https://github.com/CBIIT/nci-hitif/blob/master/framework-nucleus-segmentation/inference/watershed/demo/demo.ipynb)
+* Jupyter notebook (FPN-Watershed): [Here](https://github.com/CBIIT/nci-hitif/blob/master/framework-nucleus-segmentation/inference/watershed/demo/demo.ipynb)
