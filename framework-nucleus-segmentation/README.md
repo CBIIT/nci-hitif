@@ -37,7 +37,7 @@ Here is the description of the repo:
 
 * [Supervisely Wrapper](./supervisely-wrapper): code required for exporting/importing preminelary annotation and ground truth from supervisely.
 
-* [Image Augmentation](image-augmentation): configurable augmentation wrapper implemented around imgaug.
+* [Image Augmentation](image-augmentation): configurable augmentation wrapper implemented around imgaug. Copied from this [repo](https://github.com/fnlcr-bids-sdsi/image-segmentation/tree/master/packages/image_segmentation)
 
 * [MRCNN](./mrcnn): a forked version of Matterport MRCNN implemenation with our addition for the model's parameter we used for training, and the postprocessing pipeline after inference. The inference part is demonstrated in the [inference](./inference) directory.
 
