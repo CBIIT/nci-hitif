@@ -39,7 +39,7 @@ Here is the description of the repo:
 
 * [Image Augmentation](image-augmentation): configurable augmentation wrapper implemented around imgaug. Copied from this [repo](https://github.com/fnlcr-bids-sdsi/image-segmentation/tree/master/packages/image_segmentation)
 
-* [MRCNN](./mrcnn): a forked version of Matterport MRCNN implemenation with our addition for the model's parameter we used for training, and the postprocessing pipeline after inference. The inference part is demonstrated in the [inference](./inference) directory.
+* [MRCNN](./mrcnn): a forked version of [Matterport MRCNN](https://github.com/matterport/Mask_RCNN/tree/master/mrcnn) implemenation with our addition for the model's parameter we used for training, and the postprocessing pipeline after inference. The inference part is demonstrated in the [inference](./inference) directory.
 
 * [Feature Pyramid Netwoks](./fpn): configurable wrappers, generators, and training around models we used to predict the distance transform and the blurred contour. We used the [segmenation-models](https://github.com/qubvel/segmentation_models) library.
 
