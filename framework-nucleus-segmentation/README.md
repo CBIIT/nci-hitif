@@ -35,7 +35,7 @@ Here is the description of the repo:
 
 * [Visualization](./visualization): Regenerate the [figures](./visualization/highlight-inference.ipynb) and [plots](./visualization/DL_Nuc_Segment_Plots/DL_Nuc_Seg_Results.md) shown in the paper. 
 
-* [Supervisely Wrapper](./supervisely-wrapper): code required for exporting/importing preminelary annotation and ground truth from supervisely.
+* [Supervisely Wrapper](./supervisely-wrapper): code required for exporting/importing preminelary annotation and ground truth from [supervisely](https://supervise.ly).
 
 * [Image Augmentation](image-augmentation): configurable augmentation wrapper implemented around imgaug. Copied from this [repo](https://github.com/fnlcr-bids-sdsi/image-segmentation/tree/master/packages/image_segmentation)
 
