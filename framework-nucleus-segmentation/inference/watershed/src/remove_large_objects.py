@@ -1,4 +1,5 @@
 # This code has been generated based on remove_small_object (SkImage) module.
+# Reference: https://github.com/scikit-image/scikit-image/blob/master/skimage/morphology/misc.py#L51
 
 import numpy as np
 
