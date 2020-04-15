@@ -14,10 +14,16 @@ https://github.com/fchollet/keras/blob/master/keras/utils/training_utils.py
 """
 
 import tensorflow as tf
+
+# Tensorflow 2.x handling    
+tf_version = int((tf.__version__).split('.')[0])
+if tf_version >= 2:
+    import tensorflow.compat.v1 as tf
+    tf.disable_v2_behavior()
+
 import keras.backend as K
 import keras.layers as KL
 import keras.models as KM
-
 
 class ParallelModel(KM.Model):
     """Subclasses the standard Keras Model and adds multi-GPU support.

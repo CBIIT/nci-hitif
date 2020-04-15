@@ -17,6 +17,13 @@ from collections import OrderedDict
 import multiprocessing
 import numpy as np
 import tensorflow as tf
+
+# Tensorflow 2.x handling    
+tf_version = int((tf.__version__).split('.')[0])
+if tf_version >= 2:
+    import tensorflow.compat.v1 as tf
+    tf.disable_v2_behavior()
+    
 import keras
 import keras.backend as K
 import keras.layers as KL
