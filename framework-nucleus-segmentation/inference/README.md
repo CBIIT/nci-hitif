@@ -23,7 +23,7 @@ The folder includes:
 ## 2 (Option 2). Install dependencies using Conda (Recommended)
 Create Virtual Conda Enviroment using Anaconda.
 ```bash
-   conda create -n hitif python=3.6 anaconda
+   conda create -n <your-enviroment-name> python=3.6 anaconda
    ```
 Activate Virtual Environment.
 ```bash
@@ -44,7 +44,7 @@ Activate Virtual Environment.
 ```bash
    python3 framework-nucleus-segmentation/visualization/Download-and-Unzip.py
    ```
-## 5. Install JupyterLab (Recommended: Install using Anaconda Navigator). Now, you are ready for running demos.
+## 5. Now, you are ready for running demos. Please use Jupyter Notebook using created Python environment.
 
 # Source Code:
 ## MRCNN Inference:
