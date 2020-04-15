@@ -33,9 +33,9 @@ Here is the description of the repo:
 
 * [Inference](./inference): examples on how to use the models in inference mode for [mrcnn](./inference/mrcnn/demo/demo.ipynb) and [FPN+watershed](inference/watershed/demo/demo.ipynb)
 
-* [Visualization](./visualization): Regenerate the [figures](./visualization/highlight-inference.ipynb) and [plots](./visualization/DL_Nuc_Segment_Plots/DL_Nuc_Seg_Results.md) shown in the paper. 
+* [Visualization](./visualization): Regenerate the [figures](./visualization/highlight-inference.ipynb) and [plots](./visualization/DL_Nuc_Segment_Plots/DL_Nuc_Seg_Results.md) shown in the paper
 
-* [Supervisely Wrapper](./supervisely-wrapper): code required for exporting/importing preminelary annotation and ground truth from [supervisely](https://supervise.ly).
+* [Supervisely Wrapper](./supervisely-wrapper): code required for exporting/importing preminelary annotation and ground truth from [supervisely](https://supervise.ly)
 
 * [Image Augmentation](image-augmentation): configurable augmentation wrapper implemented around imgaug. Copied from this [repo](https://github.com/fnlcr-bids-sdsi/image-segmentation/tree/master/packages/image_segmentation)
 
@@ -43,4 +43,4 @@ Here is the description of the repo:
 
 * [Feature Pyramid Netwoks](./fpn): configurable wrappers, generators, and training around models we used to predict the distance transform and the blurred contour. We used the [segmenation-models](https://github.com/qubvel/segmentation_models) library.
 
-* [Pipeline](./pipeline): the Snakemake pipeline that we used to conduct our experiments on [NIH Biowulf](https://hpc.nih.gov/) HPC cluster. Some of the rules in the pipeline uses [Knime](https://www.knime.com/) workflows shown in this [directory](./knime) This implementation is provided for reference only. 
+* [Pipeline](./pipeline): the Snakemake pipeline that we used to conduct our experiments on [NIH Biowulf](https://hpc.nih.gov/) HPC cluster. Some of the rules in the pipeline use [Knime](https://www.knime.com/) workflows shown in this [directory](./knime). This implementation is provided for reference only.
