@@ -11,16 +11,16 @@ The folder includes:
 * Jupyter notebooks of inference built on Gaussian Blurred border and Distance Map Models.
 
 # Installation
-## 1. Clone this repository
+1. Clone this repository
 ```bash
   git clone git@github.com:CBIIT/nci-hitif.git
   cd nci-hitif
    ```
-## 2 (Option 1). Install dependencies
+2 (Option 1). Install dependencies
 ```bash
    sudo pip install -r framework-nucleus-segmentation/mrcnn/requirements.txt
    ```
-## 2 (Option 2). Install dependencies using Conda (Recommended)
+2 (Option 2). Install dependencies using Conda (Recommended)
 Create Virtual Conda Enviroment using Anaconda.
 ```bash
    conda create -n <your-enviroment-name> python=3.6 anaconda
@@ -29,22 +29,22 @@ Activate Virtual Environment.
 ```bash
    conda activate <your-environment-name>
    ```
- Install dependencies.
+Install dependencies.
 ```bash
    pip install -r framework-nucleus-segmentation/mrcnn/requirements.txt
    ```
 
-## 3. Run Dependency (MRCNN Package) setup script.
+3. Run Dependency (MRCNN Package) setup script.
 ```bash
   cd framework-nucleus-segmentation/mrcnn
   python3 setup.py install
   cd ../..
    ```
-## 4. Download datasets. Downloaded dataset will be located at **framework-nucleus-segmentation/visualization**
+4. Download datasets. Downloaded dataset will be located at **framework-nucleus-segmentation/visualization**
 ```bash
    python3 framework-nucleus-segmentation/visualization/Download-and-Unzip.py
    ```
-## 5. Now, you are ready for running demos. Please use Jupyter Notebook using created Python environment.
+5. Now, you are ready for running demos. Please use Jupyter Notebook using created Python environment.
 
 # Source Code:
 ## MRCNN Inference:
