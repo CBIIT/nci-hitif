@@ -20,20 +20,17 @@ The folder includes:
 ```bash
    sudo pip install -r framework-nucleus-segmentation/mrcnn/requirements.txt
    ```
+
 2 (Option 2). Install dependencies using Conda (Recommended)
 Create Virtual Conda Enviroment using Anaconda.
 ```bash
-   conda create -n <your-enviroment-name> python=3.6 anaconda
+   conda env create -f framework-nucleus-segmentation/mrcnn/environment.yml -n hitif
    ```
 Activate Virtual Environment.
 ```bash
-   conda activate <your-environment-name>
+   conda activate hitif
    ```
-Install dependencies.
-```bash
-   pip install -r framework-nucleus-segmentation/mrcnn/requirements.txt
-   ```
-
+   
 3. Run Dependency (MRCNN Package) setup script.
 ```bash
   cd framework-nucleus-segmentation/mrcnn
@@ -45,6 +42,17 @@ Install dependencies.
    python3 framework-nucleus-segmentation/visualization/Download-and-Unzip.py
    ```
 5. Now, you are ready for running demos. Please use Jupyter Notebook using created Python environment.
+
+Watershed-FPN:
+```bash
+   cd framework-nucleus-segmentation/inference/watershed/demo
+   jupyter lab demo.ipynb
+   ```
+MRCNN:
+```bash
+   cd framework-nucleus-segmentation/inference/mrcnn/demo
+   jupyter lab demo.ipynb
+   ```
 
 # Source Code:
 ## MRCNN Inference:
