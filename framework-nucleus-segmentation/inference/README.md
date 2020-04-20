@@ -45,6 +45,7 @@ Install dependencies.
    python3 framework-nucleus-segmentation/visualization/Download-and-Unzip.py
    ```
 5. Now, you are ready for running demos. Please use Jupyter Notebook using created Python environment.
+
 Watershed-FPN:
 ```bash
    cd framework-nucleus-segmentation/inference/watershed/demo
