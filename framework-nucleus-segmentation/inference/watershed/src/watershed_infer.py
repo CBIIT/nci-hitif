@@ -10,7 +10,6 @@ from keras.models import Model
 from keras.layers import Input, concatenate, Conv2D, MaxPooling2D, Conv2DTranspose
 from keras.optimizers import Adam
 from keras import backend as K
-from segmentation_models.common.layers import ResizeImage
 import os
 import numpy as np
 import cv2
