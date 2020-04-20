@@ -16,13 +16,7 @@ The folder includes:
   git clone git@github.com:CBIIT/nci-hitif.git
   cd nci-hitif
    ```
-2 (Option 1). Install dependencies
-```bash
-   sudo pip install -r framework-nucleus-segmentation/mrcnn/requirements.txt
-   ```
-
-2 (Option 2). Install dependencies using Conda (Recommended)
-Create Virtual Conda Enviroment using Anaconda.
+2. Create Virtual Conda Enviroment using Anaconda.
 ```bash
    conda env create -f framework-nucleus-segmentation/mrcnn/environment.yml -n hitif
    ```
