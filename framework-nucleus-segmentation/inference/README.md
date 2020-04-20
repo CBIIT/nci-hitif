@@ -20,6 +20,7 @@ The folder includes:
 ```bash
    sudo pip install -r framework-nucleus-segmentation/mrcnn/requirements.txt
    ```
+
 2 (Option 2). Install dependencies using Conda (Recommended)
 Create Virtual Conda Enviroment using Anaconda.
 ```bash
@@ -29,11 +30,7 @@ Activate Virtual Environment.
 ```bash
    conda activate hitif
    ```
-Install dependencies.
-```bash
-   pip install -r framework-nucleus-segmentation/mrcnn/requirements.txt
-   ```
-
+   
 3. Run Dependency (MRCNN Package) setup script.
 ```bash
   cd framework-nucleus-segmentation/mrcnn
