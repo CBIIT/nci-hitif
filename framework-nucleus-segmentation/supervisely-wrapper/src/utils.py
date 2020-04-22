@@ -158,7 +158,7 @@ def get_contour(image, origin = None):
             contour_indexes, hierarchy = cv2.findContours(border, cv2.RETR_LIST,cv2.CHAIN_APPROX_SIMPLE)
             correction = 1
         else:
-            cv2_image, contour_indexes, hierarchy = cv2.findContours(filled_holes, cv2.RETR_LIST,cv2.CHAIN_APPROX_SIMPLE)
+            contour_indexes, hierarchy = cv2.findContours(filled_holes, cv2.RETR_LIST,cv2.CHAIN_APPROX_SIMPLE)
             correction = 0
     except Exception as e:
             print("Can not calculate contours for region")
