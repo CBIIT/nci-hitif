@@ -1,4 +1,9 @@
 import tensorflow as tf
+tf_version = int((tf.__version__).split('.')[0])
+if tf_version >= 2:
+    import tensorflow.compat.v1 as tf
+    tf.disable_v2_behavior()
+
 import numpy as np
 import time
 from cell import CellsConfig
