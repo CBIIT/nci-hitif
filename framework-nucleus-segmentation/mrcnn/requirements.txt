@@ -16,3 +16,4 @@ Pillow>=7.1.1
 jupyter
 jupyterlab
 segmentation-models==0.2.1
+libtiff
