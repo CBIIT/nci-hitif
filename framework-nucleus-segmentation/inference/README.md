@@ -16,26 +16,31 @@ The folder includes:
   git clone git@github.com:CBIIT/nci-hitif.git
   cd nci-hitif
    ```
+If you are using MAC, please install libtiff package using [Brew](https://brew.sh/).
+```bash
+  brew install libtiff
+   ```
 2. Create Virtual Conda Enviroment using Anaconda.
 ```bash
-   conda env create -f framework-nucleus-segmentation/mrcnn/environment.yml -n hitif
+   conda create -n hitif python=3.7
+   pip install -r framework-nucleus-segmentation/mrcnn/requirements.txt
    ```
-Activate Virtual Environment.
+3. Activate Virtual Environment.
 ```bash
    conda activate hitif
    ```
    
-3. Run Dependency (MRCNN Package) setup script.
+4. Run Dependency (MRCNN Package) setup script.
 ```bash
   cd framework-nucleus-segmentation/mrcnn
   python3 setup.py install
   cd ../..
    ```
-4. Download datasets. Downloaded dataset will be located at **framework-nucleus-segmentation/visualization**
+5. Download datasets. Downloaded dataset will be located at **framework-nucleus-segmentation/visualization**
 ```bash
    python3 framework-nucleus-segmentation/visualization/Download-and-Unzip.py
    ```
-5. Now, you are ready for running demos. Please use Jupyter Notebook using created Python environment.
+6. Now, you are ready for running demos. Please use Jupyter Notebook using created Python environment.
 
 Watershed-FPN:
 ```bash
