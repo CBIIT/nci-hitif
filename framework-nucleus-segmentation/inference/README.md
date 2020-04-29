@@ -21,12 +21,14 @@ If you are using MAC, please install libtiff package using [Brew](https://brew.s
   brew install libtiff
    ```
 2. Create Virtual Conda Enviroment using Anaconda.
-**If you have No CUDA (e.g., MAC):**
+
+**Option1: NO GPU (e.g., If you are using MAC, mostly, you don't have CUDA support):**
 ```bash
    conda create -n hitif python=3.7
    pip install -r framework-nucleus-segmentation/mrcnn/requirements.txt
    ```
-**CUDA:**
+
+**Option2: CUDA:**
 ```bash
    conda create -n hitif python=3.7
    pip install -r framework-nucleus-segmentation/mrcnn/requirements_gpu.txt
