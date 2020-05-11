@@ -12,7 +12,7 @@ import skimage.io
 import sys
 import skimage
 from PIL import Image
-from libtiff import TIFF
+#from libtiff import TIFF
 import time
 
 
@@ -253,21 +253,35 @@ class CleanMask():
         """
         Build the connectivity matrix between cells ids
         """
+        start = time.time()
         n_labels = np.max(self.stack) 
         self.conn_mat = np.zeros((n_labels + 1, n_labels + 1))
 
-        #Fill up the connectivity matrix with weighted connections
-        for row in range(self.num_row):
-            for col in range(slef.num_col):
-                ids = np.unique(self.stack[row, col, :])
-                #If it is not a background
-                ids_size = ids.size
-                if ids_size > 1:
-                    for i in range(ids_size - 1):
-                        for j in range(i+1,ids_size):
-                           self.conn_mat[ids[i], ids[j] ] += 1
-                           self.conn_mat[ids[j], ids[i] ] += 1
+    
+        cells = self.stack > 0
+        #Find where a pixel has more than one inference
+        n_inference = np.sum(cells,2)
+        to_connect = (n_inference > 1)
+        indexes = np.nonzero(to_connect)
+        to_process = stack[indexes[0], indexes[1], :]
+        for i in range(0, to_process.shape[0]):
+            
+            #by profiling, working with list was faster than numpy arrays
+            ids = np.unique(to_process[i,:]).tolist()
+            if 0 in ids:
+                ids.remove(0)
+            ids_size = len(ids) 
+            for i in range(ids_size - 1): 
+                for j in range(i+1,ids_size):
+                    self.conn_mat[ids[i], ids[j] ] += 1
 
+   
+        #The connectivity matrix is symetrical 
+        conn_t = self.conn_mat.transpose()
+        self.conn_mat += conn_t
+        end = time.time()
+        print("connectivity time = {}".format(end-start))
+        
 
     def merge_cells(self):
         """
@@ -341,6 +355,7 @@ class CleanMask():
        
     def save(self, save_path):
         np.save('inference-stack', self.stack)
+        return
         tiff = TIFF.open(save_path, mode='w')
         tiff.write_image(self.getMasks())
         tiff.close()
