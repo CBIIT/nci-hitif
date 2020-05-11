@@ -1,13 +1,14 @@
+from skimage.util import img_as_ubyte
+import line_profiler
 import sys,glob,warnings,os
 import matplotlib.pyplot as plt
 from PIL import Image
 from skimage.transform import resize
-from skimage.util import img_as_ubyte
 from skimage.color import label2rgb
 
 sys.path.insert(1, '../src');
 sys.path.insert(1,'../../../visualization')
-from mrcnn_infer import *
+from mrcnn_infer_profile import *
 from download_util import *
 
 MRCNN_MODEL_URL = 'https://ndownloader.figshare.com/files/22280580?private_link=dd27a1ea28ce434aa7d4'
@@ -24,9 +25,9 @@ image_list =['../../../visualization/GreyScale/BABE_Biological/Plate1_E03_T0001F
              '../../../visualization/GreyScale/Manasi_Technical/Plate1_M21_T0001F003L01A01Z01C01.tif'
 ]
 
-img = np.zeros((len(image_list),1078,1278))
+img = np.zeros((1,1078,1278))
+image_resized = img_as_ubyte(resize(np.array(Image.open(image_list[0])), (1078, 1278)))
 for i in range(len(img)):
-    image_resized = img_as_ubyte(resize(np.array(Image.open(image_list[i])), (1078, 1278)))
     img[i,:,:] = image_resized
 
 mask = mrcnn_infer(img, mrcnn_model_path, config_file_path)
