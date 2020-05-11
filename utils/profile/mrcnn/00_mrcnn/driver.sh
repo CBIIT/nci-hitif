@@ -1,6 +1,6 @@
 #!/bin/bash         
-MRCNN_DEMO="/gpfs/gsfs10/users/HiTIF/data/kyunghhun/nci-hitif/framework-nucleus-segmentation/inference/mrcnn/demo/"
-MRCNN_SRC="/gpfs/gsfs10/users/HiTIF/data/kyunghhun/nci-hitif/framework-nucleus-segmentation/inference/mrcnn/src/"
+MRCNN_DEMO="../../../../framework-nucleus-segmentation/inference/mrcnn/demo/"
+MRCNN_SRC="../../../../framework-nucleus-segmentation/inference/mrcnn/src/"
 cp $MRCNN_DEMO/demo.py .
 cp $MRCNN_SRC/mrcnn_infer.py .
 sed -i '/def mrcnn_infer(img, mrcnn_model_path, config_file_path):/i @profile' mrcnn_infer.py
@@ -20,3 +20,5 @@ RES_FOLDER=`pwd`
 pushd $MRCNN_DEMO
 kernprof -l -v demo_profile.py > $RES_FOLDER/result.txt
 popd
+rm *.py
+

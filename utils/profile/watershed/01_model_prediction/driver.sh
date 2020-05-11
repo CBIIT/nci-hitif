@@ -1,10 +1,10 @@
 #!/bin/bash         
-WATERSHED_DEMO="/gpfs/gsfs10/users/HiTIF/data/kyunghhun/nci-hitif/framework-nucleus-segmentation/inference/watershed/demo/"
-WATERSHED_SRC="/gpfs/gsfs10/users/HiTIF/data/kyunghhun/nci-hitif/framework-nucleus-segmentation/inference/watershed/src/"
+WATERSHED_DEMO="../../../../framework-nucleus-segmentation/inference/watershed/demo/"
+WATERSHED_SRC="../../../../framework-nucleus-segmentation/inference/watershed/src/"
 cp $WATERSHED_DEMO/demo.py .
 cp $WATERSHED_SRC/watershed_infer.py .
 sed -i '/def model_prediction(img,model,param):/i @profile' watershed_infer.py
-sed -i 's/img = np.zeros((len(image_list),1078,1278))/img = np.zeros((1,1078,1278))/g' demo.py
+sed -i 's/img = np.zeros((len(image_list),1078,1278))/img = np.zeros((100,1078,1278))/g' demo.py
 sed -i 's/from watershed_infer import */from watershed_infer_profile import /g' demo.py
 sed -i '/import sys,glob,warnings,os/i import line_profiler' demo.py
 sed -i '/image_resized = img_as_ubyte/d' demo.py
@@ -19,3 +19,5 @@ RES_FOLDER=`pwd`
 pushd $WATERSHED_DEMO
 kernprof -l -v demo_profile.py > $RES_FOLDER/result.txt
 popd
+rm *.py
+
