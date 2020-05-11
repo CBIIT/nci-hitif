@@ -1,0 +1,763 @@
+/gpfs/gsfs10/users/HiTIF/data/kyunghhun/nci-hitif/framework-nucleus-segmentation/inference
+[general]
+cropsize = 256
+padding = 50
+threshold = 10
+
+MRCNN take from: /data/HiTIF/progs/miniconda/miniconda3/envs/hitif/lib/python3.7/site-packages/mask_rcnn-2.1-py3.7.egg/mrcnn/model.py
+Loading weights from  ./mrcnn_pretrained.h5
+(1078, 1278, 3)
+bounds:
+upper: 0
+lower: 256
+left : 0
+right: 256
+Processing 1 images
+image                    shape: (256, 256, 3)         min:    0.00000  max:  156.00000  uint8
+molded_images            shape: (1, 256, 256, 3)      min: -123.70000  max:   52.10000  float64
+image_metas              shape: (1, 14)               min:    0.00000  max:  256.00000  int64
+anchors                  shape: (1, 16368, 4)         min:   -0.35494  max:    1.10396  float32
+Inference took 2.300267457962036
+(256, 256, 12)
+Sum = % 23035
+Sum= 23035
+result:
+(1078, 1278)
+bounds:
+upper: 0
+lower: 256
+left : 206
+right: 462
+Processing 1 images
+image                    shape: (256, 256, 3)         min:    0.00000  max:  172.00000  uint8
+molded_images            shape: (1, 256, 256, 3)      min: -123.70000  max:   68.10000  float64
+image_metas              shape: (1, 14)               min:    0.00000  max:  256.00000  int64
+anchors                  shape: (1, 16368, 4)         min:   -0.35494  max:    1.10396  float32
+Inference took 0.5842275619506836
+(256, 256, 12)
+Sum = % 23157
+Sum= 23157
+result:
+(1078, 1278)
+bounds:
+upper: 0
+lower: 256
+left : 412
+right: 668
+Processing 1 images
+image                    shape: (256, 256, 3)         min:    0.00000  max:  180.00000  uint8
+molded_images            shape: (1, 256, 256, 3)      min: -123.70000  max:   76.10000  float64
+image_metas              shape: (1, 14)               min:    0.00000  max:  256.00000  int64
+anchors                  shape: (1, 16368, 4)         min:   -0.35494  max:    1.10396  float32
+Inference took 0.6029655933380127
+(256, 256, 15)
+Sum = % 23361
+Sum= 23361
+result:
+(1078, 1278)
+bounds:
+upper: 0
+lower: 256
+left : 618
+right: 874
+Processing 1 images
+image                    shape: (256, 256, 3)         min:    0.00000  max:  156.00000  uint8
+molded_images            shape: (1, 256, 256, 3)      min: -123.70000  max:   52.10000  float64
+image_metas              shape: (1, 14)               min:    0.00000  max:  256.00000  int64
+anchors                  shape: (1, 16368, 4)         min:   -0.35494  max:    1.10396  float32
+Inference took 0.7006158828735352
+(256, 256, 13)
+Sum = % 20380
+Sum= 20380
+result:
+(1078, 1278)
+bounds:
+upper: 0
+lower: 256
+left : 824
+right: 1080
+Processing 1 images
+image                    shape: (256, 256, 3)         min:    0.00000  max:  180.00000  uint8
+molded_images            shape: (1, 256, 256, 3)      min: -123.70000  max:   76.10000  float64
+image_metas              shape: (1, 14)               min:    0.00000  max:  256.00000  int64
+anchors                  shape: (1, 16368, 4)         min:   -0.35494  max:    1.10396  float32
+Inference took 0.5865640640258789
+(256, 256, 12)
+Sum = % 23500
+Sum= 23500
+result:
+(1078, 1278)
+bounds:
+upper: 0
+lower: 256
+left : 1022
+right: 1278
+Processing 1 images
+image                    shape: (256, 256, 3)         min:    0.00000  max:  180.00000  uint8
+molded_images            shape: (1, 256, 256, 3)      min: -123.70000  max:   76.10000  float64
+image_metas              shape: (1, 14)               min:    0.00000  max:  256.00000  int64
+anchors                  shape: (1, 16368, 4)         min:   -0.35494  max:    1.10396  float32
+Inference took 0.5861489772796631
+(256, 256, 12)
+Sum = % 25425
+Sum= 25425
+result:
+(1078, 1278)
+bounds:
+upper: 0
+lower: 256
+left : 1022
+right: 1278
+Processing 1 images
+image                    shape: (256, 256, 3)         min:    0.00000  max:  180.00000  uint8
+molded_images            shape: (1, 256, 256, 3)      min: -123.70000  max:   76.10000  float64
+image_metas              shape: (1, 14)               min:    0.00000  max:  256.00000  int64
+anchors                  shape: (1, 16368, 4)         min:   -0.35494  max:    1.10396  float32
+Inference took 0.5820450782775879
+(256, 256, 12)
+Sum = % 25425
+Sum= 25425
+result:
+(1078, 1278)
+bounds:
+upper: 206
+lower: 462
+left : 0
+right: 256
+Processing 1 images
+image                    shape: (256, 256, 3)         min:    0.00000  max:  205.00000  uint8
+molded_images            shape: (1, 256, 256, 3)      min: -123.70000  max:  101.10000  float64
+image_metas              shape: (1, 14)               min:    0.00000  max:  256.00000  int64
+anchors                  shape: (1, 16368, 4)         min:   -0.35494  max:    1.10396  float32
+Inference took 0.5900247097015381
+(256, 256, 13)
+Sum = % 21537
+Sum= 21537
+result:
+(1078, 1278)
+bounds:
+upper: 206
+lower: 462
+left : 206
+right: 462
+Processing 1 images
+image                    shape: (256, 256, 3)         min:    0.00000  max:  230.00000  uint8
+molded_images            shape: (1, 256, 256, 3)      min: -123.70000  max:  126.10000  float64
+image_metas              shape: (1, 14)               min:    0.00000  max:  256.00000  int64
+anchors                  shape: (1, 16368, 4)         min:   -0.35494  max:    1.10396  float32
+Inference took 0.5903458595275879
+(256, 256, 13)
+Sum = % 26847
+Sum= 26847
+result:
+(1078, 1278)
+bounds:
+upper: 206
+lower: 462
+left : 412
+right: 668
+Processing 1 images
+image                    shape: (256, 256, 3)         min:    0.00000  max:  180.00000  uint8
+molded_images            shape: (1, 256, 256, 3)      min: -123.70000  max:   76.10000  float64
+image_metas              shape: (1, 14)               min:    0.00000  max:  256.00000  int64
+anchors                  shape: (1, 16368, 4)         min:   -0.35494  max:    1.10396  float32
+Inference took 0.5862576961517334
+(256, 256, 14)
+Sum = % 23646
+Sum= 23646
+result:
+(1078, 1278)
+bounds:
+upper: 206
+lower: 462
+left : 618
+right: 874
+Processing 1 images
+image                    shape: (256, 256, 3)         min:    0.00000  max:  180.00000  uint8
+molded_images            shape: (1, 256, 256, 3)      min: -123.70000  max:   76.10000  float64
+image_metas              shape: (1, 14)               min:    0.00000  max:  256.00000  int64
+anchors                  shape: (1, 16368, 4)         min:   -0.35494  max:    1.10396  float32
+Inference took 0.5785787105560303
+(256, 256, 11)
+Sum = % 22568
+Sum= 22568
+result:
+(1078, 1278)
+bounds:
+upper: 206
+lower: 462
+left : 824
+right: 1080
+Processing 1 images
+image                    shape: (256, 256, 3)         min:    0.00000  max:  180.00000  uint8
+molded_images            shape: (1, 256, 256, 3)      min: -123.70000  max:   76.10000  float64
+image_metas              shape: (1, 14)               min:    0.00000  max:  256.00000  int64
+anchors                  shape: (1, 16368, 4)         min:   -0.35494  max:    1.10396  float32
+Inference took 0.5873522758483887
+(256, 256, 15)
+Sum = % 22687
+Sum= 22687
+result:
+(1078, 1278)
+bounds:
+upper: 206
+lower: 462
+left : 1022
+right: 1278
+Processing 1 images
+image                    shape: (256, 256, 3)         min:    0.00000  max:  205.00000  uint8
+molded_images            shape: (1, 256, 256, 3)      min: -123.70000  max:  101.10000  float64
+image_metas              shape: (1, 14)               min:    0.00000  max:  256.00000  int64
+anchors                  shape: (1, 16368, 4)         min:   -0.35494  max:    1.10396  float32
+Inference took 0.5897092819213867
+(256, 256, 13)
+Sum = % 23810
+Sum= 23810
+result:
+(1078, 1278)
+bounds:
+upper: 206
+lower: 462
+left : 1022
+right: 1278
+Processing 1 images
+image                    shape: (256, 256, 3)         min:    0.00000  max:  205.00000  uint8
+molded_images            shape: (1, 256, 256, 3)      min: -123.70000  max:  101.10000  float64
+image_metas              shape: (1, 14)               min:    0.00000  max:  256.00000  int64
+anchors                  shape: (1, 16368, 4)         min:   -0.35494  max:    1.10396  float32
+Inference took 0.5940794944763184
+(256, 256, 13)
+Sum = % 23810
+Sum= 23810
+result:
+(1078, 1278)
+bounds:
+upper: 412
+lower: 668
+left : 0
+right: 256
+Processing 1 images
+image                    shape: (256, 256, 3)         min:    0.00000  max:  205.00000  uint8
+molded_images            shape: (1, 256, 256, 3)      min: -123.70000  max:  101.10000  float64
+image_metas              shape: (1, 14)               min:    0.00000  max:  256.00000  int64
+anchors                  shape: (1, 16368, 4)         min:   -0.35494  max:    1.10396  float32
+Inference took 0.5877087116241455
+(256, 256, 13)
+Sum = % 24234
+Sum= 24234
+result:
+(1078, 1278)
+bounds:
+upper: 412
+lower: 668
+left : 206
+right: 462
+Processing 1 images
+image                    shape: (256, 256, 3)         min:    0.00000  max:  255.00000  uint8
+molded_images            shape: (1, 256, 256, 3)      min: -123.70000  max:  151.10000  float64
+image_metas              shape: (1, 14)               min:    0.00000  max:  256.00000  int64
+anchors                  shape: (1, 16368, 4)         min:   -0.35494  max:    1.10396  float32
+Inference took 0.5962250232696533
+(256, 256, 16)
+Sum = % 25799
+Sum= 25799
+result:
+(1078, 1278)
+bounds:
+upper: 412
+lower: 668
+left : 412
+right: 668
+Processing 1 images
+image                    shape: (256, 256, 3)         min:    0.00000  max:  180.00000  uint8
+molded_images            shape: (1, 256, 256, 3)      min: -123.70000  max:   76.10000  float64
+image_metas              shape: (1, 14)               min:    0.00000  max:  256.00000  int64
+anchors                  shape: (1, 16368, 4)         min:   -0.35494  max:    1.10396  float32
+Inference took 0.593142032623291
+(256, 256, 13)
+Sum = % 23457
+Sum= 23457
+result:
+(1078, 1278)
+bounds:
+upper: 412
+lower: 668
+left : 618
+right: 874
+Processing 1 images
+image                    shape: (256, 256, 3)         min:    0.00000  max:  164.00000  uint8
+molded_images            shape: (1, 256, 256, 3)      min: -123.70000  max:   60.10000  float64
+image_metas              shape: (1, 14)               min:    0.00000  max:  256.00000  int64
+anchors                  shape: (1, 16368, 4)         min:   -0.35494  max:    1.10396  float32
+Inference took 0.5837221145629883
+(256, 256, 14)
+Sum = % 23741
+Sum= 23741
+result:
+(1078, 1278)
+bounds:
+upper: 412
+lower: 668
+left : 824
+right: 1080
+Processing 1 images
+image                    shape: (256, 256, 3)         min:    0.00000  max:  197.00000  uint8
+molded_images            shape: (1, 256, 256, 3)      min: -123.70000  max:   93.10000  float64
+image_metas              shape: (1, 14)               min:    0.00000  max:  256.00000  int64
+anchors                  shape: (1, 16368, 4)         min:   -0.35494  max:    1.10396  float32
+Inference took 0.5849101543426514
+(256, 256, 14)
+Sum = % 25931
+Sum= 25931
+result:
+(1078, 1278)
+bounds:
+upper: 412
+lower: 668
+left : 1022
+right: 1278
+Processing 1 images
+image                    shape: (256, 256, 3)         min:    0.00000  max:  205.00000  uint8
+molded_images            shape: (1, 256, 256, 3)      min: -123.70000  max:  101.10000  float64
+image_metas              shape: (1, 14)               min:    0.00000  max:  256.00000  int64
+anchors                  shape: (1, 16368, 4)         min:   -0.35494  max:    1.10396  float32
+Inference took 0.5873034000396729
+(256, 256, 13)
+Sum = % 21039
+Sum= 21039
+result:
+(1078, 1278)
+bounds:
+upper: 412
+lower: 668
+left : 1022
+right: 1278
+Processing 1 images
+image                    shape: (256, 256, 3)         min:    0.00000  max:  205.00000  uint8
+molded_images            shape: (1, 256, 256, 3)      min: -123.70000  max:  101.10000  float64
+image_metas              shape: (1, 14)               min:    0.00000  max:  256.00000  int64
+anchors                  shape: (1, 16368, 4)         min:   -0.35494  max:    1.10396  float32
+Inference took 0.5854377746582031
+(256, 256, 13)
+Sum = % 21039
+Sum= 21039
+result:
+(1078, 1278)
+bounds:
+upper: 618
+lower: 874
+left : 0
+right: 256
+Processing 1 images
+image                    shape: (256, 256, 3)         min:    0.00000  max:  180.00000  uint8
+molded_images            shape: (1, 256, 256, 3)      min: -123.70000  max:   76.10000  float64
+image_metas              shape: (1, 14)               min:    0.00000  max:  256.00000  int64
+anchors                  shape: (1, 16368, 4)         min:   -0.35494  max:    1.10396  float32
+Inference took 0.5944092273712158
+(256, 256, 17)
+Sum = % 28184
+Sum= 28184
+result:
+(1078, 1278)
+bounds:
+upper: 618
+lower: 874
+left : 206
+right: 462
+Processing 1 images
+image                    shape: (256, 256, 3)         min:    0.00000  max:  197.00000  uint8
+molded_images            shape: (1, 256, 256, 3)      min: -123.70000  max:   93.10000  float64
+image_metas              shape: (1, 14)               min:    0.00000  max:  256.00000  int64
+anchors                  shape: (1, 16368, 4)         min:   -0.35494  max:    1.10396  float32
+Inference took 0.5870585441589355
+(256, 256, 16)
+Sum = % 26481
+Sum= 26481
+result:
+(1078, 1278)
+bounds:
+upper: 618
+lower: 874
+left : 412
+right: 668
+Processing 1 images
+image                    shape: (256, 256, 3)         min:    0.00000  max:  180.00000  uint8
+molded_images            shape: (1, 256, 256, 3)      min: -123.70000  max:   76.10000  float64
+image_metas              shape: (1, 14)               min:    0.00000  max:  256.00000  int64
+anchors                  shape: (1, 16368, 4)         min:   -0.35494  max:    1.10396  float32
+Inference took 0.5986640453338623
+(256, 256, 17)
+Sum = % 27341
+Sum= 27341
+result:
+(1078, 1278)
+bounds:
+upper: 618
+lower: 874
+left : 618
+right: 874
+Processing 1 images
+image                    shape: (256, 256, 3)         min:    0.00000  max:  180.00000  uint8
+molded_images            shape: (1, 256, 256, 3)      min: -123.70000  max:   76.10000  float64
+image_metas              shape: (1, 14)               min:    0.00000  max:  256.00000  int64
+anchors                  shape: (1, 16368, 4)         min:   -0.35494  max:    1.10396  float32
+Inference took 0.5908501148223877
+(256, 256, 15)
+Sum = % 24122
+Sum= 24122
+result:
+(1078, 1278)
+bounds:
+upper: 618
+lower: 874
+left : 824
+right: 1080
+Processing 1 images
+image                    shape: (256, 256, 3)         min:    0.00000  max:  213.00000  uint8
+molded_images            shape: (1, 256, 256, 3)      min: -123.70000  max:  109.10000  float64
+image_metas              shape: (1, 14)               min:    0.00000  max:  256.00000  int64
+anchors                  shape: (1, 16368, 4)         min:   -0.35494  max:    1.10396  float32
+Inference took 0.5899841785430908
+(256, 256, 16)
+Sum = % 24346
+Sum= 24346
+result:
+(1078, 1278)
+bounds:
+upper: 618
+lower: 874
+left : 1022
+right: 1278
+Processing 1 images
+image                    shape: (256, 256, 3)         min:    0.00000  max:  213.00000  uint8
+molded_images            shape: (1, 256, 256, 3)      min: -123.70000  max:  109.10000  float64
+image_metas              shape: (1, 14)               min:    0.00000  max:  256.00000  int64
+anchors                  shape: (1, 16368, 4)         min:   -0.35494  max:    1.10396  float32
+Inference took 0.5987691879272461
+(256, 256, 14)
+Sum = % 25811
+Sum= 25811
+result:
+(1078, 1278)
+bounds:
+upper: 618
+lower: 874
+left : 1022
+right: 1278
+Processing 1 images
+image                    shape: (256, 256, 3)         min:    0.00000  max:  213.00000  uint8
+molded_images            shape: (1, 256, 256, 3)      min: -123.70000  max:  109.10000  float64
+image_metas              shape: (1, 14)               min:    0.00000  max:  256.00000  int64
+anchors                  shape: (1, 16368, 4)         min:   -0.35494  max:    1.10396  float32
+Inference took 0.6100256443023682
+(256, 256, 14)
+Sum = % 25811
+Sum= 25811
+result:
+(1078, 1278)
+bounds:
+upper: 822
+lower: 1078
+left : 0
+right: 256
+Processing 1 images
+image                    shape: (256, 256, 3)         min:    0.00000  max:  213.00000  uint8
+molded_images            shape: (1, 256, 256, 3)      min: -123.70000  max:  109.10000  float64
+image_metas              shape: (1, 14)               min:    0.00000  max:  256.00000  int64
+anchors                  shape: (1, 16368, 4)         min:   -0.35494  max:    1.10396  float32
+Inference took 0.5862917900085449
+(256, 256, 13)
+Sum = % 25566
+Sum= 25566
+result:
+(1078, 1278)
+bounds:
+upper: 822
+lower: 1078
+left : 206
+right: 462
+Processing 1 images
+image                    shape: (256, 256, 3)         min:    0.00000  max:  180.00000  uint8
+molded_images            shape: (1, 256, 256, 3)      min: -123.70000  max:   76.10000  float64
+image_metas              shape: (1, 14)               min:    0.00000  max:  256.00000  int64
+anchors                  shape: (1, 16368, 4)         min:   -0.35494  max:    1.10396  float32
+Inference took 0.590259313583374
+(256, 256, 17)
+Sum = % 26220
+Sum= 26220
+result:
+(1078, 1278)
+bounds:
+upper: 822
+lower: 1078
+left : 412
+right: 668
+Processing 1 images
+image                    shape: (256, 256, 3)         min:    0.00000  max:  197.00000  uint8
+molded_images            shape: (1, 256, 256, 3)      min: -123.70000  max:   93.10000  float64
+image_metas              shape: (1, 14)               min:    0.00000  max:  256.00000  int64
+anchors                  shape: (1, 16368, 4)         min:   -0.35494  max:    1.10396  float32
+Inference took 0.5958387851715088
+(256, 256, 17)
+Sum = % 30919
+Sum= 30919
+result:
+(1078, 1278)
+bounds:
+upper: 822
+lower: 1078
+left : 618
+right: 874
+Processing 1 images
+image                    shape: (256, 256, 3)         min:    0.00000  max:  197.00000  uint8
+molded_images            shape: (1, 256, 256, 3)      min: -123.70000  max:   93.10000  float64
+image_metas              shape: (1, 14)               min:    0.00000  max:  256.00000  int64
+anchors                  shape: (1, 16368, 4)         min:   -0.35494  max:    1.10396  float32
+Inference took 0.5952146053314209
+(256, 256, 17)
+Sum = % 30310
+Sum= 30310
+result:
+(1078, 1278)
+bounds:
+upper: 822
+lower: 1078
+left : 824
+right: 1080
+Processing 1 images
+image                    shape: (256, 256, 3)         min:    0.00000  max:  213.00000  uint8
+molded_images            shape: (1, 256, 256, 3)      min: -123.70000  max:  109.10000  float64
+image_metas              shape: (1, 14)               min:    0.00000  max:  256.00000  int64
+anchors                  shape: (1, 16368, 4)         min:   -0.35494  max:    1.10396  float32
+Inference took 0.5841925144195557
+(256, 256, 15)
+Sum = % 27704
+Sum= 27704
+result:
+(1078, 1278)
+bounds:
+upper: 822
+lower: 1078
+left : 1022
+right: 1278
+Processing 1 images
+image                    shape: (256, 256, 3)         min:    0.00000  max:  189.00000  uint8
+molded_images            shape: (1, 256, 256, 3)      min: -123.70000  max:   85.10000  float64
+image_metas              shape: (1, 14)               min:    0.00000  max:  256.00000  int64
+anchors                  shape: (1, 16368, 4)         min:   -0.35494  max:    1.10396  float32
+Inference took 0.5995855331420898
+(256, 256, 15)
+Sum = % 22157
+Sum= 22157
+result:
+(1078, 1278)
+bounds:
+upper: 822
+lower: 1078
+left : 1022
+right: 1278
+Processing 1 images
+image                    shape: (256, 256, 3)         min:    0.00000  max:  189.00000  uint8
+molded_images            shape: (1, 256, 256, 3)      min: -123.70000  max:   85.10000  float64
+image_metas              shape: (1, 14)               min:    0.00000  max:  256.00000  int64
+anchors                  shape: (1, 16368, 4)         min:   -0.35494  max:    1.10396  float32
+Inference took 0.6228971481323242
+(256, 256, 15)
+Sum = % 22157
+Sum= 22157
+result:
+(1078, 1278)
+bounds:
+upper: 822
+lower: 1078
+left : 0
+right: 256
+Processing 1 images
+image                    shape: (256, 256, 3)         min:    0.00000  max:  213.00000  uint8
+molded_images            shape: (1, 256, 256, 3)      min: -123.70000  max:  109.10000  float64
+image_metas              shape: (1, 14)               min:    0.00000  max:  256.00000  int64
+anchors                  shape: (1, 16368, 4)         min:   -0.35494  max:    1.10396  float32
+Inference took 0.7020390033721924
+(256, 256, 13)
+Sum = % 25566
+Sum= 25566
+result:
+(1078, 1278)
+bounds:
+upper: 822
+lower: 1078
+left : 206
+right: 462
+Processing 1 images
+image                    shape: (256, 256, 3)         min:    0.00000  max:  180.00000  uint8
+molded_images            shape: (1, 256, 256, 3)      min: -123.70000  max:   76.10000  float64
+image_metas              shape: (1, 14)               min:    0.00000  max:  256.00000  int64
+anchors                  shape: (1, 16368, 4)         min:   -0.35494  max:    1.10396  float32
+Inference took 0.6089537143707275
+(256, 256, 17)
+Sum = % 26220
+Sum= 26220
+result:
+(1078, 1278)
+bounds:
+upper: 822
+lower: 1078
+left : 412
+right: 668
+Processing 1 images
+image                    shape: (256, 256, 3)         min:    0.00000  max:  197.00000  uint8
+molded_images            shape: (1, 256, 256, 3)      min: -123.70000  max:   93.10000  float64
+image_metas              shape: (1, 14)               min:    0.00000  max:  256.00000  int64
+anchors                  shape: (1, 16368, 4)         min:   -0.35494  max:    1.10396  float32
+Inference took 0.6153848171234131
+(256, 256, 17)
+Sum = % 30919
+Sum= 30919
+result:
+(1078, 1278)
+bounds:
+upper: 822
+lower: 1078
+left : 618
+right: 874
+Processing 1 images
+image                    shape: (256, 256, 3)         min:    0.00000  max:  197.00000  uint8
+molded_images            shape: (1, 256, 256, 3)      min: -123.70000  max:   93.10000  float64
+image_metas              shape: (1, 14)               min:    0.00000  max:  256.00000  int64
+anchors                  shape: (1, 16368, 4)         min:   -0.35494  max:    1.10396  float32
+Inference took 0.6914463043212891
+(256, 256, 17)
+Sum = % 30310
+Sum= 30310
+result:
+(1078, 1278)
+bounds:
+upper: 822
+lower: 1078
+left : 824
+right: 1080
+Processing 1 images
+image                    shape: (256, 256, 3)         min:    0.00000  max:  213.00000  uint8
+molded_images            shape: (1, 256, 256, 3)      min: -123.70000  max:  109.10000  float64
+image_metas              shape: (1, 14)               min:    0.00000  max:  256.00000  int64
+anchors                  shape: (1, 16368, 4)         min:   -0.35494  max:    1.10396  float32
+Inference took 0.5985100269317627
+(256, 256, 15)
+Sum = % 27704
+Sum= 27704
+result:
+(1078, 1278)
+bounds:
+upper: 822
+lower: 1078
+left : 1022
+right: 1278
+Processing 1 images
+image                    shape: (256, 256, 3)         min:    0.00000  max:  189.00000  uint8
+molded_images            shape: (1, 256, 256, 3)      min: -123.70000  max:   85.10000  float64
+image_metas              shape: (1, 14)               min:    0.00000  max:  256.00000  int64
+anchors                  shape: (1, 16368, 4)         min:   -0.35494  max:    1.10396  float32
+Inference took 0.6021938323974609
+(256, 256, 15)
+Sum = % 22157
+Sum= 22157
+result:
+(1078, 1278)
+bounds:
+upper: 822
+lower: 1078
+left : 1022
+right: 1278
+Processing 1 images
+image                    shape: (256, 256, 3)         min:    0.00000  max:  189.00000  uint8
+molded_images            shape: (1, 256, 256, 3)      min: -123.70000  max:   85.10000  float64
+image_metas              shape: (1, 14)               min:    0.00000  max:  256.00000  int64
+anchors                  shape: (1, 16368, 4)         min:   -0.35494  max:    1.10396  float32
+Inference took 0.602790117263794
+(256, 256, 15)
+Sum = % 22157
+Sum= 22157
+result:
+(1078, 1278)
+Connectivity matrix built
+(604, 604)
+222
+(604,)
+<class 'numpy.ndarray'>
+applied lookup
+(1078, 1278, 43)
+Wrote profile results to demo_profile.py.lprof
+Timer unit: 1e-06 s
+
+Total time: 28.7764 s
+File: ../../../mrcnn/samples/cell/inference_profile.py
+Function: stitched_inference at line 148
+
+Line #      Hits         Time  Per Hit   % Time  Line Contents
+==============================================================
+   148                                           @profile
+   149                                           def stitched_inference(image, cropsize, model, padding=40):#, minsize=100):
+   150                                               """
+   151                                               array: Array to be padded
+   152                                               reference: Reference array with the desired shape
+   153                                               offsets: list of offsets (number of elements must be equal to the dimension of the array)
+   154                                               """
+   155         1        357.0    357.0      0.0      stack = np.zeros((image.shape[0], image.shape[1],1),dtype=np.uint16) # make new image of zeros (exclude third dimension, not using rgb)
+   156         1       1277.0   1277.0      0.0      visited = np.zeros(image.shape[0:2])
+   157         1        100.0    100.0      0.0      num_times_visited = np.zeros(image.shape[0:2])
+   158                                               
+   159         1          1.0      1.0      0.0      num_row = image.shape[0] # num rows in the image
+   160         1          1.0      1.0      0.0      num_col = image.shape[1]
+   161         1         14.0     14.0      0.0      print(image.shape)
+   162                                               
+   163         1          2.0      2.0      0.0      assert cropsize < num_row and cropsize < num_col, 'cropsize must be smaller than the image dimensions'
+   164                                                   
+   165                                               #rowlist = np.concatenate(([0],np.arange(cropsize-padding, num_row, cropsize)))
+   166                                               #collist = np.concatenate(([0],np.arange(cropsize-padding, num_col, cropsize)))
+   167         1          1.0      1.0      0.0      checkpoint_id = 1
+   168         7         38.0      5.4      0.0      for row in np.arange(0, num_row, cropsize-padding): # row defines the rightbound side of box
+   169        48        465.0      9.7      0.0          for col in np.arange(0, num_col, cropsize-padding): # col defines lowerbound of box
+   170        42      77086.0   1835.4      0.3              masks_with_ids = np.zeros(image.shape[0:2])
+   171        42         59.0      1.4      0.0              upperbound = row
+   172        42        218.0      5.2      0.0              lowerbound = row + cropsize
+   173        42         50.0      1.2      0.0              leftbound  = col
+   174        42         64.0      1.5      0.0              rightbound = col + cropsize
+   175                                                       
+   176        42        111.0      2.6      0.0              if lowerbound > num_row:
+   177        14         15.0      1.1      0.0                  lowerbound = num_row
+   178        14         17.0      1.2      0.0                  upperbound = num_row-cropsize
+   179                                                       
+   180        42         55.0      1.3      0.0              if rightbound > num_col:
+   181        12         12.0      1.0      0.0                  rightbound = num_col
+   182        12         15.0      1.2      0.0                  leftbound  = num_col-cropsize
+   183                                                       #upperbound = bound(final_image, cropsize, padding, minsize, row, 'upper')
+   184                                                       #lowerbound = bound(final_image, cropsize, padding, minsize, row, 'lower')
+   185                                                       #rightbound = bound(final_image, cropsize, padding, minsize, col, 'right')
+   186                                                       #leftbound  = bound(final_image, cropsize, padding, minsize, col, 'left')
+   187                                                       #print(row)
+   188                                                       #print(col)
+   189        42        408.0      9.7      0.0              print('bounds:')
+   190        42        421.0     10.0      0.0              print('upper: {}'.format(upperbound))
+   191        42        109.0      2.6      0.0              print('lower: {}'.format(lowerbound))
+   192        42        146.0      3.5      0.0              print('left : {}'.format(leftbound))
+   193        42        138.0      3.3      0.0              print('right: {}'.format(rightbound))
+   194                                                       
+   195        42      18272.0    435.0      0.1              num_times_visited[upperbound:lowerbound, leftbound:rightbound] += 1
+   196        42        139.0      3.3      0.0              cropped_image = image[upperbound:lowerbound, leftbound:rightbound, :]
+   197                                                       #print('cropped image shape: {}'.format(cropped_image.shape))
+   198                                                       #print(cropped_image.shape)
+   199                                                       
+   200        42   26944450.0 641534.5     93.6              masks = run_inference(model, cropped_image)
+   201                                                       
+   202                                                       #padded_masks = pad(masks, [num_row, num_col, masks.shape[2]], [upperbound, leftbound])
+   203                                                       #padded_masks = pad(masks, [num_row, num_col, masks.shape[2]], [upperbound,leftbound,0])
+   204                                                       #print('mask shape:')
+   205                                                       #print (padded_masks.shape)
+   206                                                       
+   207        42     149311.0   3555.0      0.5              one_inference_mask_image, checkpoint_id = mask_stack_to_single_image(masks, checkpoint_id) # works
+   208        42      20377.0    485.2      0.1              padded_inference_mask = pad(one_inference_mask_image, [num_row, num_col], [upperbound,leftbound])
+   209        42       1643.0     39.1      0.0              padded_inference_mask = np.expand_dims(padded_inference_mask, axis=2)
+   210        42    1561061.0  37168.1      5.4              stack = np.concatenate((stack, padded_inference_mask), axis=2)
+   211                                                                   
+   212         1          1.0      1.0      0.0      return stack, num_times_visited
+

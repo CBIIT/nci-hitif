@@ -1,0 +1,90 @@
+[general]
+global_threshold = 0.67
+padded_width = 1280
+padded_height =  1088
+batch_size = 1
+label_min_size = 5
+label_max_size = 100000
+
+
+1/1 [==============================] - 9s 9s/step
+
+1/1 [==============================] - 8s 8s/step
+Wrote profile results to demo_profile.py.lprof
+Timer unit: 1e-06 s
+
+Total time: 16.9189 s
+File: ../src/watershed_infer_profile.py
+Function: model_prediction at line 49
+
+Line #      Hits         Time  Per Hit   % Time  Line Contents
+==============================================================
+    49                                           @profile
+    50                                           def model_prediction(img,model,param):
+    51                                           
+    52                                               # Change the datatype with normalization. (u16 -> ubyte)
+    53         2       7940.0   3970.0      0.0      img = cv2.normalize(src=img, dst=None, alpha=0, beta=255, norm_type=cv2.NORM_MINMAX, dtype=cv2.CV_8U)
+    54                                           
+    55                                               # Change the input resolution into padded resolution.
+    56         2          6.0      3.0      0.0      dim1 = param['padded_width']
+    57         2         10.0      5.0      0.0      dim2 = param['padded_height']
+    58         2         10.0      5.0      0.0      dim_original_height, dim_original_width = img[0].shape
+    59                                           
+    60         2         53.0     26.5      0.0      imshape = np.array([dim2, dim1]).astype('uint64')
+    61         2          4.0      2.0      0.0      noofImages = img.shape[0]
+    62                                           
+    63         2          2.0      1.0      0.0      batch_size = param['batch_size']
+    64         2       2427.0   1213.5      0.0      imagesNP = np.zeros([noofImages, imshape[0], imshape[1]], dtype=np.float32)
+    65                                           
+    66         4         14.0      3.5      0.0      for index in range(len(img)):
+    67         2          6.0      3.0      0.0          input_cell = img[index, :, :]
+    68         2       1536.0    768.0      0.0          im_in = input_cell.astype('float32')
+    69         2         18.0      9.0      0.0          c_im_in_shape = np.array(im_in.shape)
+    70         2         93.0     46.5      0.0          c_im_in_shape_pad = ((c_im_in_shape - imshape) / 2).astype('int')
+    71         2         15.0      7.5      0.0          im_in_pad = np.lib.pad(im_in, (
+    72         2         29.0     14.5      0.0              (-c_im_in_shape_pad[0], -c_im_in_shape_pad[0]), (-c_im_in_shape_pad[1], -c_im_in_shape_pad[1])),
+    73         2       5214.0   2607.0      0.0                                 'constant').copy()
+    74         2          6.0      3.0      0.0          del im_in
+    75         2          3.0      1.5      0.0          im_in = im_in_pad
+    76         2          3.0      1.5      0.0          del im_in_pad
+    77                                           
+    78         2          2.0      1.0      0.0          xs = 0
+    79         2          2.0      1.0      0.0          ys = 0
+    80         2          3.0      1.5      0.0          xe = im_in.shape[0]
+    81         2          3.0      1.5      0.0          ye = im_in.shape[1]
+    82                                           
+    83         2       1232.0    616.0      0.0          c_im_in_max = np.amax(im_in)
+    84         2         36.0     18.0      0.0          if c_im_in_max > 255:
+    85                                                       imagesNP[index, xs:xe, ys:ye] = im_in / float((2 ** 16) - 1)
+    86         2         18.0      9.0      0.0          elif 0 <= c_im_in_max <= 255:
+    87         2       2832.0   1416.0      0.0              imagesNP[index, xs:xe, ys:ye] = im_in / float((2 ** 8) - 1)
+    88                                                   elif 0 <= c_im_in_max <= 1.0:
+    89                                                       imagesNP[index, xs:xe, ys:ye] = im_in
+    90                                           
+    91         2   16888733.0 8444366.5     99.8      imgs_mask = unet_predict(model, batch_size, imagesNP)
+    92                                           
+    93         2       5732.0   2866.0      0.0      result = np.zeros((noofImages, dim_original_height, dim_original_width))
+    94                                           
+    95         4         14.0      3.5      0.0      for i in range(noofImages):
+    96         2          5.0      2.5      0.0          yoffset = int((dim2 - dim_original_height) / 2)
+    97         2          3.0      1.5      0.0          xoffset = int((dim1 - dim_original_width) / 2)
+    98         2          4.0      2.0      0.0          if imgs_mask.ndim == 4:
+    99         2         29.0     14.5      0.0              im_in = (imgs_mask[i, :, :, :])
+   100         2          3.0      1.5      0.0              im_in = im_in[yoffset:yoffset + dim_original_height,
+   101         2          7.0      3.5      0.0                      xoffset:xoffset + dim_original_width, :]
+   102         2        118.0     59.0      0.0              im_in = np.swapaxes(im_in, 0, 2)
+   103         2         39.0     19.5      0.0              im_in = np.transpose(im_in, (0, 2, 1))
+   104         2          4.0      2.0      0.0              if im_in.shape[0] == 1:
+   105         2         46.0     23.0      0.0                  im_in = np.squeeze(im_in)
+   106         2          3.0      1.5      0.0          if imgs_mask.ndim == 3:
+   107                                                       im_in = np.squeeze(imgs_mask[i, :, :])
+   108                                                       im_in = im_in[yoffset:yoffset + dim_original_height,
+   109                                                               xoffset:xoffset + dim_original_width]
+   110         2          2.0      1.0      0.0          if imgs_mask.ndim == 2:
+   111                                                       im_in = imgs_mask
+   112                                                       im_in = im_in[yoffset:yoffset + dim_original_height,
+   113                                                               xoffset:xoffset + dim_original_width]
+   114         2       2682.0   1341.0      0.0          result[i,:,:] = im_in
+   115                                           
+   116         2          2.0      1.0      0.0      return result
+
