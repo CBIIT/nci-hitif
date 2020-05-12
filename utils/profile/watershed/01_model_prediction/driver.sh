@@ -8,7 +8,7 @@ sed -i 's/img = np.zeros((len(image_list),1078,1278))/img = np.zeros((100,1078,1
 sed -i 's/from watershed_infer import */from watershed_infer_profile import /g' demo.py
 sed -i '/import sys,glob,warnings,os/i import line_profiler' demo.py
 sed -i '/image_resized = img_as_ubyte/d' demo.py
-sed -i '/img = np.zeros((1,1078,1278))/i image_resized = img_as_ubyte(resize(np.array(Image.open(image_list[0])), (1078, 1278)))' demo.py
+sed -i '/for i in range(len(img)):/i image_resized = img_as_ubyte(resize(np.array(Image.open(image_list[0])), (1078, 1278)))' demo.py
 mv demo.py demo_profile.py
 mv watershed_infer.py watershed_infer_profile.py
 
