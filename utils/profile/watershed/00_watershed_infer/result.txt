@@ -7,13 +7,13 @@ label_min_size = 5
 label_max_size = 100000
 
 
-1/1 [==============================] - 8s 8s/step
+1/1 [==============================] - 9s 9s/step
 
 1/1 [==============================] - 8s 8s/step
 Wrote profile results to demo_profile.py.lprof
 Timer unit: 1e-06 s
 
-Total time: 17.7968 s
+Total time: 18.0493 s
 File: ../src/watershed_infer_profile.py
 Function: watershed_infer at line 117
 
@@ -23,42 +23,42 @@ Line #      Hits         Time  Per Hit   % Time  Line Contents
    118                                           def watershed_infer(img,gaussian_blur_model,distance_map_model,config_file_path):
    119                                           
    120                                               # Parser (Config file -> Dictionary)
-   121         1        256.0    256.0      0.0      config = configparser.ConfigParser()
-   122         1        552.0    552.0      0.0      config.read(config_file_path)
+   121         1        253.0    253.0      0.0      config = configparser.ConfigParser()
+   122         1        605.0    605.0      0.0      config.read(config_file_path)
    123         1        158.0    158.0      0.0      param = {s: dict(config.items(s)) for s in config.sections()}['general']
    124                                           
-   125         7          7.0      1.0      0.0      for key in param:
-   126         6          8.0      1.3      0.0          if key == "global_threshold":
+   125         7          8.0      1.1      0.0      for key in param:
+   126         6          6.0      1.0      0.0          if key == "global_threshold":
    127         1          4.0      4.0      0.0              param[key] = float(param[key])
    128                                                   else:
-   129         5          6.0      1.2      0.0              param[key] = int(param[key])
+   129         5          9.0      1.8      0.0              param[key] = int(param[key])
    130                                           
    131                                               # Prediciton (Galussian_Blur DL model)
-   132         1    8506754.0 8506754.0     47.8      img_gauss = model_prediction(img, gaussian_blur_model, param)
+   132         1    8604244.0 8604244.0     47.7      img_gauss = model_prediction(img, gaussian_blur_model, param)
    133                                           
    134                                               # Prediction (Distance MAP DL Model)
-   135         1    8325131.0 8325131.0     46.8      result = model_prediction(img_gauss, distance_map_model, param)
+   135         1    8464707.0 8464707.0     46.9      result = model_prediction(img_gauss, distance_map_model, param)
    136                                           
    137                                               # Global Thresholding
-   138         1       2425.0   2425.0      0.0      result[result<param['global_threshold']] = 0
-   139         1       1161.0   1161.0      0.0      result[result!=0] = 1
+   138         1       2743.0   2743.0      0.0      result[result<param['global_threshold']] = 0
+   139         1       1168.0   1168.0      0.0      result[result!=0] = 1
    140                                           
-   141         1       2408.0   2408.0      0.0      mask = np.zeros(result.shape)
+   141         1       2362.0   2362.0      0.0      mask = np.zeros(result.shape)
    142                                           
-   143         2          8.0      4.0      0.0      for i in range(len(result)):
+   143         2          7.0      3.5      0.0      for i in range(len(result)):
    144                                           
    145                                                   # Morphorligcal Operation
-   146         1     394460.0 394460.0      2.2          mask[i] = closing(result[i], disk(6))
+   146         1     396706.0 396706.0      2.2          mask[i] = closing(result[i], disk(6))
    147                                           
    148                                                   # Connected Component Analysis
-   149         1      10493.0  10493.0      0.1          mask[i] = label(mask[i], connectivity=1, background=0)
+   149         1      11431.0  11431.0      0.1          mask[i] = label(mask[i], connectivity=1, background=0)
    150                                           
    151                                                   # Watershed
-   152         1     525506.0 525506.0      3.0          watershed_result = watershed(img_gauss[i], mask[i])
+   152         1     537342.0 537342.0      3.0          watershed_result = watershed(img_gauss[i], mask[i])
    153                                           
    154                                                   # Label size filter
-   155         1      13494.0  13494.0      0.1          mask[i] = remove_small_objects(watershed_result, param['label_min_size'], connectivity=1)
-   156         1      14018.0  14018.0      0.1          mask[i] = remove_large_objects(watershed_result, param['label_max_size'], connectivity=1)
+   155         1      13313.0  13313.0      0.1          mask[i] = remove_small_objects(watershed_result, param['label_min_size'], connectivity=1)
+   156         1      14195.0  14195.0      0.1          mask[i] = remove_large_objects(watershed_result, param['label_max_size'], connectivity=1)
    157                                           
    158         1          1.0      1.0      0.0      return mask
 
