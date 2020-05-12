@@ -30,7 +30,10 @@ config_file_path='./demo.ini'
 with open(config_file_path, 'r') as fin:
     print(fin.read())
 
-image_list =['/Users/leek13/Downloads/1a.tif']
+image_list =['../../../visualization/GreyScale/BABE_Biological/Plate1_E03_T0001FF001Zall.tif',
+             '../../../visualization/GreyScale/HiTIF_Laurent_Technical/AUTO0496_J14_T0001F001L01A01Z01C01.tif',
+             '../../../visualization/GreyScale/Manasi_Technical/Plate1_M21_T0001F003L01A01Z01C01.tif'
+]
 
 img = np.zeros((len(image_list),1078,1278))
 for i in range(len(img)):
