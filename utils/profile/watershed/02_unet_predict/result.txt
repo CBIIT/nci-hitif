@@ -13,7 +13,7 @@ label_max_size = 100000
 Wrote profile results to demo_profile.py.lprof
 Timer unit: 1e-06 s
 
-Total time: 17.1329 s
+Total time: 16.9712 s
 File: ../src/watershed_infer_profile.py
 Function: unet_predict at line 36
 
@@ -21,14 +21,14 @@ Line #      Hits         Time  Per Hit   % Time  Line Contents
 ==============================================================
     36                                           @profile
     37                                           def unet_predict(model, batch_size, imgs_test):
-    38         2         94.0     47.0      0.0      model_input_channelSize = model.layers[0].input_shape[-1]
-    39         2       1936.0    968.0      0.0      imgs_test = imgs_test.astype('float32')
+    38         2        132.0     66.0      0.0      model_input_channelSize = model.layers[0].input_shape[-1]
+    39         2       1883.0    941.5      0.0      imgs_test = imgs_test.astype('float32')
     40                                           
-    41         2          3.0      1.5      0.0      if model_input_channelSize > 1:
-    42         2      10823.0   5411.5      0.1          imgs_test = np.stack((imgs_test,) * model_input_channelSize, -1)
+    41         2          2.0      1.0      0.0      if model_input_channelSize > 1:
+    42         2      11940.0   5970.0      0.1          imgs_test = np.stack((imgs_test,) * model_input_channelSize, -1)
     43                                               elif model_input_channelSize == 1:
     44                                                   imgs_test = np.expand_dims(imgs_test, 3)
-    45         2   17119999.0 8559999.5     99.9      imgs_mask_test = model.predict(imgs_test, batch_size=batch_size, verbose=1)
+    45         2   16957287.0 8478643.5     99.9      imgs_mask_test = model.predict(imgs_test, batch_size=batch_size, verbose=1)
     46                                           
     47         2          6.0      3.0      0.0      return (imgs_mask_test)
 
