@@ -27,3 +27,5 @@ rm *.py
 rm $MRCNN_DEMO/demo_profile.py
 rm $MRCNN_SRC/mrcnn_infer_profile.py
 rm $INF_SRC/inference_profile.py
+
+
