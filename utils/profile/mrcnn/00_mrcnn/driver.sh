@@ -19,11 +19,11 @@ cp inference_profile.py $INF_SRC
 # Execution and Store Benchmark Result.
 RES_FOLDER=`pwd`
 pushd $MRCNN_DEMO
-python3 demo_profile.py > $RES_FOLDER/result.txt
+#python3 demo_profile.py > $RES_FOLDER/result.txt
 popd
 
 # Clean up generated python codes.
-rm *.py
+#rm *.py
 rm $MRCNN_DEMO/demo_profile.py
 rm $MRCNN_SRC/mrcnn_infer_profile.py
 rm $INF_SRC/inference_profile.py

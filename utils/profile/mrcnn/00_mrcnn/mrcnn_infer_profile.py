@@ -2,12 +2,11 @@ import sys,os,configparser,skimage
 import numpy as np
 sys.path.insert(1, '../../../mrcnn/samples/cell')
 from inference_utils import CleanMask
-from inference import generate_inference_model
-from inference import stitched_inference
-from inference import map_uint16_to_uint8
+from inference_profile import generate_inference_model
+from inference_profile import stitched_inference
+from inference_profile import map_uint16_to_uint8
 from skimage.color import label2rgb
 
-@profile
 def mrcnn_infer(img, mrcnn_model_path, config_file_path):
     # Config File Parser
     config = configparser.ConfigParser()
