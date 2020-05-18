@@ -11,6 +11,6 @@ The required configuration for the pipeline is:
 
 1. Set of training experiments to be used to train the model
 2. Set of test experiments to run inference and evaluation
-3. Configuration of the augmentation/pre-processing pipeline
+3. Configuration of the augmentation/pre-processing pipeline for input experiments
 4. Configuration of MRCNN model training
 5. Configuration of FPN models training
