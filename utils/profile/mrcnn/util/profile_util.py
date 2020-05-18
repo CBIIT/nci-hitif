@@ -41,12 +41,12 @@ inference_input = input_dir + "inference_profile.py"
 # Replace words
 replace_word(demo_input,"./demo_profile.py","$NUM_ITER",str(param["num_image"]))
 if param['mrcnn_infer_profile'] == True:
-    replace_word(mrcnn_infer_input, "./mrcnn_infer_profile.py", "$PROF_MRCNN_INFER", "@profile")
-else:
-    replace_word(mrcnn_infer_input, "./mrcnn_infer_profile.py", "$PROF_MRCNN_INFER", "")
+    replace_word("./demo_profile.py", "./demo_profile.py", "mask = mrcnn_infer(img, mrcnn_model_path, config_file_path)",
+                 "lp = LineProfiler()\nlp_wrapper = lp(mrcnn_infer)\nlp_wrapper(img, mrcnn_model_path, config_file_path)\nlp.print_stats()")
 
 if param['stitched_inference_profile'] == True:
-    replace_word(inference_input, "./inference_profile.py", "$PROF_STITCHED_INFERENCE", "@profile")
+    replace_word(mrcnn_infer_input, "./mrcnn_infer_profile.py", "stitched_inference_stack, num_times_visited = stitched_inference(image, cropsize, model, padding=padding)",
+                 "lp = LineProfiler()\nlp_wrapper = lp(mrcnn_infer)\nlp_wrapper(img, mrcnn_model_path, config_file_path)\nlp.print_stats()")
 else:
     replace_word(inference_input, "./inference_profile.py", "$PROF_STITCHED_INFERENCE", "")
 

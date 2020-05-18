@@ -17,7 +17,7 @@ image                    shape: (256, 256, 3)         min:    0.00000  max:  156
 molded_images            shape: (1, 256, 256, 3)      min: -123.70000  max:   52.10000  float64
 image_metas              shape: (1, 14)               min:    0.00000  max:  256.00000  int64
 anchors                  shape: (1, 16368, 4)         min:   -0.35494  max:    1.10396  float32
-Inference took 2.673956871032715
+Inference took 2.424990177154541
 (256, 256, 12)
 Sum = % 23035
 Sum= 23035
@@ -33,7 +33,7 @@ image                    shape: (256, 256, 3)         min:    0.00000  max:  172
 molded_images            shape: (1, 256, 256, 3)      min: -123.70000  max:   68.10000  float64
 image_metas              shape: (1, 14)               min:    0.00000  max:  256.00000  int64
 anchors                  shape: (1, 16368, 4)         min:   -0.35494  max:    1.10396  float32
-Inference took 0.8573176860809326
+Inference took 0.5586996078491211
 (256, 256, 12)
 Sum = % 23157
 Sum= 23157
@@ -49,7 +49,7 @@ image                    shape: (256, 256, 3)         min:    0.00000  max:  180
 molded_images            shape: (1, 256, 256, 3)      min: -123.70000  max:   76.10000  float64
 image_metas              shape: (1, 14)               min:    0.00000  max:  256.00000  int64
 anchors                  shape: (1, 16368, 4)         min:   -0.35494  max:    1.10396  float32
-Inference took 0.8552167415618896
+Inference took 0.5585861206054688
 (256, 256, 15)
 Sum = % 23361
 Sum= 23361
@@ -65,7 +65,7 @@ image                    shape: (256, 256, 3)         min:    0.00000  max:  156
 molded_images            shape: (1, 256, 256, 3)      min: -123.70000  max:   52.10000  float64
 image_metas              shape: (1, 14)               min:    0.00000  max:  256.00000  int64
 anchors                  shape: (1, 16368, 4)         min:   -0.35494  max:    1.10396  float32
-Inference took 0.8296277523040771
+Inference took 0.5620503425598145
 (256, 256, 13)
 Sum = % 20380
 Sum= 20380
@@ -81,7 +81,7 @@ image                    shape: (256, 256, 3)         min:    0.00000  max:  180
 molded_images            shape: (1, 256, 256, 3)      min: -123.70000  max:   76.10000  float64
 image_metas              shape: (1, 14)               min:    0.00000  max:  256.00000  int64
 anchors                  shape: (1, 16368, 4)         min:   -0.35494  max:    1.10396  float32
-Inference took 0.9267239570617676
+Inference took 0.5635137557983398
 (256, 256, 12)
 Sum = % 23500
 Sum= 23500
@@ -97,7 +97,7 @@ image                    shape: (256, 256, 3)         min:    0.00000  max:  180
 molded_images            shape: (1, 256, 256, 3)      min: -123.70000  max:   76.10000  float64
 image_metas              shape: (1, 14)               min:    0.00000  max:  256.00000  int64
 anchors                  shape: (1, 16368, 4)         min:   -0.35494  max:    1.10396  float32
-Inference took 0.8335320949554443
+Inference took 0.5802614688873291
 (256, 256, 12)
 Sum = % 25425
 Sum= 25425
@@ -113,7 +113,7 @@ image                    shape: (256, 256, 3)         min:    0.00000  max:  180
 molded_images            shape: (1, 256, 256, 3)      min: -123.70000  max:   76.10000  float64
 image_metas              shape: (1, 14)               min:    0.00000  max:  256.00000  int64
 anchors                  shape: (1, 16368, 4)         min:   -0.35494  max:    1.10396  float32
-Inference took 0.8219985961914062
+Inference took 0.6152081489562988
 (256, 256, 12)
 Sum = % 25425
 Sum= 25425
@@ -129,7 +129,7 @@ image                    shape: (256, 256, 3)         min:    0.00000  max:  205
 molded_images            shape: (1, 256, 256, 3)      min: -123.70000  max:  101.10000  float64
 image_metas              shape: (1, 14)               min:    0.00000  max:  256.00000  int64
 anchors                  shape: (1, 16368, 4)         min:   -0.35494  max:    1.10396  float32
-Inference took 0.8191077709197998
+Inference took 0.5932798385620117
 (256, 256, 13)
 Sum = % 21537
 Sum= 21537
@@ -145,7 +145,7 @@ image                    shape: (256, 256, 3)         min:    0.00000  max:  230
 molded_images            shape: (1, 256, 256, 3)      min: -123.70000  max:  126.10000  float64
 image_metas              shape: (1, 14)               min:    0.00000  max:  256.00000  int64
 anchors                  shape: (1, 16368, 4)         min:   -0.35494  max:    1.10396  float32
-Inference took 0.8156960010528564
+Inference took 0.6063170433044434
 (256, 256, 13)
 Sum = % 26847
 Sum= 26847
@@ -161,7 +161,7 @@ image                    shape: (256, 256, 3)         min:    0.00000  max:  180
 molded_images            shape: (1, 256, 256, 3)      min: -123.70000  max:   76.10000  float64
 image_metas              shape: (1, 14)               min:    0.00000  max:  256.00000  int64
 anchors                  shape: (1, 16368, 4)         min:   -0.35494  max:    1.10396  float32
-Inference took 0.8192307949066162
+Inference took 0.5602359771728516
 (256, 256, 14)
 Sum = % 23646
 Sum= 23646
@@ -177,7 +177,7 @@ image                    shape: (256, 256, 3)         min:    0.00000  max:  180
 molded_images            shape: (1, 256, 256, 3)      min: -123.70000  max:   76.10000  float64
 image_metas              shape: (1, 14)               min:    0.00000  max:  256.00000  int64
 anchors                  shape: (1, 16368, 4)         min:   -0.35494  max:    1.10396  float32
-Inference took 0.8270504474639893
+Inference took 0.5800778865814209
 (256, 256, 11)
 Sum = % 22568
 Sum= 22568
@@ -193,7 +193,7 @@ image                    shape: (256, 256, 3)         min:    0.00000  max:  180
 molded_images            shape: (1, 256, 256, 3)      min: -123.70000  max:   76.10000  float64
 image_metas              shape: (1, 14)               min:    0.00000  max:  256.00000  int64
 anchors                  shape: (1, 16368, 4)         min:   -0.35494  max:    1.10396  float32
-Inference took 0.8759229183197021
+Inference took 0.5605318546295166
 (256, 256, 15)
 Sum = % 22687
 Sum= 22687
@@ -209,7 +209,7 @@ image                    shape: (256, 256, 3)         min:    0.00000  max:  205
 molded_images            shape: (1, 256, 256, 3)      min: -123.70000  max:  101.10000  float64
 image_metas              shape: (1, 14)               min:    0.00000  max:  256.00000  int64
 anchors                  shape: (1, 16368, 4)         min:   -0.35494  max:    1.10396  float32
-Inference took 0.8467276096343994
+Inference took 0.5551154613494873
 (256, 256, 13)
 Sum = % 23810
 Sum= 23810
@@ -225,7 +225,7 @@ image                    shape: (256, 256, 3)         min:    0.00000  max:  205
 molded_images            shape: (1, 256, 256, 3)      min: -123.70000  max:  101.10000  float64
 image_metas              shape: (1, 14)               min:    0.00000  max:  256.00000  int64
 anchors                  shape: (1, 16368, 4)         min:   -0.35494  max:    1.10396  float32
-Inference took 0.884779691696167
+Inference took 0.573627233505249
 (256, 256, 13)
 Sum = % 23810
 Sum= 23810
@@ -241,7 +241,7 @@ image                    shape: (256, 256, 3)         min:    0.00000  max:  205
 molded_images            shape: (1, 256, 256, 3)      min: -123.70000  max:  101.10000  float64
 image_metas              shape: (1, 14)               min:    0.00000  max:  256.00000  int64
 anchors                  shape: (1, 16368, 4)         min:   -0.35494  max:    1.10396  float32
-Inference took 0.8254201412200928
+Inference took 0.607764720916748
 (256, 256, 13)
 Sum = % 24234
 Sum= 24234
@@ -257,7 +257,7 @@ image                    shape: (256, 256, 3)         min:    0.00000  max:  255
 molded_images            shape: (1, 256, 256, 3)      min: -123.70000  max:  151.10000  float64
 image_metas              shape: (1, 14)               min:    0.00000  max:  256.00000  int64
 anchors                  shape: (1, 16368, 4)         min:   -0.35494  max:    1.10396  float32
-Inference took 0.8483483791351318
+Inference took 0.566464900970459
 (256, 256, 16)
 Sum = % 25799
 Sum= 25799
@@ -273,7 +273,7 @@ image                    shape: (256, 256, 3)         min:    0.00000  max:  180
 molded_images            shape: (1, 256, 256, 3)      min: -123.70000  max:   76.10000  float64
 image_metas              shape: (1, 14)               min:    0.00000  max:  256.00000  int64
 anchors                  shape: (1, 16368, 4)         min:   -0.35494  max:    1.10396  float32
-Inference took 0.8141448497772217
+Inference took 0.5533580780029297
 (256, 256, 13)
 Sum = % 23457
 Sum= 23457
@@ -289,7 +289,7 @@ image                    shape: (256, 256, 3)         min:    0.00000  max:  164
 molded_images            shape: (1, 256, 256, 3)      min: -123.70000  max:   60.10000  float64
 image_metas              shape: (1, 14)               min:    0.00000  max:  256.00000  int64
 anchors                  shape: (1, 16368, 4)         min:   -0.35494  max:    1.10396  float32
-Inference took 0.8201944828033447
+Inference took 0.5556039810180664
 (256, 256, 14)
 Sum = % 23741
 Sum= 23741
@@ -305,7 +305,7 @@ image                    shape: (256, 256, 3)         min:    0.00000  max:  197
 molded_images            shape: (1, 256, 256, 3)      min: -123.70000  max:   93.10000  float64
 image_metas              shape: (1, 14)               min:    0.00000  max:  256.00000  int64
 anchors                  shape: (1, 16368, 4)         min:   -0.35494  max:    1.10396  float32
-Inference took 0.8618052005767822
+Inference took 0.5521259307861328
 (256, 256, 14)
 Sum = % 25931
 Sum= 25931
@@ -321,7 +321,7 @@ image                    shape: (256, 256, 3)         min:    0.00000  max:  205
 molded_images            shape: (1, 256, 256, 3)      min: -123.70000  max:  101.10000  float64
 image_metas              shape: (1, 14)               min:    0.00000  max:  256.00000  int64
 anchors                  shape: (1, 16368, 4)         min:   -0.35494  max:    1.10396  float32
-Inference took 0.817629337310791
+Inference took 0.5567433834075928
 (256, 256, 13)
 Sum = % 21039
 Sum= 21039
@@ -337,7 +337,7 @@ image                    shape: (256, 256, 3)         min:    0.00000  max:  205
 molded_images            shape: (1, 256, 256, 3)      min: -123.70000  max:  101.10000  float64
 image_metas              shape: (1, 14)               min:    0.00000  max:  256.00000  int64
 anchors                  shape: (1, 16368, 4)         min:   -0.35494  max:    1.10396  float32
-Inference took 0.8155012130737305
+Inference took 0.5551531314849854
 (256, 256, 13)
 Sum = % 21039
 Sum= 21039
@@ -353,7 +353,7 @@ image                    shape: (256, 256, 3)         min:    0.00000  max:  180
 molded_images            shape: (1, 256, 256, 3)      min: -123.70000  max:   76.10000  float64
 image_metas              shape: (1, 14)               min:    0.00000  max:  256.00000  int64
 anchors                  shape: (1, 16368, 4)         min:   -0.35494  max:    1.10396  float32
-Inference took 0.827286958694458
+Inference took 0.5665552616119385
 (256, 256, 17)
 Sum = % 28184
 Sum= 28184
@@ -369,7 +369,7 @@ image                    shape: (256, 256, 3)         min:    0.00000  max:  197
 molded_images            shape: (1, 256, 256, 3)      min: -123.70000  max:   93.10000  float64
 image_metas              shape: (1, 14)               min:    0.00000  max:  256.00000  int64
 anchors                  shape: (1, 16368, 4)         min:   -0.35494  max:    1.10396  float32
-Inference took 0.8422551155090332
+Inference took 0.562016487121582
 (256, 256, 16)
 Sum = % 26481
 Sum= 26481
@@ -385,7 +385,7 @@ image                    shape: (256, 256, 3)         min:    0.00000  max:  180
 molded_images            shape: (1, 256, 256, 3)      min: -123.70000  max:   76.10000  float64
 image_metas              shape: (1, 14)               min:    0.00000  max:  256.00000  int64
 anchors                  shape: (1, 16368, 4)         min:   -0.35494  max:    1.10396  float32
-Inference took 0.8643226623535156
+Inference took 0.5620348453521729
 (256, 256, 17)
 Sum = % 27341
 Sum= 27341
@@ -401,7 +401,7 @@ image                    shape: (256, 256, 3)         min:    0.00000  max:  180
 molded_images            shape: (1, 256, 256, 3)      min: -123.70000  max:   76.10000  float64
 image_metas              shape: (1, 14)               min:    0.00000  max:  256.00000  int64
 anchors                  shape: (1, 16368, 4)         min:   -0.35494  max:    1.10396  float32
-Inference took 0.816941499710083
+Inference took 0.5515480041503906
 (256, 256, 15)
 Sum = % 24122
 Sum= 24122
@@ -417,7 +417,7 @@ image                    shape: (256, 256, 3)         min:    0.00000  max:  213
 molded_images            shape: (1, 256, 256, 3)      min: -123.70000  max:  109.10000  float64
 image_metas              shape: (1, 14)               min:    0.00000  max:  256.00000  int64
 anchors                  shape: (1, 16368, 4)         min:   -0.35494  max:    1.10396  float32
-Inference took 0.8152499198913574
+Inference took 0.5605072975158691
 (256, 256, 16)
 Sum = % 24346
 Sum= 24346
@@ -433,7 +433,7 @@ image                    shape: (256, 256, 3)         min:    0.00000  max:  213
 molded_images            shape: (1, 256, 256, 3)      min: -123.70000  max:  109.10000  float64
 image_metas              shape: (1, 14)               min:    0.00000  max:  256.00000  int64
 anchors                  shape: (1, 16368, 4)         min:   -0.35494  max:    1.10396  float32
-Inference took 0.8217074871063232
+Inference took 0.5621309280395508
 (256, 256, 14)
 Sum = % 25811
 Sum= 25811
@@ -449,7 +449,7 @@ image                    shape: (256, 256, 3)         min:    0.00000  max:  213
 molded_images            shape: (1, 256, 256, 3)      min: -123.70000  max:  109.10000  float64
 image_metas              shape: (1, 14)               min:    0.00000  max:  256.00000  int64
 anchors                  shape: (1, 16368, 4)         min:   -0.35494  max:    1.10396  float32
-Inference took 0.8194870948791504
+Inference took 0.5608270168304443
 (256, 256, 14)
 Sum = % 25811
 Sum= 25811
@@ -465,7 +465,7 @@ image                    shape: (256, 256, 3)         min:    0.00000  max:  213
 molded_images            shape: (1, 256, 256, 3)      min: -123.70000  max:  109.10000  float64
 image_metas              shape: (1, 14)               min:    0.00000  max:  256.00000  int64
 anchors                  shape: (1, 16368, 4)         min:   -0.35494  max:    1.10396  float32
-Inference took 0.815255880355835
+Inference took 0.5527043342590332
 (256, 256, 13)
 Sum = % 25566
 Sum= 25566
@@ -481,7 +481,7 @@ image                    shape: (256, 256, 3)         min:    0.00000  max:  180
 molded_images            shape: (1, 256, 256, 3)      min: -123.70000  max:   76.10000  float64
 image_metas              shape: (1, 14)               min:    0.00000  max:  256.00000  int64
 anchors                  shape: (1, 16368, 4)         min:   -0.35494  max:    1.10396  float32
-Inference took 0.8212389945983887
+Inference took 0.6260204315185547
 (256, 256, 17)
 Sum = % 26220
 Sum= 26220
@@ -497,7 +497,7 @@ image                    shape: (256, 256, 3)         min:    0.00000  max:  197
 molded_images            shape: (1, 256, 256, 3)      min: -123.70000  max:   93.10000  float64
 image_metas              shape: (1, 14)               min:    0.00000  max:  256.00000  int64
 anchors                  shape: (1, 16368, 4)         min:   -0.35494  max:    1.10396  float32
-Inference took 0.8356766700744629
+Inference took 0.5597615242004395
 (256, 256, 17)
 Sum = % 30919
 Sum= 30919
@@ -513,7 +513,7 @@ image                    shape: (256, 256, 3)         min:    0.00000  max:  197
 molded_images            shape: (1, 256, 256, 3)      min: -123.70000  max:   93.10000  float64
 image_metas              shape: (1, 14)               min:    0.00000  max:  256.00000  int64
 anchors                  shape: (1, 16368, 4)         min:   -0.35494  max:    1.10396  float32
-Inference took 0.8631961345672607
+Inference took 0.5544466972351074
 (256, 256, 17)
 Sum = % 30310
 Sum= 30310
@@ -529,7 +529,7 @@ image                    shape: (256, 256, 3)         min:    0.00000  max:  213
 molded_images            shape: (1, 256, 256, 3)      min: -123.70000  max:  109.10000  float64
 image_metas              shape: (1, 14)               min:    0.00000  max:  256.00000  int64
 anchors                  shape: (1, 16368, 4)         min:   -0.35494  max:    1.10396  float32
-Inference took 0.8172276020050049
+Inference took 0.5580072402954102
 (256, 256, 15)
 Sum = % 27704
 Sum= 27704
@@ -545,7 +545,7 @@ image                    shape: (256, 256, 3)         min:    0.00000  max:  189
 molded_images            shape: (1, 256, 256, 3)      min: -123.70000  max:   85.10000  float64
 image_metas              shape: (1, 14)               min:    0.00000  max:  256.00000  int64
 anchors                  shape: (1, 16368, 4)         min:   -0.35494  max:    1.10396  float32
-Inference took 0.8159866333007812
+Inference took 0.5631928443908691
 (256, 256, 15)
 Sum = % 22157
 Sum= 22157
@@ -561,7 +561,7 @@ image                    shape: (256, 256, 3)         min:    0.00000  max:  189
 molded_images            shape: (1, 256, 256, 3)      min: -123.70000  max:   85.10000  float64
 image_metas              shape: (1, 14)               min:    0.00000  max:  256.00000  int64
 anchors                  shape: (1, 16368, 4)         min:   -0.35494  max:    1.10396  float32
-Inference took 0.8214173316955566
+Inference took 0.564337968826294
 (256, 256, 15)
 Sum = % 22157
 Sum= 22157
@@ -577,7 +577,7 @@ image                    shape: (256, 256, 3)         min:    0.00000  max:  213
 molded_images            shape: (1, 256, 256, 3)      min: -123.70000  max:  109.10000  float64
 image_metas              shape: (1, 14)               min:    0.00000  max:  256.00000  int64
 anchors                  shape: (1, 16368, 4)         min:   -0.35494  max:    1.10396  float32
-Inference took 0.8139142990112305
+Inference took 0.5523841381072998
 (256, 256, 13)
 Sum = % 25566
 Sum= 25566
@@ -593,7 +593,7 @@ image                    shape: (256, 256, 3)         min:    0.00000  max:  180
 molded_images            shape: (1, 256, 256, 3)      min: -123.70000  max:   76.10000  float64
 image_metas              shape: (1, 14)               min:    0.00000  max:  256.00000  int64
 anchors                  shape: (1, 16368, 4)         min:   -0.35494  max:    1.10396  float32
-Inference took 0.8194549083709717
+Inference took 0.5523092746734619
 (256, 256, 17)
 Sum = % 26220
 Sum= 26220
@@ -609,7 +609,7 @@ image                    shape: (256, 256, 3)         min:    0.00000  max:  197
 molded_images            shape: (1, 256, 256, 3)      min: -123.70000  max:   93.10000  float64
 image_metas              shape: (1, 14)               min:    0.00000  max:  256.00000  int64
 anchors                  shape: (1, 16368, 4)         min:   -0.35494  max:    1.10396  float32
-Inference took 0.8428623676300049
+Inference took 0.5629844665527344
 (256, 256, 17)
 Sum = % 30919
 Sum= 30919
@@ -625,7 +625,7 @@ image                    shape: (256, 256, 3)         min:    0.00000  max:  197
 molded_images            shape: (1, 256, 256, 3)      min: -123.70000  max:   93.10000  float64
 image_metas              shape: (1, 14)               min:    0.00000  max:  256.00000  int64
 anchors                  shape: (1, 16368, 4)         min:   -0.35494  max:    1.10396  float32
-Inference took 0.8724040985107422
+Inference took 0.5621013641357422
 (256, 256, 17)
 Sum = % 30310
 Sum= 30310
@@ -641,7 +641,7 @@ image                    shape: (256, 256, 3)         min:    0.00000  max:  213
 molded_images            shape: (1, 256, 256, 3)      min: -123.70000  max:  109.10000  float64
 image_metas              shape: (1, 14)               min:    0.00000  max:  256.00000  int64
 anchors                  shape: (1, 16368, 4)         min:   -0.35494  max:    1.10396  float32
-Inference took 0.81911301612854
+Inference took 0.5540285110473633
 (256, 256, 15)
 Sum = % 27704
 Sum= 27704
@@ -657,7 +657,7 @@ image                    shape: (256, 256, 3)         min:    0.00000  max:  189
 molded_images            shape: (1, 256, 256, 3)      min: -123.70000  max:   85.10000  float64
 image_metas              shape: (1, 14)               min:    0.00000  max:  256.00000  int64
 anchors                  shape: (1, 16368, 4)         min:   -0.35494  max:    1.10396  float32
-Inference took 0.8480665683746338
+Inference took 0.5630645751953125
 (256, 256, 15)
 Sum = % 22157
 Sum= 22157
@@ -673,7 +673,7 @@ image                    shape: (256, 256, 3)         min:    0.00000  max:  189
 molded_images            shape: (1, 256, 256, 3)      min: -123.70000  max:   85.10000  float64
 image_metas              shape: (1, 14)               min:    0.00000  max:  256.00000  int64
 anchors                  shape: (1, 16368, 4)         min:   -0.35494  max:    1.10396  float32
-Inference took 0.8736104965209961
+Inference took 0.5816760063171387
 (256, 256, 15)
 Sum = % 22157
 Sum= 22157
@@ -686,41 +686,39 @@ Connectivity matrix built
 <class 'numpy.ndarray'>
 applied lookup
 (1078, 1278, 43)
-Wrote profile results to demo_profile.py.lprof
 Timer unit: 1e-06 s
 
-Total time: 93.1156 s
+Total time: 78.0627 s
 File: ../src/mrcnn_infer_profile.py
 Function: mrcnn_infer at line 10
 
 Line #      Hits         Time  Per Hit   % Time  Line Contents
 ==============================================================
-    10                                           @profile
-    11                                           def mrcnn_infer(img, mrcnn_model_path, config_file_path):
-    12                                               # Config File Parser
-    13         1        313.0    313.0      0.0      config = configparser.ConfigParser()
-    14         1        480.0    480.0      0.0      config.read(config_file_path)
-    15         1        116.0    116.0      0.0      param = {s: dict(config.items(s)) for s in config.sections()}['general']
-    16         4          6.0      1.5      0.0      for key in param:
-    17         3          6.0      2.0      0.0          param[key] = int(param[key])
-    18         1          1.0      1.0      0.0      cropsize = param['cropsize']
-    19         1          1.0      1.0      0.0      padding = param['padding']
-    20         1          3.0      3.0      0.0      threshold = param['threshold']
-    21                                           
-    22         1   20863198.0 20863198.0     22.4      model = generate_inference_model(mrcnn_model_path, cropsize)
-    23         1       1452.0   1452.0      0.0      mask = np.zeros(img.shape)
-    24                                           
-    25         2          9.0      4.5      0.0      for i in range(len(img)):
-    26         1       4965.0   4965.0      0.0          imarray = np.array(img[i]).astype('uint16')
-    27         1       2724.0   2724.0      0.0          image = skimage.color.gray2rgb(imarray)
-    28         1      26818.0  26818.0      0.0          image = map_uint16_to_uint8(image)
-    29                                           
-    30         1   38781688.0 38781688.0     41.6          stitched_inference_stack, num_times_visited = stitched_inference(image, cropsize, model, padding=padding)
-    31                                           
-    32         1        394.0    394.0      0.0          masks = CleanMask(stitched_inference_stack, threshold, )
-    33         1   33428767.0 33428767.0     35.9          masks.merge_cells()
-    34                                           
-    35         1       1263.0   1263.0      0.0          my_mask = masks.getMasks().astype("int16")
-    36         1       3347.0   3347.0      0.0          mask[i, :, :] = my_mask
-    37         1          2.0      2.0      0.0      return mask
+    10                                           def mrcnn_infer(img, mrcnn_model_path, config_file_path):
+    11                                               # Config File Parser
+    12         1        323.0    323.0      0.0      config = configparser.ConfigParser()
+    13         1        461.0    461.0      0.0      config.read(config_file_path)
+    14         1        128.0    128.0      0.0      param = {s: dict(config.items(s)) for s in config.sections()}['general']
+    15         4          5.0      1.2      0.0      for key in param:
+    16         3          6.0      2.0      0.0          param[key] = int(param[key])
+    17         1          1.0      1.0      0.0      cropsize = param['cropsize']
+    18         1          1.0      1.0      0.0      padding = param['padding']
+    19         1          1.0      1.0      0.0      threshold = param['threshold']
+    20                                           
+    21         1   20209537.0 20209537.0     25.9      model = generate_inference_model(mrcnn_model_path, cropsize)
+    22         1       1292.0   1292.0      0.0      mask = np.zeros(img.shape)
+    23                                           
+    24         2         12.0      6.0      0.0      for i in range(len(img)):
+    25         1       4409.0   4409.0      0.0          imarray = np.array(img[i]).astype('uint16')
+    26         1       3183.0   3183.0      0.0          image = skimage.color.gray2rgb(imarray)
+    27         1      29185.0  29185.0      0.0          image = map_uint16_to_uint8(image)
+    28                                           
+    29         1   27318279.0 27318279.0     35.0          stitched_inference_stack, num_times_visited = stitched_inference(image, cropsize, model, padding=padding)
+    30                                           
+    31         1        379.0    379.0      0.0          masks = CleanMask(stitched_inference_stack, threshold, )
+    32         1   30489755.0 30489755.0     39.1          masks.merge_cells()
+    33                                           
+    34         1        881.0    881.0      0.0          my_mask = masks.getMasks().astype("int16")
+    35         1       4905.0   4905.0      0.0          mask[i, :, :] = my_mask
+    36         1          1.0      1.0      0.0      return mask
 

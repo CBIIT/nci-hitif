@@ -1,5 +1,6 @@
 from skimage.util import img_as_ubyte
 import line_profiler
+from line_profiler import LineProfiler
 import sys,glob,warnings,os
 import matplotlib.pyplot as plt
 from PIL import Image
@@ -31,4 +32,5 @@ for i in range(len(img)):
     img[i,:,:] = image_resized
 
 mask = mrcnn_infer(img, mrcnn_model_path, config_file_path)
+
 

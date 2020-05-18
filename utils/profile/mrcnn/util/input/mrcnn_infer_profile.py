@@ -7,7 +7,6 @@ from inference_profile import stitched_inference
 from inference_profile import map_uint16_to_uint8
 from skimage.color import label2rgb
 
-$PROF_MRCNN_INFER
 def mrcnn_infer(img, mrcnn_model_path, config_file_path):
     # Config File Parser
     config = configparser.ConfigParser()

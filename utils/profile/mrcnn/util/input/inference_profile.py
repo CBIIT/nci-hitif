@@ -163,8 +163,6 @@ def pad(arrays, reference, offsets):
     result[insertHere] = arrays
     return result
 
-
-$PROF_STITCHED_INFERENCE
 def stitched_inference(image, cropsize, model, padding=40):#, minsize=100):
     """
     array: Array to be padded
