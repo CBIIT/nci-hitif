@@ -70,4 +70,5 @@ demo_input = "demo_profile.py"
 
 # Replace words
 replace_word(demo_input, demo_input, "$ITER", str(param["iter"]))
+replace_word(demo_input, demo_input, "$IMG_PATH", str(param["img_path"]))
 add_benchmark_on_function(param['file_name'], param['function_api'], param['function_name'])

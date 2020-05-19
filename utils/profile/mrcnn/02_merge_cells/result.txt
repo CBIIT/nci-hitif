@@ -7,18 +7,18 @@ Line #      Hits         Time  Per Hit   % Time  Line Contents
     32                                               """
     33                                           
     34         1          4.0      4.0      0.0      stack = masks.stack
-    35         1          2.0      2.0      0.0      threshold = masks.threshold
+    35         1          1.0      1.0      0.0      threshold = masks.threshold
     36                                               # conn_matrix = masks.conn_matrix
     37                                           
-    38         1   30483706.0 30483706.0    100.0      masks.build_connectivity_matrix()
+    38         1   30020757.0 30020757.0    100.0      masks.build_connectivity_matrix()
     39                                           
     40                                               # Filter out week connections
-    41         1        992.0    992.0      0.0      masks.conn_matrix[masks.conn_matrix < masks.threshold] = 0
+    41         1       1522.0   1522.0      0.0      masks.conn_matrix[masks.conn_matrix < masks.threshold] = 0
     42                                           
     43                                               # Get connected components
-    44         1         70.0     70.0      0.0      np.fill_diagonal(masks.conn_matrix, 1)
+    44         1         60.0     60.0      0.0      np.fill_diagonal(masks.conn_matrix, 1)
     45                                           
-    46         1         48.0     48.0      0.0      from scipy.sparse.csgraph import csgraph_from_dense, connected_components
-    47         1      10330.0  10330.0      0.0      n_conn_comp, graph_labels = connected_components(masks.conn_matrix, False)
-    48         1          2.0      2.0      0.0      return n_conn_comp, graph_labels
+    46         1         41.0     41.0      0.0      from scipy.sparse.csgraph import csgraph_from_dense, connected_components
+    47         1      11789.0  11789.0      0.0      n_conn_comp, graph_labels = connected_components(masks.conn_matrix, False)
+    48         1          1.0      1.0      0.0      return n_conn_comp, graph_labels
 

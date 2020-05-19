@@ -33,7 +33,7 @@ def merge_cells(masks):
 
     stack = masks.stack
     threshold = masks.threshold
-    conn_matrix = masks.conn_matrix
+    # conn_matrix = masks.conn_matrix
 
     masks.build_connectivity_matrix()
 
@@ -44,7 +44,7 @@ def merge_cells(masks):
     np.fill_diagonal(masks.conn_matrix, 1)
 
     from scipy.sparse.csgraph import csgraph_from_dense, connected_components
-    n_conn_comp, graph_labels = connected_components(conn_matrix, False)
+    n_conn_comp, graph_labels = connected_components(masks.conn_matrix, False)
     return n_conn_comp, graph_labels
 
     # print(n_conn_comp)

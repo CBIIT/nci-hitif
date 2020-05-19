@@ -31,10 +31,7 @@ config_file_path='./demo.ini'
 with open(config_file_path, 'r') as fin:
     print(fin.read())
 
-image_list =['../../../visualization/GreyScale/BABE_Biological/Plate1_E03_T0001FF001Zall.tif',
-             '../../../visualization/GreyScale/HiTIF_Laurent_Technical/AUTO0496_J14_T0001F001L01A01Z01C01.tif',
-             '../../../visualization/GreyScale/Manasi_Technical/Plate1_M21_T0001F003L01A01Z01C01.tif'
-]
+image_list =['$IMG_PATH']
 
 img = np.zeros(($ITER,1078,1278))
 image_resized = img_as_ubyte(resize(np.array(Image.open(image_list[0])), (1078, 1278)))

@@ -36,8 +36,8 @@ def mrcnn_infer(img, mrcnn_model_path, config_file_path):
 
 
         masks = CleanMask(stitched_inference_stack, threshold, )
-        masks.merge_cells()
-        # n_conn_comp, graph_labels = merge_cells(masks)
+        # masks.merge_cells()
+        n_conn_comp, graph_labels = merge_cells(masks)
 
         my_mask = masks.getMasks().astype("int16")
         mask[i, :, :] = my_mask
