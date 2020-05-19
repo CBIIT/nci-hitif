@@ -16,7 +16,6 @@ def replace_word(input_file_path, output_file_path, word_before, word_after):
     f.write(newdata)
     f.close()
 
-
 def get_indent(input_file, word):
     with open(input_file) as search:
         for line in search:
@@ -52,7 +51,6 @@ if len(sys.argv) != 2:
     exit()
 
 config_file_path = sys.argv[1]
-# config_file_path="00_mrcnn/config.ini"
 
 # Parser (Config file -> Dictionary)
 config = configparser.ConfigParser()

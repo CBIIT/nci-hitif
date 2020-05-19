@@ -1,23 +1,32 @@
-#!/bin/bash         
+#!/bin/bash
+
+# Activate Conda Environment
+source /data/HiTIF/progs/miniconda/miniconda3_setup_script.sh
+conda activate hitif
+
+# Output file location configuration
 WATERSHED_DEMO="../../../../framework-nucleus-segmentation/inference/watershed/demo/"
 WATERSHED_SRC="../../../../framework-nucleus-segmentation/inference/watershed/src/"
-cp $WATERSHED_DEMO/demo.py .
-cp $WATERSHED_SRC/watershed_infer.py .
-sed -i '/def watershed_infer(img,gaussian_blur_model,distance_map_model,config_file_path):/i @profile' watershed_infer.py
-sed -i 's/img = np.zeros((len(image_list),1078,1278))/img = np.zeros((1,1078,1278))/g' demo.py
-sed -i 's/from watershed_infer import */from watershed_infer_profile import /g' demo.py
-sed -i '/import sys,glob,warnings,os/i import line_profiler' demo.py
-sed -i '/image_resized = img_as_ubyte/d' demo.py
-sed -i '/img = np.zeros((1,1078,1278))/i image_resized = img_as_ubyte(resize(np.array(Image.open(image_list[0])), (1078, 1278)))' demo.py
-mv demo.py demo_profile.py
-mv watershed_infer.py watershed_infer_profile.py
+
+# Copy input files
+cp ../util/input/*.py .
+
+# Run utility for getting new python codes up to the configuration file.
+python3 ../util/profile_util.py config.ini
 
 cp demo_profile.py $WATERSHED_DEMO
 cp watershed_infer_profile.py $WATERSHED_SRC
 
+# Execution and Store Benchmark Result.
 RES_FOLDER=`pwd`
 pushd $WATERSHED_DEMO
-kernprof -l -v demo_profile.py > $RES_FOLDER/result.txt
+python3 demo_profile.py > $RES_FOLDER/result.txt
 popd
-#rm *.py
 
+# remove redundant part of result.txt
+sed -i '/Line #      Hits         Time  Per Hit   % Time  Line Contents/,$!d' result.txt
+
+# Clean up generated python codes.
+rm *.py
+rm $WATERSHED_DEMO/demo_profile.py
+rm $WATERSHED_SRC/watershed_infer_profile.py

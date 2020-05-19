@@ -1,34 +1,38 @@
-[general]
-global_threshold = 0.67
-padded_width = 1280
-padded_height =  1088
-batch_size = 1
-label_min_size = 5
-label_max_size = 100000
+Line #      Hits         Time  Per Hit   % Time  Line Contents
+==============================================================
+    37                                           def unet_predict(model, batch_size, imgs_test):
+    38         1        111.0    111.0      0.0      model_input_channelSize = model.layers[0].input_shape[-1]
+    39         1       1205.0   1205.0      0.0      imgs_test = imgs_test.astype('float32')
+    40                                           
+    41         1          2.0      2.0      0.0      if model_input_channelSize > 1:
+    42         1       8868.0   8868.0      0.3          imgs_test = np.stack((imgs_test,) * model_input_channelSize, -1)
+    43                                               elif model_input_channelSize == 1:
+    44                                                   imgs_test = np.expand_dims(imgs_test, 3)
+    45         1    3316162.0 3316162.0     99.7      imgs_mask_test = model.predict(imgs_test, batch_size=batch_size, verbose=1)
+    46                                           
+    47         1          2.0      2.0      0.0      return (imgs_mask_test)
 
 
 1/1 [==============================] - 9s 9s/step
 
-1/1 [==============================] - 8s 8s/step
-Wrote profile results to demo_profile.py.lprof
+1/1 [==============================] - 3s 3s/step
 Timer unit: 1e-06 s
 
-Total time: 16.9712 s
+Total time: 3.31696 s
 File: ../src/watershed_infer_profile.py
-Function: unet_predict at line 36
+Function: unet_predict at line 37
 
 Line #      Hits         Time  Per Hit   % Time  Line Contents
 ==============================================================
-    36                                           @profile
     37                                           def unet_predict(model, batch_size, imgs_test):
-    38         2        132.0     66.0      0.0      model_input_channelSize = model.layers[0].input_shape[-1]
-    39         2       1883.0    941.5      0.0      imgs_test = imgs_test.astype('float32')
+    38         1         45.0     45.0      0.0      model_input_channelSize = model.layers[0].input_shape[-1]
+    39         1       2815.0   2815.0      0.1      imgs_test = imgs_test.astype('float32')
     40                                           
-    41         2          2.0      1.0      0.0      if model_input_channelSize > 1:
-    42         2      11940.0   5970.0      0.1          imgs_test = np.stack((imgs_test,) * model_input_channelSize, -1)
+    41         1          2.0      2.0      0.0      if model_input_channelSize > 1:
+    42         1       8680.0   8680.0      0.3          imgs_test = np.stack((imgs_test,) * model_input_channelSize, -1)
     43                                               elif model_input_channelSize == 1:
     44                                                   imgs_test = np.expand_dims(imgs_test, 3)
-    45         2   16957287.0 8478643.5     99.9      imgs_mask_test = model.predict(imgs_test, batch_size=batch_size, verbose=1)
+    45         1    3305409.0 3305409.0     99.7      imgs_mask_test = model.predict(imgs_test, batch_size=batch_size, verbose=1)
     46                                           
-    47         2          6.0      3.0      0.0      return (imgs_mask_test)
+    47         1          5.0      5.0      0.0      return (imgs_mask_test)
 

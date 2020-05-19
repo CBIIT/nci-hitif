@@ -15,6 +15,7 @@ import os
 import numpy as np
 import cv2
 from keras.models import model_from_json
+from line_profiler import LineProfiler
 
 # Function for reading pre-trained model.
 def get_model(modeljsonfname,modelwtsfname):
@@ -33,7 +34,6 @@ def get_model(modeljsonfname,modelwtsfname):
     return model
 
 # Model Prediction function
-@profile
 def unet_predict(model, batch_size, imgs_test):
     model_input_channelSize = model.layers[0].input_shape[-1]
     imgs_test = imgs_test.astype('float32')
@@ -89,6 +89,11 @@ def model_prediction(img,model,param):
             imagesNP[index, xs:xe, ys:ye] = im_in
 
     imgs_mask = unet_predict(model, batch_size, imagesNP)
+    lp = LineProfiler()
+    lp_wrapper = lp(unet_predict)
+    lp_wrapper(model, batch_size, imagesNP)
+    lp.print_stats()
+
 
     result = np.zeros((noofImages, dim_original_height, dim_original_width))
 

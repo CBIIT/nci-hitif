@@ -15,6 +15,7 @@ import os
 import numpy as np
 import cv2
 from keras.models import model_from_json
+from line_profiler import LineProfiler
 
 # Function for reading pre-trained model.
 def get_model(modeljsonfname,modelwtsfname):
@@ -46,7 +47,6 @@ def unet_predict(model, batch_size, imgs_test):
     return (imgs_mask_test)
 
 
-@profile
 def model_prediction(img,model,param):
 
     # Change the datatype with normalization. (u16 -> ubyte)
@@ -130,6 +130,11 @@ def watershed_infer(img,gaussian_blur_model,distance_map_model,config_file_path)
 
     # Prediciton (Galussian_Blur DL model)
     img_gauss = model_prediction(img, gaussian_blur_model, param)
+    lp = LineProfiler()
+    lp_wrapper = lp(model_prediction)
+    lp_wrapper(img, gaussian_blur_model, param)
+    lp.print_stats()
+
 
     # Prediction (Distance MAP DL Model)
     result = model_prediction(img_gauss, distance_map_model, param)
