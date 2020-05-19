@@ -5,22 +5,9 @@ from inference_utils import CleanMask
 from inference_profile import generate_inference_model
 from inference_profile import stitched_inference
 from inference_profile import map_uint16_to_uint8
+from inference_profile import merge_cells
 from skimage.color import label2rgb
-
-@profile
-def merge_cells(mask):
-        """
-        Find connected cells between multiple inferences and merge strongly connected 
-        cells that have overlap more than a threshold.
-        """
-        mask.build_connectivity_matrix()
-        
-        #Filter out week connections
-        mask.conn_matrix[mask.conn_matrix < mask.threshold] = 0
-
-        #Get connected components 
-        np.fill_diagonal(mask.conn_matrix, 1)
-
+from line_profiler import LineProfiler
 
 def mrcnn_infer(img, mrcnn_model_path, config_file_path):
     # Config File Parser
@@ -44,8 +31,13 @@ def mrcnn_infer(img, mrcnn_model_path, config_file_path):
         stitched_inference_stack, num_times_visited = stitched_inference(image, cropsize, model, padding=padding)
 
         masks = CleanMask(stitched_inference_stack, threshold, )
-        masks.merge_cells()
-        merge_cells(masks)
+        # masks.merge_cells()
+        n_conn_comp, graph_labels = merge_cells(masks)
+        lp = LineProfiler()
+        lp_wrapper = lp(merge_cells)
+        lp_wrapper(masks)
+        lp.print_stats()
+
 
         my_mask = masks.getMasks().astype("int16")
         mask[i, :, :] = my_mask

@@ -26,7 +26,7 @@ image_list =['../../../visualization/GreyScale/BABE_Biological/Plate1_E03_T0001F
              '../../../visualization/GreyScale/Manasi_Technical/Plate1_M21_T0001F003L01A01Z01C01.tif'
 ]
 
-img = np.zeros(($NUM_ITER,1078,1278))
+img = np.zeros(($ITER,1078,1278))
 image_resized = img_as_ubyte(resize(np.array(Image.open(image_list[0])), (1078, 1278)))
 for i in range(len(img)):
     img[i,:,:] = image_resized

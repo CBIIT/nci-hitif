@@ -9,6 +9,9 @@ MRCNN_DEMO="../../../../framework-nucleus-segmentation/inference/mrcnn/demo/"
 MRCNN_SRC="../../../../framework-nucleus-segmentation/inference/mrcnn/src/"
 INF_SRC="../../../../framework-nucleus-segmentation/mrcnn/samples/cell/"
 
+# Copy input files
+cp ../util/input/*.py .
+
 # Run utility for getting new python codes up to the configuration file.
 python3 ../util/profile_util.py config.ini
 
@@ -21,6 +24,9 @@ RES_FOLDER=`pwd`
 pushd $MRCNN_DEMO
 python3 demo_profile.py > $RES_FOLDER/result.txt
 popd
+
+# remove redundant part of result.txt
+sed -i '/Line #      Hits         Time  Per Hit   % Time  Line Contents/,$!d' result.txt
 
 # Clean up generated python codes.
 rm *.py

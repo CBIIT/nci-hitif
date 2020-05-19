@@ -32,5 +32,10 @@ for i in range(len(img)):
     img[i,:,:] = image_resized
 
 mask = mrcnn_infer(img, mrcnn_model_path, config_file_path)
+lp = LineProfiler()
+lp_wrapper = lp(mrcnn_infer)
+lp_wrapper(img, mrcnn_model_path, config_file_path)
+lp.print_stats()
+
 
 

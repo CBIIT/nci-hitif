@@ -5,7 +5,9 @@ from inference_utils import CleanMask
 from inference_profile import generate_inference_model
 from inference_profile import stitched_inference
 from inference_profile import map_uint16_to_uint8
+from inference_profile import merge_cells
 from skimage.color import label2rgb
+from line_profiler import LineProfiler
 
 def mrcnn_infer(img, mrcnn_model_path, config_file_path):
     # Config File Parser
@@ -30,6 +32,7 @@ def mrcnn_infer(img, mrcnn_model_path, config_file_path):
 
         masks = CleanMask(stitched_inference_stack, threshold, )
         masks.merge_cells()
+        # n_conn_comp, graph_labels = merge_cells(masks)
 
         my_mask = masks.getMasks().astype("int16")
         mask[i, :, :] = my_mask

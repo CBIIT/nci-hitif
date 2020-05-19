@@ -14,13 +14,27 @@ import skimage
 from PIL import Image
 from libtiff import TIFF
 import time
+import os,sys
+from line_profiler import LineProfiler
 
-$PROF_MERGE_CELLS
+# Disable
+def blockPrint():
+    sys.stdout = open(os.devnull, 'w')
+
+# Restore
+def enablePrint():
+    sys.stdout = sys.__stdout__
+
 def merge_cells(masks):
     """
     Find connected cells between multiple inferences and merge strongly connected
     cells that have overlap more than a threshold.
     """
+
+    stack = masks.stack
+    threshold = masks.threshold
+    # conn_matrix = masks.conn_matrix
+
     masks.build_connectivity_matrix()
 
     # Filter out week connections
@@ -29,8 +43,9 @@ def merge_cells(masks):
     # Get connected components
     np.fill_diagonal(masks.conn_matrix, 1)
 
-    # from scipy.sparse.csgraph import csgraph_from_dense, connected_components
-    # n_conn_comp, graph_labels = connected_components(conn_matrix, False)
+    from scipy.sparse.csgraph import csgraph_from_dense, connected_components
+    n_conn_comp, graph_labels = connected_components(masks.conn_matrix, False)
+    return n_conn_comp, graph_labels
 
     # print(n_conn_comp)
     # print(graph_labels)
@@ -58,7 +73,7 @@ def generate_inference_model(model_path, cropsize):
         IMAGE_MAX_DIM = cropsize #math.ceil(maxdim / 256) * 256
 
     inference_config = InferenceConfig()
-    print("MRCNN take from:", modellib.__file__)
+    # print("MRCNN take from:", modellib.__file__)
 
     # Recreate the model in inference mode
     DEVICE = '/device:GPU:0'
@@ -77,25 +92,25 @@ def generate_inference_model(model_path, cropsize):
 
     # Load trained weights (fill in path to trained weights here)
     assert model_path != "", "Provide path to trained weights"
-    print("Loading weights from ", model_path)
+    # print("Loading weights from ", model_path)
     model.load_weights(model_path, by_name=True)
     
     return model
 
-
-$PROF_RUN_INFERENCE
 def run_inference(model, image):
     """
     Runs inference on an image using model and returns the mask stack.
     """
     # get results
     start = time.time()
+    blockPrint()
     results = model.detect([image], verbose=1)
+    enablePrint()
     end = time.time()
-    print("Inference took {}".format(end-start))
+    # print("Inference took {}".format(end-start))
     r = results[0]
     masks = r['masks']
-    print(masks.shape)
+    # print(masks.shape)
     return masks
 
 
@@ -121,7 +136,7 @@ def mask_stack_to_single_image(masks, checkpoint_id):
     #print(image.shape)
     num_masks = masks.shape[0] # shape = [n, h, w]
        
-    print("Sum = %", np.sum(masks))
+    # print("Sum = %", np.sum(masks))
     for i in range(num_masks):
         current_mask = masks[i]
         #print(np.max(current_mask), np.sum(current_mask))
@@ -130,7 +145,7 @@ def mask_stack_to_single_image(masks, checkpoint_id):
         checkpoint_id += 1
   
     
-    print("Sum=", np.sum(image > 0))
+    # print("Sum=", np.sum(image > 0))
     return image, checkpoint_id
 
 
@@ -153,8 +168,8 @@ def pad(arrays, reference, offsets):
     """
     # Create an array of zeros with the reference shape
     result = np.zeros((reference[0],reference[1]), dtype=np.uint16)
-    print('result:')
-    print(result.shape)
+    # print('result:')
+    # print(result.shape)
     # Create a list of slices from offset to offset + shape in each dimension
     insertHere = [slice(offsets[dim], offsets[dim] + arrays.shape[dim]) for dim in range(arrays.ndim)]
     #print(insertHere)
@@ -175,7 +190,7 @@ def stitched_inference(image, cropsize, model, padding=40):#, minsize=100):
     
     num_row = image.shape[0] # num rows in the image
     num_col = image.shape[1]
-    print(image.shape)
+    # print(image.shape)
     
     assert cropsize < num_row and cropsize < num_col, 'cropsize must be smaller than the image dimensions'
         
@@ -203,11 +218,11 @@ def stitched_inference(image, cropsize, model, padding=40):#, minsize=100):
             #leftbound  = bound(final_image, cropsize, padding, minsize, col, 'left')
             #print(row)
             #print(col)
-            print('bounds:')
-            print('upper: {}'.format(upperbound))
-            print('lower: {}'.format(lowerbound))
-            print('left : {}'.format(leftbound))
-            print('right: {}'.format(rightbound))
+            # print('bounds:')
+            # print('upper: {}'.format(upperbound))
+            # print('lower: {}'.format(lowerbound))
+            # print('left : {}'.format(leftbound))
+            # print('right: {}'.format(rightbound))
             
             num_times_visited[upperbound:lowerbound, leftbound:rightbound] += 1
             cropped_image = image[upperbound:lowerbound, leftbound:rightbound, :]
@@ -303,8 +318,8 @@ class CleanMask():
         from scipy.sparse.csgraph import csgraph_from_dense, connected_components
         n_conn_comp, graph_labels =  connected_components(conn_matrix, False) 
 
-        print(n_conn_comp)
-        print(graph_labels)
+        # print(n_conn_comp)
+        # print(graph_labels)
 
 
             

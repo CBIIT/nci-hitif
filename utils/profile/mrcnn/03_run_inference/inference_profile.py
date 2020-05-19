@@ -230,6 +230,11 @@ def stitched_inference(image, cropsize, model, padding=40):#, minsize=100):
             #print(cropped_image.shape)
             
             masks = run_inference(model, cropped_image)
+            lp = LineProfiler()
+            lp_wrapper = lp(run_inference)
+            lp_wrapper(model, cropped_image)
+            lp.print_stats()
+
             
             #padded_masks = pad(masks, [num_row, num_col, masks.shape[2]], [upperbound, leftbound])
             #padded_masks = pad(masks, [num_row, num_col, masks.shape[2]], [upperbound,leftbound,0])

@@ -1,712 +1,1002 @@
-/gpfs/gsfs10/users/HiTIF/data/nci-hitif/framework-nucleus-segmentation/inference
-[general]
-cropsize = 256
-padding = 50
-threshold = 10
+Line #      Hits         Time  Per Hit   % Time  Line Contents
+==============================================================
+   100                                           def run_inference(model, image):
+   101                                               """
+   102                                               Runs inference on an image using model and returns the mask stack.
+   103                                               """
+   104                                               # get results
+   105         1          2.0      2.0      0.0      start = time.time()
+   106         1         64.0     64.0      0.0      blockPrint()
+   107         1     557217.0 557217.0    100.0      results = model.detect([image], verbose=1)
+   108         1         53.0     53.0      0.0      enablePrint()
+   109         1          2.0      2.0      0.0      end = time.time()
+   110                                               # print("Inference took {}".format(end-start))
+   111         1          1.0      1.0      0.0      r = results[0]
+   112         1          1.0      1.0      0.0      masks = r['masks']
+   113                                               # print(masks.shape)
+   114         1          0.0      0.0      0.0      return masks
 
-MRCNN take from: /data/HiTIF/progs/miniconda/miniconda3/envs/hitif/lib/python3.7/site-packages/mask_rcnn-2.1-py3.7.egg/mrcnn/model.py
-Loading weights from  ./mrcnn_pretrained.h5
-(1078, 1278, 3)
-bounds:
-upper: 0
-lower: 256
-left : 0
-right: 256
-Processing 1 images
-image                    shape: (256, 256, 3)         min:    0.00000  max:  156.00000  uint8
-molded_images            shape: (1, 256, 256, 3)      min: -123.70000  max:   52.10000  float64
-image_metas              shape: (1, 14)               min:    0.00000  max:  256.00000  int64
-anchors                  shape: (1, 16368, 4)         min:   -0.35494  max:    1.10396  float32
-Inference took 2.453321695327759
-(256, 256, 12)
-Sum = % 23035
-Sum= 23035
-result:
-(1078, 1278)
-bounds:
-upper: 0
-lower: 256
-left : 206
-right: 462
-Processing 1 images
-image                    shape: (256, 256, 3)         min:    0.00000  max:  172.00000  uint8
-molded_images            shape: (1, 256, 256, 3)      min: -123.70000  max:   68.10000  float64
-image_metas              shape: (1, 14)               min:    0.00000  max:  256.00000  int64
-anchors                  shape: (1, 16368, 4)         min:   -0.35494  max:    1.10396  float32
-Inference took 0.8311293125152588
-(256, 256, 12)
-Sum = % 23157
-Sum= 23157
-result:
-(1078, 1278)
-bounds:
-upper: 0
-lower: 256
-left : 412
-right: 668
-Processing 1 images
-image                    shape: (256, 256, 3)         min:    0.00000  max:  180.00000  uint8
-molded_images            shape: (1, 256, 256, 3)      min: -123.70000  max:   76.10000  float64
-image_metas              shape: (1, 14)               min:    0.00000  max:  256.00000  int64
-anchors                  shape: (1, 16368, 4)         min:   -0.35494  max:    1.10396  float32
-Inference took 0.8237688541412354
-(256, 256, 15)
-Sum = % 23361
-Sum= 23361
-result:
-(1078, 1278)
-bounds:
-upper: 0
-lower: 256
-left : 618
-right: 874
-Processing 1 images
-image                    shape: (256, 256, 3)         min:    0.00000  max:  156.00000  uint8
-molded_images            shape: (1, 256, 256, 3)      min: -123.70000  max:   52.10000  float64
-image_metas              shape: (1, 14)               min:    0.00000  max:  256.00000  int64
-anchors                  shape: (1, 16368, 4)         min:   -0.35494  max:    1.10396  float32
-Inference took 0.8244900703430176
-(256, 256, 13)
-Sum = % 20380
-Sum= 20380
-result:
-(1078, 1278)
-bounds:
-upper: 0
-lower: 256
-left : 824
-right: 1080
-Processing 1 images
-image                    shape: (256, 256, 3)         min:    0.00000  max:  180.00000  uint8
-molded_images            shape: (1, 256, 256, 3)      min: -123.70000  max:   76.10000  float64
-image_metas              shape: (1, 14)               min:    0.00000  max:  256.00000  int64
-anchors                  shape: (1, 16368, 4)         min:   -0.35494  max:    1.10396  float32
-Inference took 0.8635005950927734
-(256, 256, 12)
-Sum = % 23500
-Sum= 23500
-result:
-(1078, 1278)
-bounds:
-upper: 0
-lower: 256
-left : 1022
-right: 1278
-Processing 1 images
-image                    shape: (256, 256, 3)         min:    0.00000  max:  180.00000  uint8
-molded_images            shape: (1, 256, 256, 3)      min: -123.70000  max:   76.10000  float64
-image_metas              shape: (1, 14)               min:    0.00000  max:  256.00000  int64
-anchors                  shape: (1, 16368, 4)         min:   -0.35494  max:    1.10396  float32
-Inference took 0.9228835105895996
-(256, 256, 12)
-Sum = % 25425
-Sum= 25425
-result:
-(1078, 1278)
-bounds:
-upper: 0
-lower: 256
-left : 1022
-right: 1278
-Processing 1 images
-image                    shape: (256, 256, 3)         min:    0.00000  max:  180.00000  uint8
-molded_images            shape: (1, 256, 256, 3)      min: -123.70000  max:   76.10000  float64
-image_metas              shape: (1, 14)               min:    0.00000  max:  256.00000  int64
-anchors                  shape: (1, 16368, 4)         min:   -0.35494  max:    1.10396  float32
-Inference took 0.8174333572387695
-(256, 256, 12)
-Sum = % 25425
-Sum= 25425
-result:
-(1078, 1278)
-bounds:
-upper: 206
-lower: 462
-left : 0
-right: 256
-Processing 1 images
-image                    shape: (256, 256, 3)         min:    0.00000  max:  205.00000  uint8
-molded_images            shape: (1, 256, 256, 3)      min: -123.70000  max:  101.10000  float64
-image_metas              shape: (1, 14)               min:    0.00000  max:  256.00000  int64
-anchors                  shape: (1, 16368, 4)         min:   -0.35494  max:    1.10396  float32
-Inference took 0.8111879825592041
-(256, 256, 13)
-Sum = % 21537
-Sum= 21537
-result:
-(1078, 1278)
-bounds:
-upper: 206
-lower: 462
-left : 206
-right: 462
-Processing 1 images
-image                    shape: (256, 256, 3)         min:    0.00000  max:  230.00000  uint8
-molded_images            shape: (1, 256, 256, 3)      min: -123.70000  max:  126.10000  float64
-image_metas              shape: (1, 14)               min:    0.00000  max:  256.00000  int64
-anchors                  shape: (1, 16368, 4)         min:   -0.35494  max:    1.10396  float32
-Inference took 0.8223159313201904
-(256, 256, 13)
-Sum = % 26847
-Sum= 26847
-result:
-(1078, 1278)
-bounds:
-upper: 206
-lower: 462
-left : 412
-right: 668
-Processing 1 images
-image                    shape: (256, 256, 3)         min:    0.00000  max:  180.00000  uint8
-molded_images            shape: (1, 256, 256, 3)      min: -123.70000  max:   76.10000  float64
-image_metas              shape: (1, 14)               min:    0.00000  max:  256.00000  int64
-anchors                  shape: (1, 16368, 4)         min:   -0.35494  max:    1.10396  float32
-Inference took 0.8269059658050537
-(256, 256, 14)
-Sum = % 23646
-Sum= 23646
-result:
-(1078, 1278)
-bounds:
-upper: 206
-lower: 462
-left : 618
-right: 874
-Processing 1 images
-image                    shape: (256, 256, 3)         min:    0.00000  max:  180.00000  uint8
-molded_images            shape: (1, 256, 256, 3)      min: -123.70000  max:   76.10000  float64
-image_metas              shape: (1, 14)               min:    0.00000  max:  256.00000  int64
-anchors                  shape: (1, 16368, 4)         min:   -0.35494  max:    1.10396  float32
-Inference took 0.8567743301391602
-(256, 256, 11)
-Sum = % 22568
-Sum= 22568
-result:
-(1078, 1278)
-bounds:
-upper: 206
-lower: 462
-left : 824
-right: 1080
-Processing 1 images
-image                    shape: (256, 256, 3)         min:    0.00000  max:  180.00000  uint8
-molded_images            shape: (1, 256, 256, 3)      min: -123.70000  max:   76.10000  float64
-image_metas              shape: (1, 14)               min:    0.00000  max:  256.00000  int64
-anchors                  shape: (1, 16368, 4)         min:   -0.35494  max:    1.10396  float32
-Inference took 0.8823897838592529
-(256, 256, 15)
-Sum = % 22687
-Sum= 22687
-result:
-(1078, 1278)
-bounds:
-upper: 206
-lower: 462
-left : 1022
-right: 1278
-Processing 1 images
-image                    shape: (256, 256, 3)         min:    0.00000  max:  205.00000  uint8
-molded_images            shape: (1, 256, 256, 3)      min: -123.70000  max:  101.10000  float64
-image_metas              shape: (1, 14)               min:    0.00000  max:  256.00000  int64
-anchors                  shape: (1, 16368, 4)         min:   -0.35494  max:    1.10396  float32
-Inference took 0.8532955646514893
-(256, 256, 13)
-Sum = % 23810
-Sum= 23810
-result:
-(1078, 1278)
-bounds:
-upper: 206
-lower: 462
-left : 1022
-right: 1278
-Processing 1 images
-image                    shape: (256, 256, 3)         min:    0.00000  max:  205.00000  uint8
-molded_images            shape: (1, 256, 256, 3)      min: -123.70000  max:  101.10000  float64
-image_metas              shape: (1, 14)               min:    0.00000  max:  256.00000  int64
-anchors                  shape: (1, 16368, 4)         min:   -0.35494  max:    1.10396  float32
-Inference took 0.8147010803222656
-(256, 256, 13)
-Sum = % 23810
-Sum= 23810
-result:
-(1078, 1278)
-bounds:
-upper: 412
-lower: 668
-left : 0
-right: 256
-Processing 1 images
-image                    shape: (256, 256, 3)         min:    0.00000  max:  205.00000  uint8
-molded_images            shape: (1, 256, 256, 3)      min: -123.70000  max:  101.10000  float64
-image_metas              shape: (1, 14)               min:    0.00000  max:  256.00000  int64
-anchors                  shape: (1, 16368, 4)         min:   -0.35494  max:    1.10396  float32
-Inference took 0.8225705623626709
-(256, 256, 13)
-Sum = % 24234
-Sum= 24234
-result:
-(1078, 1278)
-bounds:
-upper: 412
-lower: 668
-left : 206
-right: 462
-Processing 1 images
-image                    shape: (256, 256, 3)         min:    0.00000  max:  255.00000  uint8
-molded_images            shape: (1, 256, 256, 3)      min: -123.70000  max:  151.10000  float64
-image_metas              shape: (1, 14)               min:    0.00000  max:  256.00000  int64
-anchors                  shape: (1, 16368, 4)         min:   -0.35494  max:    1.10396  float32
-Inference took 0.8812105655670166
-(256, 256, 16)
-Sum = % 25799
-Sum= 25799
-result:
-(1078, 1278)
-bounds:
-upper: 412
-lower: 668
-left : 412
-right: 668
-Processing 1 images
-image                    shape: (256, 256, 3)         min:    0.00000  max:  180.00000  uint8
-molded_images            shape: (1, 256, 256, 3)      min: -123.70000  max:   76.10000  float64
-image_metas              shape: (1, 14)               min:    0.00000  max:  256.00000  int64
-anchors                  shape: (1, 16368, 4)         min:   -0.35494  max:    1.10396  float32
-Inference took 0.8270740509033203
-(256, 256, 13)
-Sum = % 23457
-Sum= 23457
-result:
-(1078, 1278)
-bounds:
-upper: 412
-lower: 668
-left : 618
-right: 874
-Processing 1 images
-image                    shape: (256, 256, 3)         min:    0.00000  max:  164.00000  uint8
-molded_images            shape: (1, 256, 256, 3)      min: -123.70000  max:   60.10000  float64
-image_metas              shape: (1, 14)               min:    0.00000  max:  256.00000  int64
-anchors                  shape: (1, 16368, 4)         min:   -0.35494  max:    1.10396  float32
-Inference took 0.8372247219085693
-(256, 256, 14)
-Sum = % 23741
-Sum= 23741
-result:
-(1078, 1278)
-bounds:
-upper: 412
-lower: 668
-left : 824
-right: 1080
-Processing 1 images
-image                    shape: (256, 256, 3)         min:    0.00000  max:  197.00000  uint8
-molded_images            shape: (1, 256, 256, 3)      min: -123.70000  max:   93.10000  float64
-image_metas              shape: (1, 14)               min:    0.00000  max:  256.00000  int64
-anchors                  shape: (1, 16368, 4)         min:   -0.35494  max:    1.10396  float32
-Inference took 0.8589251041412354
-(256, 256, 14)
-Sum = % 25931
-Sum= 25931
-result:
-(1078, 1278)
-bounds:
-upper: 412
-lower: 668
-left : 1022
-right: 1278
-Processing 1 images
-image                    shape: (256, 256, 3)         min:    0.00000  max:  205.00000  uint8
-molded_images            shape: (1, 256, 256, 3)      min: -123.70000  max:  101.10000  float64
-image_metas              shape: (1, 14)               min:    0.00000  max:  256.00000  int64
-anchors                  shape: (1, 16368, 4)         min:   -0.35494  max:    1.10396  float32
-Inference took 0.8180851936340332
-(256, 256, 13)
-Sum = % 21039
-Sum= 21039
-result:
-(1078, 1278)
-bounds:
-upper: 412
-lower: 668
-left : 1022
-right: 1278
-Processing 1 images
-image                    shape: (256, 256, 3)         min:    0.00000  max:  205.00000  uint8
-molded_images            shape: (1, 256, 256, 3)      min: -123.70000  max:  101.10000  float64
-image_metas              shape: (1, 14)               min:    0.00000  max:  256.00000  int64
-anchors                  shape: (1, 16368, 4)         min:   -0.35494  max:    1.10396  float32
-Inference took 0.813136100769043
-(256, 256, 13)
-Sum = % 21039
-Sum= 21039
-result:
-(1078, 1278)
-bounds:
-upper: 618
-lower: 874
-left : 0
-right: 256
-Processing 1 images
-image                    shape: (256, 256, 3)         min:    0.00000  max:  180.00000  uint8
-molded_images            shape: (1, 256, 256, 3)      min: -123.70000  max:   76.10000  float64
-image_metas              shape: (1, 14)               min:    0.00000  max:  256.00000  int64
-anchors                  shape: (1, 16368, 4)         min:   -0.35494  max:    1.10396  float32
-Inference took 0.8272843360900879
-(256, 256, 17)
-Sum = % 28184
-Sum= 28184
-result:
-(1078, 1278)
-bounds:
-upper: 618
-lower: 874
-left : 206
-right: 462
-Processing 1 images
-image                    shape: (256, 256, 3)         min:    0.00000  max:  197.00000  uint8
-molded_images            shape: (1, 256, 256, 3)      min: -123.70000  max:   93.10000  float64
-image_metas              shape: (1, 14)               min:    0.00000  max:  256.00000  int64
-anchors                  shape: (1, 16368, 4)         min:   -0.35494  max:    1.10396  float32
-Inference took 0.8189737796783447
-(256, 256, 16)
-Sum = % 26481
-Sum= 26481
-result:
-(1078, 1278)
-bounds:
-upper: 618
-lower: 874
-left : 412
-right: 668
-Processing 1 images
-image                    shape: (256, 256, 3)         min:    0.00000  max:  180.00000  uint8
-molded_images            shape: (1, 256, 256, 3)      min: -123.70000  max:   76.10000  float64
-image_metas              shape: (1, 14)               min:    0.00000  max:  256.00000  int64
-anchors                  shape: (1, 16368, 4)         min:   -0.35494  max:    1.10396  float32
-Inference took 0.8401877880096436
-(256, 256, 17)
-Sum = % 27341
-Sum= 27341
-result:
-(1078, 1278)
-bounds:
-upper: 618
-lower: 874
-left : 618
-right: 874
-Processing 1 images
-image                    shape: (256, 256, 3)         min:    0.00000  max:  180.00000  uint8
-molded_images            shape: (1, 256, 256, 3)      min: -123.70000  max:   76.10000  float64
-image_metas              shape: (1, 14)               min:    0.00000  max:  256.00000  int64
-anchors                  shape: (1, 16368, 4)         min:   -0.35494  max:    1.10396  float32
-Inference took 0.868004560470581
-(256, 256, 15)
-Sum = % 24122
-Sum= 24122
-result:
-(1078, 1278)
-bounds:
-upper: 618
-lower: 874
-left : 824
-right: 1080
-Processing 1 images
-image                    shape: (256, 256, 3)         min:    0.00000  max:  213.00000  uint8
-molded_images            shape: (1, 256, 256, 3)      min: -123.70000  max:  109.10000  float64
-image_metas              shape: (1, 14)               min:    0.00000  max:  256.00000  int64
-anchors                  shape: (1, 16368, 4)         min:   -0.35494  max:    1.10396  float32
-Inference took 0.8183364868164062
-(256, 256, 16)
-Sum = % 24346
-Sum= 24346
-result:
-(1078, 1278)
-bounds:
-upper: 618
-lower: 874
-left : 1022
-right: 1278
-Processing 1 images
-image                    shape: (256, 256, 3)         min:    0.00000  max:  213.00000  uint8
-molded_images            shape: (1, 256, 256, 3)      min: -123.70000  max:  109.10000  float64
-image_metas              shape: (1, 14)               min:    0.00000  max:  256.00000  int64
-anchors                  shape: (1, 16368, 4)         min:   -0.35494  max:    1.10396  float32
-Inference took 0.8224887847900391
-(256, 256, 14)
-Sum = % 25811
-Sum= 25811
-result:
-(1078, 1278)
-bounds:
-upper: 618
-lower: 874
-left : 1022
-right: 1278
-Processing 1 images
-image                    shape: (256, 256, 3)         min:    0.00000  max:  213.00000  uint8
-molded_images            shape: (1, 256, 256, 3)      min: -123.70000  max:  109.10000  float64
-image_metas              shape: (1, 14)               min:    0.00000  max:  256.00000  int64
-anchors                  shape: (1, 16368, 4)         min:   -0.35494  max:    1.10396  float32
-Inference took 0.8270416259765625
-(256, 256, 14)
-Sum = % 25811
-Sum= 25811
-result:
-(1078, 1278)
-bounds:
-upper: 822
-lower: 1078
-left : 0
-right: 256
-Processing 1 images
-image                    shape: (256, 256, 3)         min:    0.00000  max:  213.00000  uint8
-molded_images            shape: (1, 256, 256, 3)      min: -123.70000  max:  109.10000  float64
-image_metas              shape: (1, 14)               min:    0.00000  max:  256.00000  int64
-anchors                  shape: (1, 16368, 4)         min:   -0.35494  max:    1.10396  float32
-Inference took 0.8618214130401611
-(256, 256, 13)
-Sum = % 25566
-Sum= 25566
-result:
-(1078, 1278)
-bounds:
-upper: 822
-lower: 1078
-left : 206
-right: 462
-Processing 1 images
-image                    shape: (256, 256, 3)         min:    0.00000  max:  180.00000  uint8
-molded_images            shape: (1, 256, 256, 3)      min: -123.70000  max:   76.10000  float64
-image_metas              shape: (1, 14)               min:    0.00000  max:  256.00000  int64
-anchors                  shape: (1, 16368, 4)         min:   -0.35494  max:    1.10396  float32
-Inference took 0.8397507667541504
-(256, 256, 17)
-Sum = % 26220
-Sum= 26220
-result:
-(1078, 1278)
-bounds:
-upper: 822
-lower: 1078
-left : 412
-right: 668
-Processing 1 images
-image                    shape: (256, 256, 3)         min:    0.00000  max:  197.00000  uint8
-molded_images            shape: (1, 256, 256, 3)      min: -123.70000  max:   93.10000  float64
-image_metas              shape: (1, 14)               min:    0.00000  max:  256.00000  int64
-anchors                  shape: (1, 16368, 4)         min:   -0.35494  max:    1.10396  float32
-Inference took 0.8219108581542969
-(256, 256, 17)
-Sum = % 30919
-Sum= 30919
-result:
-(1078, 1278)
-bounds:
-upper: 822
-lower: 1078
-left : 618
-right: 874
-Processing 1 images
-image                    shape: (256, 256, 3)         min:    0.00000  max:  197.00000  uint8
-molded_images            shape: (1, 256, 256, 3)      min: -123.70000  max:   93.10000  float64
-image_metas              shape: (1, 14)               min:    0.00000  max:  256.00000  int64
-anchors                  shape: (1, 16368, 4)         min:   -0.35494  max:    1.10396  float32
-Inference took 0.8143620491027832
-(256, 256, 17)
-Sum = % 30310
-Sum= 30310
-result:
-(1078, 1278)
-bounds:
-upper: 822
-lower: 1078
-left : 824
-right: 1080
-Processing 1 images
-image                    shape: (256, 256, 3)         min:    0.00000  max:  213.00000  uint8
-molded_images            shape: (1, 256, 256, 3)      min: -123.70000  max:  109.10000  float64
-image_metas              shape: (1, 14)               min:    0.00000  max:  256.00000  int64
-anchors                  shape: (1, 16368, 4)         min:   -0.35494  max:    1.10396  float32
-Inference took 0.8159549236297607
-(256, 256, 15)
-Sum = % 27704
-Sum= 27704
-result:
-(1078, 1278)
-bounds:
-upper: 822
-lower: 1078
-left : 1022
-right: 1278
-Processing 1 images
-image                    shape: (256, 256, 3)         min:    0.00000  max:  189.00000  uint8
-molded_images            shape: (1, 256, 256, 3)      min: -123.70000  max:   85.10000  float64
-image_metas              shape: (1, 14)               min:    0.00000  max:  256.00000  int64
-anchors                  shape: (1, 16368, 4)         min:   -0.35494  max:    1.10396  float32
-Inference took 0.8173222541809082
-(256, 256, 15)
-Sum = % 22157
-Sum= 22157
-result:
-(1078, 1278)
-bounds:
-upper: 822
-lower: 1078
-left : 1022
-right: 1278
-Processing 1 images
-image                    shape: (256, 256, 3)         min:    0.00000  max:  189.00000  uint8
-molded_images            shape: (1, 256, 256, 3)      min: -123.70000  max:   85.10000  float64
-image_metas              shape: (1, 14)               min:    0.00000  max:  256.00000  int64
-anchors                  shape: (1, 16368, 4)         min:   -0.35494  max:    1.10396  float32
-Inference took 0.8280458450317383
-(256, 256, 15)
-Sum = % 22157
-Sum= 22157
-result:
-(1078, 1278)
-bounds:
-upper: 822
-lower: 1078
-left : 0
-right: 256
-Processing 1 images
-image                    shape: (256, 256, 3)         min:    0.00000  max:  213.00000  uint8
-molded_images            shape: (1, 256, 256, 3)      min: -123.70000  max:  109.10000  float64
-image_metas              shape: (1, 14)               min:    0.00000  max:  256.00000  int64
-anchors                  shape: (1, 16368, 4)         min:   -0.35494  max:    1.10396  float32
-Inference took 0.870990514755249
-(256, 256, 13)
-Sum = % 25566
-Sum= 25566
-result:
-(1078, 1278)
-bounds:
-upper: 822
-lower: 1078
-left : 206
-right: 462
-Processing 1 images
-image                    shape: (256, 256, 3)         min:    0.00000  max:  180.00000  uint8
-molded_images            shape: (1, 256, 256, 3)      min: -123.70000  max:   76.10000  float64
-image_metas              shape: (1, 14)               min:    0.00000  max:  256.00000  int64
-anchors                  shape: (1, 16368, 4)         min:   -0.35494  max:    1.10396  float32
-Inference took 0.8323216438293457
-(256, 256, 17)
-Sum = % 26220
-Sum= 26220
-result:
-(1078, 1278)
-bounds:
-upper: 822
-lower: 1078
-left : 412
-right: 668
-Processing 1 images
-image                    shape: (256, 256, 3)         min:    0.00000  max:  197.00000  uint8
-molded_images            shape: (1, 256, 256, 3)      min: -123.70000  max:   93.10000  float64
-image_metas              shape: (1, 14)               min:    0.00000  max:  256.00000  int64
-anchors                  shape: (1, 16368, 4)         min:   -0.35494  max:    1.10396  float32
-Inference took 0.8250589370727539
-(256, 256, 17)
-Sum = % 30919
-Sum= 30919
-result:
-(1078, 1278)
-bounds:
-upper: 822
-lower: 1078
-left : 618
-right: 874
-Processing 1 images
-image                    shape: (256, 256, 3)         min:    0.00000  max:  197.00000  uint8
-molded_images            shape: (1, 256, 256, 3)      min: -123.70000  max:   93.10000  float64
-image_metas              shape: (1, 14)               min:    0.00000  max:  256.00000  int64
-anchors                  shape: (1, 16368, 4)         min:   -0.35494  max:    1.10396  float32
-Inference took 0.8220913410186768
-(256, 256, 17)
-Sum = % 30310
-Sum= 30310
-result:
-(1078, 1278)
-bounds:
-upper: 822
-lower: 1078
-left : 824
-right: 1080
-Processing 1 images
-image                    shape: (256, 256, 3)         min:    0.00000  max:  213.00000  uint8
-molded_images            shape: (1, 256, 256, 3)      min: -123.70000  max:  109.10000  float64
-image_metas              shape: (1, 14)               min:    0.00000  max:  256.00000  int64
-anchors                  shape: (1, 16368, 4)         min:   -0.35494  max:    1.10396  float32
-Inference took 0.8690063953399658
-(256, 256, 15)
-Sum = % 27704
-Sum= 27704
-result:
-(1078, 1278)
-bounds:
-upper: 822
-lower: 1078
-left : 1022
-right: 1278
-Processing 1 images
-image                    shape: (256, 256, 3)         min:    0.00000  max:  189.00000  uint8
-molded_images            shape: (1, 256, 256, 3)      min: -123.70000  max:   85.10000  float64
-image_metas              shape: (1, 14)               min:    0.00000  max:  256.00000  int64
-anchors                  shape: (1, 16368, 4)         min:   -0.35494  max:    1.10396  float32
-Inference took 0.8240363597869873
-(256, 256, 15)
-Sum = % 22157
-Sum= 22157
-result:
-(1078, 1278)
-bounds:
-upper: 822
-lower: 1078
-left : 1022
-right: 1278
-Processing 1 images
-image                    shape: (256, 256, 3)         min:    0.00000  max:  189.00000  uint8
-molded_images            shape: (1, 256, 256, 3)      min: -123.70000  max:   85.10000  float64
-image_metas              shape: (1, 14)               min:    0.00000  max:  256.00000  int64
-anchors                  shape: (1, 16368, 4)         min:   -0.35494  max:    1.10396  float32
-Inference took 0.8192956447601318
-(256, 256, 15)
-Sum = % 22157
-Sum= 22157
-result:
-(1078, 1278)
-Connectivity matrix built
-(604, 604)
-222
-(604,)
-<class 'numpy.ndarray'>
-applied lookup
-(1078, 1278, 43)
-Wrote profile results to demo_profile.py.lprof
 Timer unit: 1e-06 s
 
-Total time: 36.7476 s
+Total time: 0.613188 s
 File: ../../../mrcnn/samples/cell/inference_profile.py
-Function: run_inference at line 86
+Function: run_inference at line 100
 
 Line #      Hits         Time  Per Hit   % Time  Line Contents
 ==============================================================
-    86                                           @profile
-    87                                           def run_inference(model, image):
-    88                                               """
-    89                                               Runs inference on an image using model and returns the mask stack.
-    90                                               """
-    91                                               # get results
-    92        42        208.0      5.0      0.0      start = time.time()
-    93        42   36746130.0 874907.9    100.0      results = model.detect([image], verbose=1)
-    94        42        229.0      5.5      0.0      end = time.time()
-    95        42        660.0     15.7      0.0      print("Inference took {}".format(end-start))
-    96        42         31.0      0.7      0.0      r = results[0]
-    97        42         35.0      0.8      0.0      masks = r['masks']
-    98        42        247.0      5.9      0.0      print(masks.shape)
-    99        42         27.0      0.6      0.0      return masks
+   100                                           def run_inference(model, image):
+   101                                               """
+   102                                               Runs inference on an image using model and returns the mask stack.
+   103                                               """
+   104                                               # get results
+   105         1          4.0      4.0      0.0      start = time.time()
+   106         1        108.0    108.0      0.0      blockPrint()
+   107         1     613020.0 613020.0    100.0      results = model.detect([image], verbose=1)
+   108         1         52.0     52.0      0.0      enablePrint()
+   109         1          3.0      3.0      0.0      end = time.time()
+   110                                               # print("Inference took {}".format(end-start))
+   111         1          0.0      0.0      0.0      r = results[0]
+   112         1          1.0      1.0      0.0      masks = r['masks']
+   113                                               # print(masks.shape)
+   114         1          0.0      0.0      0.0      return masks
+
+Timer unit: 1e-06 s
+
+Total time: 0.5634 s
+File: ../../../mrcnn/samples/cell/inference_profile.py
+Function: run_inference at line 100
+
+Line #      Hits         Time  Per Hit   % Time  Line Contents
+==============================================================
+   100                                           def run_inference(model, image):
+   101                                               """
+   102                                               Runs inference on an image using model and returns the mask stack.
+   103                                               """
+   104                                               # get results
+   105         1          2.0      2.0      0.0      start = time.time()
+   106         1         66.0     66.0      0.0      blockPrint()
+   107         1     563268.0 563268.0    100.0      results = model.detect([image], verbose=1)
+   108         1         59.0     59.0      0.0      enablePrint()
+   109         1          3.0      3.0      0.0      end = time.time()
+   110                                               # print("Inference took {}".format(end-start))
+   111         1          1.0      1.0      0.0      r = results[0]
+   112         1          1.0      1.0      0.0      masks = r['masks']
+   113                                               # print(masks.shape)
+   114         1          0.0      0.0      0.0      return masks
+
+Timer unit: 1e-06 s
+
+Total time: 0.559653 s
+File: ../../../mrcnn/samples/cell/inference_profile.py
+Function: run_inference at line 100
+
+Line #      Hits         Time  Per Hit   % Time  Line Contents
+==============================================================
+   100                                           def run_inference(model, image):
+   101                                               """
+   102                                               Runs inference on an image using model and returns the mask stack.
+   103                                               """
+   104                                               # get results
+   105         1          3.0      3.0      0.0      start = time.time()
+   106         1         64.0     64.0      0.0      blockPrint()
+   107         1     559529.0 559529.0    100.0      results = model.detect([image], verbose=1)
+   108         1         53.0     53.0      0.0      enablePrint()
+   109         1          3.0      3.0      0.0      end = time.time()
+   110                                               # print("Inference took {}".format(end-start))
+   111         1          0.0      0.0      0.0      r = results[0]
+   112         1          1.0      1.0      0.0      masks = r['masks']
+   113                                               # print(masks.shape)
+   114         1          0.0      0.0      0.0      return masks
+
+Timer unit: 1e-06 s
+
+Total time: 0.555257 s
+File: ../../../mrcnn/samples/cell/inference_profile.py
+Function: run_inference at line 100
+
+Line #      Hits         Time  Per Hit   % Time  Line Contents
+==============================================================
+   100                                           def run_inference(model, image):
+   101                                               """
+   102                                               Runs inference on an image using model and returns the mask stack.
+   103                                               """
+   104                                               # get results
+   105         1          2.0      2.0      0.0      start = time.time()
+   106         1         65.0     65.0      0.0      blockPrint()
+   107         1     555134.0 555134.0    100.0      results = model.detect([image], verbose=1)
+   108         1         51.0     51.0      0.0      enablePrint()
+   109         1          2.0      2.0      0.0      end = time.time()
+   110                                               # print("Inference took {}".format(end-start))
+   111         1          1.0      1.0      0.0      r = results[0]
+   112         1          1.0      1.0      0.0      masks = r['masks']
+   113                                               # print(masks.shape)
+   114         1          1.0      1.0      0.0      return masks
+
+Timer unit: 1e-06 s
+
+Total time: 0.568966 s
+File: ../../../mrcnn/samples/cell/inference_profile.py
+Function: run_inference at line 100
+
+Line #      Hits         Time  Per Hit   % Time  Line Contents
+==============================================================
+   100                                           def run_inference(model, image):
+   101                                               """
+   102                                               Runs inference on an image using model and returns the mask stack.
+   103                                               """
+   104                                               # get results
+   105         1          2.0      2.0      0.0      start = time.time()
+   106         1         66.0     66.0      0.0      blockPrint()
+   107         1     568819.0 568819.0    100.0      results = model.detect([image], verbose=1)
+   108         1         73.0     73.0      0.0      enablePrint()
+   109         1          4.0      4.0      0.0      end = time.time()
+   110                                               # print("Inference took {}".format(end-start))
+   111         1          1.0      1.0      0.0      r = results[0]
+   112         1          1.0      1.0      0.0      masks = r['masks']
+   113                                               # print(masks.shape)
+   114         1          0.0      0.0      0.0      return masks
+
+Timer unit: 1e-06 s
+
+Total time: 0.562433 s
+File: ../../../mrcnn/samples/cell/inference_profile.py
+Function: run_inference at line 100
+
+Line #      Hits         Time  Per Hit   % Time  Line Contents
+==============================================================
+   100                                           def run_inference(model, image):
+   101                                               """
+   102                                               Runs inference on an image using model and returns the mask stack.
+   103                                               """
+   104                                               # get results
+   105         1          4.0      4.0      0.0      start = time.time()
+   106         1        108.0    108.0      0.0      blockPrint()
+   107         1     562264.0 562264.0    100.0      results = model.detect([image], verbose=1)
+   108         1         52.0     52.0      0.0      enablePrint()
+   109         1          3.0      3.0      0.0      end = time.time()
+   110                                               # print("Inference took {}".format(end-start))
+   111         1          1.0      1.0      0.0      r = results[0]
+   112         1          1.0      1.0      0.0      masks = r['masks']
+   113                                               # print(masks.shape)
+   114         1          0.0      0.0      0.0      return masks
+
+Timer unit: 1e-06 s
+
+Total time: 0.559981 s
+File: ../../../mrcnn/samples/cell/inference_profile.py
+Function: run_inference at line 100
+
+Line #      Hits         Time  Per Hit   % Time  Line Contents
+==============================================================
+   100                                           def run_inference(model, image):
+   101                                               """
+   102                                               Runs inference on an image using model and returns the mask stack.
+   103                                               """
+   104                                               # get results
+   105         1          3.0      3.0      0.0      start = time.time()
+   106         1         67.0     67.0      0.0      blockPrint()
+   107         1     559831.0 559831.0    100.0      results = model.detect([image], verbose=1)
+   108         1         73.0     73.0      0.0      enablePrint()
+   109         1          4.0      4.0      0.0      end = time.time()
+   110                                               # print("Inference took {}".format(end-start))
+   111         1          1.0      1.0      0.0      r = results[0]
+   112         1          1.0      1.0      0.0      masks = r['masks']
+   113                                               # print(masks.shape)
+   114         1          1.0      1.0      0.0      return masks
+
+Timer unit: 1e-06 s
+
+Total time: 0.605689 s
+File: ../../../mrcnn/samples/cell/inference_profile.py
+Function: run_inference at line 100
+
+Line #      Hits         Time  Per Hit   % Time  Line Contents
+==============================================================
+   100                                           def run_inference(model, image):
+   101                                               """
+   102                                               Runs inference on an image using model and returns the mask stack.
+   103                                               """
+   104                                               # get results
+   105         1          3.0      3.0      0.0      start = time.time()
+   106         1         78.0     78.0      0.0      blockPrint()
+   107         1     605490.0 605490.0    100.0      results = model.detect([image], verbose=1)
+   108         1        114.0    114.0      0.0      enablePrint()
+   109         1          3.0      3.0      0.0      end = time.time()
+   110                                               # print("Inference took {}".format(end-start))
+   111         1          1.0      1.0      0.0      r = results[0]
+   112         1          0.0      0.0      0.0      masks = r['masks']
+   113                                               # print(masks.shape)
+   114         1          0.0      0.0      0.0      return masks
+
+Timer unit: 1e-06 s
+
+Total time: 0.561958 s
+File: ../../../mrcnn/samples/cell/inference_profile.py
+Function: run_inference at line 100
+
+Line #      Hits         Time  Per Hit   % Time  Line Contents
+==============================================================
+   100                                           def run_inference(model, image):
+   101                                               """
+   102                                               Runs inference on an image using model and returns the mask stack.
+   103                                               """
+   104                                               # get results
+   105         1          2.0      2.0      0.0      start = time.time()
+   106         1         74.0     74.0      0.0      blockPrint()
+   107         1     561825.0 561825.0    100.0      results = model.detect([image], verbose=1)
+   108         1         52.0     52.0      0.0      enablePrint()
+   109         1          3.0      3.0      0.0      end = time.time()
+   110                                               # print("Inference took {}".format(end-start))
+   111         1          1.0      1.0      0.0      r = results[0]
+   112         1          1.0      1.0      0.0      masks = r['masks']
+   113                                               # print(masks.shape)
+   114         1          0.0      0.0      0.0      return masks
+
+Timer unit: 1e-06 s
+
+Total time: 0.554403 s
+File: ../../../mrcnn/samples/cell/inference_profile.py
+Function: run_inference at line 100
+
+Line #      Hits         Time  Per Hit   % Time  Line Contents
+==============================================================
+   100                                           def run_inference(model, image):
+   101                                               """
+   102                                               Runs inference on an image using model and returns the mask stack.
+   103                                               """
+   104                                               # get results
+   105         1          3.0      3.0      0.0      start = time.time()
+   106         1         70.0     70.0      0.0      blockPrint()
+   107         1     554275.0 554275.0    100.0      results = model.detect([image], verbose=1)
+   108         1         50.0     50.0      0.0      enablePrint()
+   109         1          3.0      3.0      0.0      end = time.time()
+   110                                               # print("Inference took {}".format(end-start))
+   111         1          0.0      0.0      0.0      r = results[0]
+   112         1          1.0      1.0      0.0      masks = r['masks']
+   113                                               # print(masks.shape)
+   114         1          1.0      1.0      0.0      return masks
+
+Timer unit: 1e-06 s
+
+Total time: 0.573861 s
+File: ../../../mrcnn/samples/cell/inference_profile.py
+Function: run_inference at line 100
+
+Line #      Hits         Time  Per Hit   % Time  Line Contents
+==============================================================
+   100                                           def run_inference(model, image):
+   101                                               """
+   102                                               Runs inference on an image using model and returns the mask stack.
+   103                                               """
+   104                                               # get results
+   105         1          3.0      3.0      0.0      start = time.time()
+   106         1         84.0     84.0      0.0      blockPrint()
+   107         1     573717.0 573717.0    100.0      results = model.detect([image], verbose=1)
+   108         1         53.0     53.0      0.0      enablePrint()
+   109         1          2.0      2.0      0.0      end = time.time()
+   110                                               # print("Inference took {}".format(end-start))
+   111         1          1.0      1.0      0.0      r = results[0]
+   112         1          0.0      0.0      0.0      masks = r['masks']
+   113                                               # print(masks.shape)
+   114         1          1.0      1.0      0.0      return masks
+
+Timer unit: 1e-06 s
+
+Total time: 0.557419 s
+File: ../../../mrcnn/samples/cell/inference_profile.py
+Function: run_inference at line 100
+
+Line #      Hits         Time  Per Hit   % Time  Line Contents
+==============================================================
+   100                                           def run_inference(model, image):
+   101                                               """
+   102                                               Runs inference on an image using model and returns the mask stack.
+   103                                               """
+   104                                               # get results
+   105         1          3.0      3.0      0.0      start = time.time()
+   106         1         64.0     64.0      0.0      blockPrint()
+   107         1     557296.0 557296.0    100.0      results = model.detect([image], verbose=1)
+   108         1         52.0     52.0      0.0      enablePrint()
+   109         1          3.0      3.0      0.0      end = time.time()
+   110                                               # print("Inference took {}".format(end-start))
+   111         1          1.0      1.0      0.0      r = results[0]
+   112         1          0.0      0.0      0.0      masks = r['masks']
+   113                                               # print(masks.shape)
+   114         1          0.0      0.0      0.0      return masks
+
+Timer unit: 1e-06 s
+
+Total time: 0.554531 s
+File: ../../../mrcnn/samples/cell/inference_profile.py
+Function: run_inference at line 100
+
+Line #      Hits         Time  Per Hit   % Time  Line Contents
+==============================================================
+   100                                           def run_inference(model, image):
+   101                                               """
+   102                                               Runs inference on an image using model and returns the mask stack.
+   103                                               """
+   104                                               # get results
+   105         1          5.0      5.0      0.0      start = time.time()
+   106         1        107.0    107.0      0.0      blockPrint()
+   107         1     554364.0 554364.0    100.0      results = model.detect([image], verbose=1)
+   108         1         51.0     51.0      0.0      enablePrint()
+   109         1          3.0      3.0      0.0      end = time.time()
+   110                                               # print("Inference took {}".format(end-start))
+   111         1          0.0      0.0      0.0      r = results[0]
+   112         1          1.0      1.0      0.0      masks = r['masks']
+   113                                               # print(masks.shape)
+   114         1          0.0      0.0      0.0      return masks
+
+Timer unit: 1e-06 s
+
+Total time: 0.559512 s
+File: ../../../mrcnn/samples/cell/inference_profile.py
+Function: run_inference at line 100
+
+Line #      Hits         Time  Per Hit   % Time  Line Contents
+==============================================================
+   100                                           def run_inference(model, image):
+   101                                               """
+   102                                               Runs inference on an image using model and returns the mask stack.
+   103                                               """
+   104                                               # get results
+   105         1          3.0      3.0      0.0      start = time.time()
+   106         1         64.0     64.0      0.0      blockPrint()
+   107         1     559388.0 559388.0    100.0      results = model.detect([image], verbose=1)
+   108         1         52.0     52.0      0.0      enablePrint()
+   109         1          3.0      3.0      0.0      end = time.time()
+   110                                               # print("Inference took {}".format(end-start))
+   111         1          1.0      1.0      0.0      r = results[0]
+   112         1          0.0      0.0      0.0      masks = r['masks']
+   113                                               # print(masks.shape)
+   114         1          1.0      1.0      0.0      return masks
+
+Timer unit: 1e-06 s
+
+Total time: 0.556625 s
+File: ../../../mrcnn/samples/cell/inference_profile.py
+Function: run_inference at line 100
+
+Line #      Hits         Time  Per Hit   % Time  Line Contents
+==============================================================
+   100                                           def run_inference(model, image):
+   101                                               """
+   102                                               Runs inference on an image using model and returns the mask stack.
+   103                                               """
+   104                                               # get results
+   105         1          3.0      3.0      0.0      start = time.time()
+   106         1         65.0     65.0      0.0      blockPrint()
+   107         1     556498.0 556498.0    100.0      results = model.detect([image], verbose=1)
+   108         1         54.0     54.0      0.0      enablePrint()
+   109         1          2.0      2.0      0.0      end = time.time()
+   110                                               # print("Inference took {}".format(end-start))
+   111         1          1.0      1.0      0.0      r = results[0]
+   112         1          1.0      1.0      0.0      masks = r['masks']
+   113                                               # print(masks.shape)
+   114         1          1.0      1.0      0.0      return masks
+
+Timer unit: 1e-06 s
+
+Total time: 0.555106 s
+File: ../../../mrcnn/samples/cell/inference_profile.py
+Function: run_inference at line 100
+
+Line #      Hits         Time  Per Hit   % Time  Line Contents
+==============================================================
+   100                                           def run_inference(model, image):
+   101                                               """
+   102                                               Runs inference on an image using model and returns the mask stack.
+   103                                               """
+   104                                               # get results
+   105         1          2.0      2.0      0.0      start = time.time()
+   106         1         65.0     65.0      0.0      blockPrint()
+   107         1     554980.0 554980.0    100.0      results = model.detect([image], verbose=1)
+   108         1         54.0     54.0      0.0      enablePrint()
+   109         1          2.0      2.0      0.0      end = time.time()
+   110                                               # print("Inference took {}".format(end-start))
+   111         1          1.0      1.0      0.0      r = results[0]
+   112         1          1.0      1.0      0.0      masks = r['masks']
+   113                                               # print(masks.shape)
+   114         1          1.0      1.0      0.0      return masks
+
+Timer unit: 1e-06 s
+
+Total time: 0.557382 s
+File: ../../../mrcnn/samples/cell/inference_profile.py
+Function: run_inference at line 100
+
+Line #      Hits         Time  Per Hit   % Time  Line Contents
+==============================================================
+   100                                           def run_inference(model, image):
+   101                                               """
+   102                                               Runs inference on an image using model and returns the mask stack.
+   103                                               """
+   104                                               # get results
+   105         1          2.0      2.0      0.0      start = time.time()
+   106         1         67.0     67.0      0.0      blockPrint()
+   107         1     557254.0 557254.0    100.0      results = model.detect([image], verbose=1)
+   108         1         54.0     54.0      0.0      enablePrint()
+   109         1          3.0      3.0      0.0      end = time.time()
+   110                                               # print("Inference took {}".format(end-start))
+   111         1          1.0      1.0      0.0      r = results[0]
+   112         1          1.0      1.0      0.0      masks = r['masks']
+   113                                               # print(masks.shape)
+   114         1          0.0      0.0      0.0      return masks
+
+Timer unit: 1e-06 s
+
+Total time: 0.566821 s
+File: ../../../mrcnn/samples/cell/inference_profile.py
+Function: run_inference at line 100
+
+Line #      Hits         Time  Per Hit   % Time  Line Contents
+==============================================================
+   100                                           def run_inference(model, image):
+   101                                               """
+   102                                               Runs inference on an image using model and returns the mask stack.
+   103                                               """
+   104                                               # get results
+   105         1          2.0      2.0      0.0      start = time.time()
+   106         1         83.0     83.0      0.0      blockPrint()
+   107         1     566678.0 566678.0    100.0      results = model.detect([image], verbose=1)
+   108         1         54.0     54.0      0.0      enablePrint()
+   109         1          3.0      3.0      0.0      end = time.time()
+   110                                               # print("Inference took {}".format(end-start))
+   111         1          0.0      0.0      0.0      r = results[0]
+   112         1          1.0      1.0      0.0      masks = r['masks']
+   113                                               # print(masks.shape)
+   114         1          0.0      0.0      0.0      return masks
+
+Timer unit: 1e-06 s
+
+Total time: 0.5677 s
+File: ../../../mrcnn/samples/cell/inference_profile.py
+Function: run_inference at line 100
+
+Line #      Hits         Time  Per Hit   % Time  Line Contents
+==============================================================
+   100                                           def run_inference(model, image):
+   101                                               """
+   102                                               Runs inference on an image using model and returns the mask stack.
+   103                                               """
+   104                                               # get results
+   105         1          4.0      4.0      0.0      start = time.time()
+   106         1         99.0     99.0      0.0      blockPrint()
+   107         1     567539.0 567539.0    100.0      results = model.detect([image], verbose=1)
+   108         1         54.0     54.0      0.0      enablePrint()
+   109         1          2.0      2.0      0.0      end = time.time()
+   110                                               # print("Inference took {}".format(end-start))
+   111         1          1.0      1.0      0.0      r = results[0]
+   112         1          0.0      0.0      0.0      masks = r['masks']
+   113                                               # print(masks.shape)
+   114         1          1.0      1.0      0.0      return masks
+
+Timer unit: 1e-06 s
+
+Total time: 0.559887 s
+File: ../../../mrcnn/samples/cell/inference_profile.py
+Function: run_inference at line 100
+
+Line #      Hits         Time  Per Hit   % Time  Line Contents
+==============================================================
+   100                                           def run_inference(model, image):
+   101                                               """
+   102                                               Runs inference on an image using model and returns the mask stack.
+   103                                               """
+   104                                               # get results
+   105         1          3.0      3.0      0.0      start = time.time()
+   106         1         64.0     64.0      0.0      blockPrint()
+   107         1     559758.0 559758.0    100.0      results = model.detect([image], verbose=1)
+   108         1         56.0     56.0      0.0      enablePrint()
+   109         1          3.0      3.0      0.0      end = time.time()
+   110                                               # print("Inference took {}".format(end-start))
+   111         1          1.0      1.0      0.0      r = results[0]
+   112         1          1.0      1.0      0.0      masks = r['masks']
+   113                                               # print(masks.shape)
+   114         1          1.0      1.0      0.0      return masks
+
+Timer unit: 1e-06 s
+
+Total time: 0.568431 s
+File: ../../../mrcnn/samples/cell/inference_profile.py
+Function: run_inference at line 100
+
+Line #      Hits         Time  Per Hit   % Time  Line Contents
+==============================================================
+   100                                           def run_inference(model, image):
+   101                                               """
+   102                                               Runs inference on an image using model and returns the mask stack.
+   103                                               """
+   104                                               # get results
+   105         1          4.0      4.0      0.0      start = time.time()
+   106         1        109.0    109.0      0.0      blockPrint()
+   107         1     568260.0 568260.0    100.0      results = model.detect([image], verbose=1)
+   108         1         53.0     53.0      0.0      enablePrint()
+   109         1          2.0      2.0      0.0      end = time.time()
+   110                                               # print("Inference took {}".format(end-start))
+   111         1          1.0      1.0      0.0      r = results[0]
+   112         1          1.0      1.0      0.0      masks = r['masks']
+   113                                               # print(masks.shape)
+   114         1          1.0      1.0      0.0      return masks
+
+Timer unit: 1e-06 s
+
+Total time: 0.56506 s
+File: ../../../mrcnn/samples/cell/inference_profile.py
+Function: run_inference at line 100
+
+Line #      Hits         Time  Per Hit   % Time  Line Contents
+==============================================================
+   100                                           def run_inference(model, image):
+   101                                               """
+   102                                               Runs inference on an image using model and returns the mask stack.
+   103                                               """
+   104                                               # get results
+   105         1          2.0      2.0      0.0      start = time.time()
+   106         1         69.0     69.0      0.0      blockPrint()
+   107         1     564924.0 564924.0    100.0      results = model.detect([image], verbose=1)
+   108         1         60.0     60.0      0.0      enablePrint()
+   109         1          2.0      2.0      0.0      end = time.time()
+   110                                               # print("Inference took {}".format(end-start))
+   111         1          1.0      1.0      0.0      r = results[0]
+   112         1          1.0      1.0      0.0      masks = r['masks']
+   113                                               # print(masks.shape)
+   114         1          1.0      1.0      0.0      return masks
+
+Timer unit: 1e-06 s
+
+Total time: 0.564825 s
+File: ../../../mrcnn/samples/cell/inference_profile.py
+Function: run_inference at line 100
+
+Line #      Hits         Time  Per Hit   % Time  Line Contents
+==============================================================
+   100                                           def run_inference(model, image):
+   101                                               """
+   102                                               Runs inference on an image using model and returns the mask stack.
+   103                                               """
+   104                                               # get results
+   105         1          4.0      4.0      0.0      start = time.time()
+   106         1         65.0     65.0      0.0      blockPrint()
+   107         1     564700.0 564700.0    100.0      results = model.detect([image], verbose=1)
+   108         1         52.0     52.0      0.0      enablePrint()
+   109         1          3.0      3.0      0.0      end = time.time()
+   110                                               # print("Inference took {}".format(end-start))
+   111         1          0.0      0.0      0.0      r = results[0]
+   112         1          1.0      1.0      0.0      masks = r['masks']
+   113                                               # print(masks.shape)
+   114         1          0.0      0.0      0.0      return masks
+
+Timer unit: 1e-06 s
+
+Total time: 0.557182 s
+File: ../../../mrcnn/samples/cell/inference_profile.py
+Function: run_inference at line 100
+
+Line #      Hits         Time  Per Hit   % Time  Line Contents
+==============================================================
+   100                                           def run_inference(model, image):
+   101                                               """
+   102                                               Runs inference on an image using model and returns the mask stack.
+   103                                               """
+   104                                               # get results
+   105         1          2.0      2.0      0.0      start = time.time()
+   106         1         68.0     68.0      0.0      blockPrint()
+   107         1     557051.0 557051.0    100.0      results = model.detect([image], verbose=1)
+   108         1         55.0     55.0      0.0      enablePrint()
+   109         1          3.0      3.0      0.0      end = time.time()
+   110                                               # print("Inference took {}".format(end-start))
+   111         1          1.0      1.0      0.0      r = results[0]
+   112         1          1.0      1.0      0.0      masks = r['masks']
+   113                                               # print(masks.shape)
+   114         1          1.0      1.0      0.0      return masks
+
+Timer unit: 1e-06 s
+
+Total time: 0.564135 s
+File: ../../../mrcnn/samples/cell/inference_profile.py
+Function: run_inference at line 100
+
+Line #      Hits         Time  Per Hit   % Time  Line Contents
+==============================================================
+   100                                           def run_inference(model, image):
+   101                                               """
+   102                                               Runs inference on an image using model and returns the mask stack.
+   103                                               """
+   104                                               # get results
+   105         1          3.0      3.0      0.0      start = time.time()
+   106         1         67.0     67.0      0.0      blockPrint()
+   107         1     564003.0 564003.0    100.0      results = model.detect([image], verbose=1)
+   108         1         57.0     57.0      0.0      enablePrint()
+   109         1          3.0      3.0      0.0      end = time.time()
+   110                                               # print("Inference took {}".format(end-start))
+   111         1          1.0      1.0      0.0      r = results[0]
+   112         1          0.0      0.0      0.0      masks = r['masks']
+   113                                               # print(masks.shape)
+   114         1          1.0      1.0      0.0      return masks
+
+Timer unit: 1e-06 s
+
+Total time: 0.561253 s
+File: ../../../mrcnn/samples/cell/inference_profile.py
+Function: run_inference at line 100
+
+Line #      Hits         Time  Per Hit   % Time  Line Contents
+==============================================================
+   100                                           def run_inference(model, image):
+   101                                               """
+   102                                               Runs inference on an image using model and returns the mask stack.
+   103                                               """
+   104                                               # get results
+   105         1          3.0      3.0      0.0      start = time.time()
+   106         1         66.0     66.0      0.0      blockPrint()
+   107         1     561123.0 561123.0    100.0      results = model.detect([image], verbose=1)
+   108         1         56.0     56.0      0.0      enablePrint()
+   109         1          3.0      3.0      0.0      end = time.time()
+   110                                               # print("Inference took {}".format(end-start))
+   111         1          1.0      1.0      0.0      r = results[0]
+   112         1          1.0      1.0      0.0      masks = r['masks']
+   113                                               # print(masks.shape)
+   114         1          0.0      0.0      0.0      return masks
+
+Timer unit: 1e-06 s
+
+Total time: 0.568942 s
+File: ../../../mrcnn/samples/cell/inference_profile.py
+Function: run_inference at line 100
+
+Line #      Hits         Time  Per Hit   % Time  Line Contents
+==============================================================
+   100                                           def run_inference(model, image):
+   101                                               """
+   102                                               Runs inference on an image using model and returns the mask stack.
+   103                                               """
+   104                                               # get results
+   105         1          3.0      3.0      0.0      start = time.time()
+   106         1         66.0     66.0      0.0      blockPrint()
+   107         1     568809.0 568809.0    100.0      results = model.detect([image], verbose=1)
+   108         1         59.0     59.0      0.0      enablePrint()
+   109         1          2.0      2.0      0.0      end = time.time()
+   110                                               # print("Inference took {}".format(end-start))
+   111         1          1.0      1.0      0.0      r = results[0]
+   112         1          1.0      1.0      0.0      masks = r['masks']
+   113                                               # print(masks.shape)
+   114         1          1.0      1.0      0.0      return masks
+
+Timer unit: 1e-06 s
+
+Total time: 0.550469 s
+File: ../../../mrcnn/samples/cell/inference_profile.py
+Function: run_inference at line 100
+
+Line #      Hits         Time  Per Hit   % Time  Line Contents
+==============================================================
+   100                                           def run_inference(model, image):
+   101                                               """
+   102                                               Runs inference on an image using model and returns the mask stack.
+   103                                               """
+   104                                               # get results
+   105         1          3.0      3.0      0.0      start = time.time()
+   106         1         67.0     67.0      0.0      blockPrint()
+   107         1     550344.0 550344.0    100.0      results = model.detect([image], verbose=1)
+   108         1         52.0     52.0      0.0      enablePrint()
+   109         1          2.0      2.0      0.0      end = time.time()
+   110                                               # print("Inference took {}".format(end-start))
+   111         1          1.0      1.0      0.0      r = results[0]
+   112         1          0.0      0.0      0.0      masks = r['masks']
+   113                                               # print(masks.shape)
+   114         1          0.0      0.0      0.0      return masks
+
+Timer unit: 1e-06 s
+
+Total time: 0.566065 s
+File: ../../../mrcnn/samples/cell/inference_profile.py
+Function: run_inference at line 100
+
+Line #      Hits         Time  Per Hit   % Time  Line Contents
+==============================================================
+   100                                           def run_inference(model, image):
+   101                                               """
+   102                                               Runs inference on an image using model and returns the mask stack.
+   103                                               """
+   104                                               # get results
+   105         1          2.0      2.0      0.0      start = time.time()
+   106         1         65.0     65.0      0.0      blockPrint()
+   107         1     565939.0 565939.0    100.0      results = model.detect([image], verbose=1)
+   108         1         54.0     54.0      0.0      enablePrint()
+   109         1          2.0      2.0      0.0      end = time.time()
+   110                                               # print("Inference took {}".format(end-start))
+   111         1          1.0      1.0      0.0      r = results[0]
+   112         1          1.0      1.0      0.0      masks = r['masks']
+   113                                               # print(masks.shape)
+   114         1          1.0      1.0      0.0      return masks
+
+Timer unit: 1e-06 s
+
+Total time: 0.561551 s
+File: ../../../mrcnn/samples/cell/inference_profile.py
+Function: run_inference at line 100
+
+Line #      Hits         Time  Per Hit   % Time  Line Contents
+==============================================================
+   100                                           def run_inference(model, image):
+   101                                               """
+   102                                               Runs inference on an image using model and returns the mask stack.
+   103                                               """
+   104                                               # get results
+   105         1          3.0      3.0      0.0      start = time.time()
+   106         1         65.0     65.0      0.0      blockPrint()
+   107         1     561397.0 561397.0    100.0      results = model.detect([image], verbose=1)
+   108         1         80.0     80.0      0.0      enablePrint()
+   109         1          4.0      4.0      0.0      end = time.time()
+   110                                               # print("Inference took {}".format(end-start))
+   111         1          1.0      1.0      0.0      r = results[0]
+   112         1          1.0      1.0      0.0      masks = r['masks']
+   113                                               # print(masks.shape)
+   114         1          0.0      0.0      0.0      return masks
+
+Timer unit: 1e-06 s
+
+Total time: 0.566594 s
+File: ../../../mrcnn/samples/cell/inference_profile.py
+Function: run_inference at line 100
+
+Line #      Hits         Time  Per Hit   % Time  Line Contents
+==============================================================
+   100                                           def run_inference(model, image):
+   101                                               """
+   102                                               Runs inference on an image using model and returns the mask stack.
+   103                                               """
+   104                                               # get results
+   105         1          3.0      3.0      0.0      start = time.time()
+   106         1         65.0     65.0      0.0      blockPrint()
+   107         1     566464.0 566464.0    100.0      results = model.detect([image], verbose=1)
+   108         1         58.0     58.0      0.0      enablePrint()
+   109         1          3.0      3.0      0.0      end = time.time()
+   110                                               # print("Inference took {}".format(end-start))
+   111         1          0.0      0.0      0.0      r = results[0]
+   112         1          1.0      1.0      0.0      masks = r['masks']
+   113                                               # print(masks.shape)
+   114         1          0.0      0.0      0.0      return masks
+
+Timer unit: 1e-06 s
+
+Total time: 0.608333 s
+File: ../../../mrcnn/samples/cell/inference_profile.py
+Function: run_inference at line 100
+
+Line #      Hits         Time  Per Hit   % Time  Line Contents
+==============================================================
+   100                                           def run_inference(model, image):
+   101                                               """
+   102                                               Runs inference on an image using model and returns the mask stack.
+   103                                               """
+   104                                               # get results
+   105         1          2.0      2.0      0.0      start = time.time()
+   106         1         66.0     66.0      0.0      blockPrint()
+   107         1     608205.0 608205.0    100.0      results = model.detect([image], verbose=1)
+   108         1         55.0     55.0      0.0      enablePrint()
+   109         1          3.0      3.0      0.0      end = time.time()
+   110                                               # print("Inference took {}".format(end-start))
+   111         1          1.0      1.0      0.0      r = results[0]
+   112         1          1.0      1.0      0.0      masks = r['masks']
+   113                                               # print(masks.shape)
+   114         1          0.0      0.0      0.0      return masks
+
+Timer unit: 1e-06 s
+
+Total time: 0.566132 s
+File: ../../../mrcnn/samples/cell/inference_profile.py
+Function: run_inference at line 100
+
+Line #      Hits         Time  Per Hit   % Time  Line Contents
+==============================================================
+   100                                           def run_inference(model, image):
+   101                                               """
+   102                                               Runs inference on an image using model and returns the mask stack.
+   103                                               """
+   104                                               # get results
+   105         1          2.0      2.0      0.0      start = time.time()
+   106         1         65.0     65.0      0.0      blockPrint()
+   107         1     566007.0 566007.0    100.0      results = model.detect([image], verbose=1)
+   108         1         54.0     54.0      0.0      enablePrint()
+   109         1          3.0      3.0      0.0      end = time.time()
+   110                                               # print("Inference took {}".format(end-start))
+   111         1          0.0      0.0      0.0      r = results[0]
+   112         1          1.0      1.0      0.0      masks = r['masks']
+   113                                               # print(masks.shape)
+   114         1          0.0      0.0      0.0      return masks
+
+Timer unit: 1e-06 s
+
+Total time: 0.569719 s
+File: ../../../mrcnn/samples/cell/inference_profile.py
+Function: run_inference at line 100
+
+Line #      Hits         Time  Per Hit   % Time  Line Contents
+==============================================================
+   100                                           def run_inference(model, image):
+   101                                               """
+   102                                               Runs inference on an image using model and returns the mask stack.
+   103                                               """
+   104                                               # get results
+   105         1          4.0      4.0      0.0      start = time.time()
+   106         1        110.0    110.0      0.0      blockPrint()
+   107         1     569547.0 569547.0    100.0      results = model.detect([image], verbose=1)
+   108         1         53.0     53.0      0.0      enablePrint()
+   109         1          3.0      3.0      0.0      end = time.time()
+   110                                               # print("Inference took {}".format(end-start))
+   111         1          1.0      1.0      0.0      r = results[0]
+   112         1          1.0      1.0      0.0      masks = r['masks']
+   113                                               # print(masks.shape)
+   114         1          0.0      0.0      0.0      return masks
+
+Timer unit: 1e-06 s
+
+Total time: 0.559392 s
+File: ../../../mrcnn/samples/cell/inference_profile.py
+Function: run_inference at line 100
+
+Line #      Hits         Time  Per Hit   % Time  Line Contents
+==============================================================
+   100                                           def run_inference(model, image):
+   101                                               """
+   102                                               Runs inference on an image using model and returns the mask stack.
+   103                                               """
+   104                                               # get results
+   105         1          2.0      2.0      0.0      start = time.time()
+   106         1         66.0     66.0      0.0      blockPrint()
+   107         1     559265.0 559265.0    100.0      results = model.detect([image], verbose=1)
+   108         1         54.0     54.0      0.0      enablePrint()
+   109         1          3.0      3.0      0.0      end = time.time()
+   110                                               # print("Inference took {}".format(end-start))
+   111         1          1.0      1.0      0.0      r = results[0]
+   112         1          1.0      1.0      0.0      masks = r['masks']
+   113                                               # print(masks.shape)
+   114         1          0.0      0.0      0.0      return masks
+
+Timer unit: 1e-06 s
+
+Total time: 0.560925 s
+File: ../../../mrcnn/samples/cell/inference_profile.py
+Function: run_inference at line 100
+
+Line #      Hits         Time  Per Hit   % Time  Line Contents
+==============================================================
+   100                                           def run_inference(model, image):
+   101                                               """
+   102                                               Runs inference on an image using model and returns the mask stack.
+   103                                               """
+   104                                               # get results
+   105         1          3.0      3.0      0.0      start = time.time()
+   106         1         65.0     65.0      0.0      blockPrint()
+   107         1     560800.0 560800.0    100.0      results = model.detect([image], verbose=1)
+   108         1         51.0     51.0      0.0      enablePrint()
+   109         1          3.0      3.0      0.0      end = time.time()
+   110                                               # print("Inference took {}".format(end-start))
+   111         1          1.0      1.0      0.0      r = results[0]
+   112         1          1.0      1.0      0.0      masks = r['masks']
+   113                                               # print(masks.shape)
+   114         1          1.0      1.0      0.0      return masks
+
+Timer unit: 1e-06 s
+
+Total time: 0.55795 s
+File: ../../../mrcnn/samples/cell/inference_profile.py
+Function: run_inference at line 100
+
+Line #      Hits         Time  Per Hit   % Time  Line Contents
+==============================================================
+   100                                           def run_inference(model, image):
+   101                                               """
+   102                                               Runs inference on an image using model and returns the mask stack.
+   103                                               """
+   104                                               # get results
+   105         1          3.0      3.0      0.0      start = time.time()
+   106         1         66.0     66.0      0.0      blockPrint()
+   107         1     557826.0 557826.0    100.0      results = model.detect([image], verbose=1)
+   108         1         51.0     51.0      0.0      enablePrint()
+   109         1          3.0      3.0      0.0      end = time.time()
+   110                                               # print("Inference took {}".format(end-start))
+   111         1          0.0      0.0      0.0      r = results[0]
+   112         1          0.0      0.0      0.0      masks = r['masks']
+   113                                               # print(masks.shape)
+   114         1          1.0      1.0      0.0      return masks
+
+Timer unit: 1e-06 s
+
+Total time: 0.566699 s
+File: ../../../mrcnn/samples/cell/inference_profile.py
+Function: run_inference at line 100
+
+Line #      Hits         Time  Per Hit   % Time  Line Contents
+==============================================================
+   100                                           def run_inference(model, image):
+   101                                               """
+   102                                               Runs inference on an image using model and returns the mask stack.
+   103                                               """
+   104                                               # get results
+   105         1          2.0      2.0      0.0      start = time.time()
+   106         1         75.0     75.0      0.0      blockPrint()
+   107         1     566564.0 566564.0    100.0      results = model.detect([image], verbose=1)
+   108         1         54.0     54.0      0.0      enablePrint()
+   109         1          3.0      3.0      0.0      end = time.time()
+   110                                               # print("Inference took {}".format(end-start))
+   111         1          1.0      1.0      0.0      r = results[0]
+   112         1          0.0      0.0      0.0      masks = r['masks']
+   113                                               # print(masks.shape)
+   114         1          0.0      0.0      0.0      return masks
+
+Timer unit: 1e-06 s
+
+Total time: 0.55539 s
+File: ../../../mrcnn/samples/cell/inference_profile.py
+Function: run_inference at line 100
+
+Line #      Hits         Time  Per Hit   % Time  Line Contents
+==============================================================
+   100                                           def run_inference(model, image):
+   101                                               """
+   102                                               Runs inference on an image using model and returns the mask stack.
+   103                                               """
+   104                                               # get results
+   105         1          2.0      2.0      0.0      start = time.time()
+   106         1         65.0     65.0      0.0      blockPrint()
+   107         1     555264.0 555264.0    100.0      results = model.detect([image], verbose=1)
+   108         1         54.0     54.0      0.0      enablePrint()
+   109         1          2.0      2.0      0.0      end = time.time()
+   110                                               # print("Inference took {}".format(end-start))
+   111         1          1.0      1.0      0.0      r = results[0]
+   112         1          1.0      1.0      0.0      masks = r['masks']
+   113                                               # print(masks.shape)
+   114         1          1.0      1.0      0.0      return masks
+
+Timer unit: 1e-06 s
+
+Total time: 0.564707 s
+File: ../../../mrcnn/samples/cell/inference_profile.py
+Function: run_inference at line 100
+
+Line #      Hits         Time  Per Hit   % Time  Line Contents
+==============================================================
+   100                                           def run_inference(model, image):
+   101                                               """
+   102                                               Runs inference on an image using model and returns the mask stack.
+   103                                               """
+   104                                               # get results
+   105         1          2.0      2.0      0.0      start = time.time()
+   106         1         57.0     57.0      0.0      blockPrint()
+   107         1     564591.0 564591.0    100.0      results = model.detect([image], verbose=1)
+   108         1         52.0     52.0      0.0      enablePrint()
+   109         1          3.0      3.0      0.0      end = time.time()
+   110                                               # print("Inference took {}".format(end-start))
+   111         1          1.0      1.0      0.0      r = results[0]
+   112         1          1.0      1.0      0.0      masks = r['masks']
+   113                                               # print(masks.shape)
+   114         1          0.0      0.0      0.0      return masks
+
+Timer unit: 1e-06 s
+
+Total time: 0.567302 s
+File: ../../../mrcnn/samples/cell/inference_profile.py
+Function: run_inference at line 100
+
+Line #      Hits         Time  Per Hit   % Time  Line Contents
+==============================================================
+   100                                           def run_inference(model, image):
+   101                                               """
+   102                                               Runs inference on an image using model and returns the mask stack.
+   103                                               """
+   104                                               # get results
+   105         1          2.0      2.0      0.0      start = time.time()
+   106         1         61.0     61.0      0.0      blockPrint()
+   107         1     567180.0 567180.0    100.0      results = model.detect([image], verbose=1)
+   108         1         55.0     55.0      0.0      enablePrint()
+   109         1          2.0      2.0      0.0      end = time.time()
+   110                                               # print("Inference took {}".format(end-start))
+   111         1          1.0      1.0      0.0      r = results[0]
+   112         1          0.0      0.0      0.0      masks = r['masks']
+   113                                               # print(masks.shape)
+   114         1          1.0      1.0      0.0      return masks
 
