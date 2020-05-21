@@ -1,5 +1,8 @@
 # Execution Time profiler
-This is an inference execution time profiler for our exisiting demos. **Currently, this only works on NIH biowulf Linux system.** If you want to use them on your own Linux system, please update the part for activating conda environment in driver script.
+This is an inference execution time profiler for our exisiting demos. **Currently, this profiler only works on NIH biowulf Linux system.** If you want to use them on your own Linux system, please update the part for activating conda environment in driver script.
+
+## Requirement
+Please make sure [https://github.com/CBIIT/nci-hitif/tree/master/framework-nucleus-segmentation/inference](Inference of Cell Object Detection and Segmentation) works first. If everything in the link works, you are ready for running this profiler.
 
 ## Input example:
 ```bash
