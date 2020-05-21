@@ -1,9 +1,6 @@
 # Execution Time profiler
 This is an inference execution time profiler for our exisiting demos. **Currently, this profiler only works on NIH biowulf Linux system.** If you want to use them on your own Linux system, please update the part for activating conda environment in driver script.
 
-## Requirement
-Please make sure [Inference of Cell Object Detection and Segmentation](https://github.com/CBIIT/nci-hitif/tree/master/framework-nucleus-segmentation/inference) works first. If everything in the link works, you are ready for running this profiler.
-
 ## Input example:
 ```bash
 ITER = 1
@@ -45,6 +42,8 @@ Line #      Hits         Time  Per Hit   % Time  Line Contents
     38         1       2843.0   2843.0      0.0          mask[i, :, :] = my_mask
     39         1          1.0      1.0      0.0      return mask
 ```
+## Requirement
+Please make sure [Inference of Cell Object Detection and Segmentation](https://github.com/CBIIT/nci-hitif/tree/master/framework-nucleus-segmentation/inference) works first. If everything in the link works, you are ready for running this profiler.
 
 ## Prebuilt Test Organization
 ### MRCNN
@@ -60,6 +59,15 @@ Because python line_profiler does not work on class method, function implementat
 
 * mrcnn/03_run_inference:
 This profiles **run_inference** function in **stitched_inference** function in **inference.py**.
+
+## How to use
+1. Open Linux Terminal (e.g., Biowulf Terminal)
+2. go to the testing folder you want. For example, if you want to profile **mrcnn/00_mrcnn**, assuming that your current directory is **nci-hitif/utils/profile**
+```bash
+cd mrcnn/00_mrcnn
+./driver.sh
+```
+Then, the result of **00_mrcnn** will be generated, and you can find **result.txt** in the same folder. (i.e., **mrcnn/00_mrcnn/result.txt**)
 
 ### Watershed-FPN
 * watershed/00_watershed_infer:
