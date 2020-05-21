@@ -2,7 +2,7 @@
 This is an inference execution time profiler for our exisiting demos. **Currently, this profiler only works on NIH biowulf Linux system.** If you want to use them on your own Linux system, please update the part for activating conda environment in driver script.
 
 ## Input example:
-```bash
+```python
 ITER = 1
 IMG_PATH="../../../visualization/GreyScale/BABE_Biological/Plate1_E03_T0001FF001Zall.tif"
 FILE_NAME = "demo_profile.py"
