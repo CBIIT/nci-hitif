@@ -64,7 +64,7 @@ This profiles **watershed_infer** function used in **demo.py**.
 2. watershed/01_model_prediction
 3. watershed/02_unet_predict
 
-## The meaning of parameters in **config.ini**
+## Parameter Description (**config.ini**)
 1. ITER: the number of iterations. For example, if **ITER==100**, 100 copied images are used as input of **demo.py**
 2. IMG_PATH: the path for the input image. The current version only support the same image.
 3. FILE_NAME: the target file we want to benchmark. i.e., the file which has a line we want to profile.
