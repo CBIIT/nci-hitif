@@ -30,8 +30,9 @@ config_file_path='./demo.ini'
 with open(config_file_path, 'r') as fin:
     print(fin.read())
 
-image_list =['../../../visualization/GreyScale/BABE_Biological/Plate1_E03_T0001FF001Zall.tif',
-             '../../../visualization/GreyScale/HiTIF_Laurent_Technical/AUTO0496_J14_T0001F001L01A01Z01C01.tif',
+image_list =['../../../visualization/GreyScale/HiTIF_Laurent_Technical/AUTO0496_J14_T0001F001L01A01Z01C01.tif',
+             '../../../visualization/GreyScale/BABE_Technical/image_0.tif',
+             '../../../visualization/GreyScale/HiTIF_Colorectal_Biological/AUTO0218_N07_T0001F004L01A01Z01C01.tif',
              '../../../visualization/GreyScale/Manasi_Technical/Plate1_M21_T0001F003L01A01Z01C01.tif'
 ]
 
