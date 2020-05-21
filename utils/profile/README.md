@@ -10,7 +10,7 @@ FUNCTION_API = "mask = mrcnn_infer(img, mrcnn_model_path, config_file_path)"
 FUNCTION_NAME = "mrcnn_infer"
 ```
 ## Output example:
-```bash
+```python
 Line #      Hits         Time  Per Hit   % Time  Line Contents
 ==============================================================
     12                                           def mrcnn_infer(img, mrcnn_model_path, config_file_path):
