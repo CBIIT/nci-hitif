@@ -45,24 +45,24 @@ Line #      Hits         Time  Per Hit   % Time  Line Contents
 
 ## Prebuilt Test Organization
 ### MRCNN
-1. mrcnn/00_mrcnn:
+* mrcnn/00_mrcnn:
 This profiles **mrcnn_infer** function used in **demo.py**.
 
-2. mrcnn/01_stitched_inference:
+* mrcnn/01_stitched_inference:
 This profiles **stitched_inference** function used in **mrcnn_infer** function in **mrcnn_infer.py**.
 
-3. mrcnn/02_merge_cells:
+* mrcnn/02_merge_cells:
 This profiles **merge_cells** function used in **mrcnn_infer** function in **mrcnn_infer.py**.
 Because python line_profiler does not work on class method, function implementation is newly added in **mrcnn_infer.py**.
 
-4. mrcnn/03_run_inference:
+* mrcnn/03_run_inference:
 This profiles **run_inference** function in **stitched_inference** function in **inference.py**.
 
 ### Watershed-FPN
-1. watershed/00_watershed_infer
+* watershed/00_watershed_infer:
 This profiles **watershed_infer** function used in **demo.py**.
-2. watershed/01_model_prediction
-3. watershed/02_unet_predict
+* watershed/01_model_prediction:
+* watershed/02_unet_predict
 
 ## Parameter Description (**config.ini**)
 1. ITER: the number of iterations. For example, if **ITER==100**, 100 copied images are used as input of **demo.py**
