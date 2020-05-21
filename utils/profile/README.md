@@ -2,7 +2,7 @@
 This is an inference execution time profiler for our exisiting demos. **Currently, this profiler only works on NIH biowulf Linux system.** If you want to use them on your own Linux system, please update the part for activating conda environment in driver script.
 
 ## Requirement
-Please make sure [https://github.com/CBIIT/nci-hitif/tree/master/framework-nucleus-segmentation/inference](Inference of Cell Object Detection and Segmentation) works first. If everything in the link works, you are ready for running this profiler.
+Please make sure [Inference of Cell Object Detection and Segmentation](https://github.com/CBIIT/nci-hitif/tree/master/framework-nucleus-segmentation/inference) works first. If everything in the link works, you are ready for running this profiler.
 
 ## Input example:
 ```bash
@@ -65,9 +65,12 @@ This profiles **run_inference** function in **stitched_inference** function in *
 * watershed/00_watershed_infer:
 This profiles **watershed_infer** function used in **demo.py**.
 * watershed/01_model_prediction:
-* watershed/02_unet_predict
+This profiles **model_prediction** function used in **watershed_infer** function in **watershed_infer.py**.
+* watershed/02_unet_predict:
+This profiles **unet_predict** function used in **model_prediction** function in **watershed_infer.py**.
 
 ## Parameter Description (**config.ini**)
+You can make your own profiler testing by changing this **config.ini**, and here is the description for each parameter.
 1. ITER: the number of iterations. For example, if **ITER==100**, 100 copied images are used as input of **demo.py**
 2. IMG_PATH: the path for the input image. The current version only support the same image.
 3. FILE_NAME: the target file we want to benchmark. i.e., the file which has a line we want to profile.
