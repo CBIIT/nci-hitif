@@ -1,6 +1,6 @@
 ---
 title: "Generation of the Figures for the DL Nuclear Segmentation Manuscript"
-date: "Apr 8 2020"
+date: "Jun 2 2020"
 authors: "Gianluca Pegoraro/George Zaki, NCI/NIH"
 output: github_document
 ---
@@ -45,9 +45,9 @@ calculate_F1 <- function(tp, fn, fp){
 
 Download unzip the input results of the inference experiments from Figshare.
 ```{r}
-URL <- "https://ndownloader.figshare.com/files/22184748"  
+URL <- "https://ndownloader.figshare.com/files/22863422"
 curl_download(URL, "data.zip")
-unzip("data.zip")
+unzip("data.zip") 
 ```
 
 Recursively read ands process all the data from all the paper runs. 
@@ -76,7 +76,7 @@ glimpse(raw_tbl)
 Recode the values of the `cell_line` variable to make them compatible with the actual cell names used in the experiments.  
 ```{r}
 levs1 <- c("MCF10A", "U2OS", "HCT116", "Eosinophils")
-levs2 <- c("Original", "Technical", "Biological")
+levs2 <- c("Original", "Technical", "Biological", "Technical_manual", "Biological_manual")
 
 raw_tbl <- raw_tbl %>%
            mutate(filename = str_replace(filename, "BABE", "MCF10A"),
@@ -121,7 +121,7 @@ scores_tbl <- raw_tbl %>%
                   aug = factor(aug),
                   epochs = factor(epochs),
                   model = factor(model, levels = levs5)) %>%
-           filter(replicate != "Original" ) %>%
+           filter(replicate != "Original") %>%
            filter(!(cell_line == "MCF10A" & replicate == "Technical"))
 
 glimpse(scores_tbl)
@@ -180,7 +180,8 @@ initialization_plot+ geom_point(alpha = 0.7,
 
 Create a subset of experiments for the incremental training strategy experiments (Fig.3B).
 ```{r TrainingSet}
-training_set <- F1_07_tbl %>% filter(run %in% c(1, 5, 6, 10, 29, 30, 65, 66))
+training_set <- F1_07_tbl %>% filter(run %in% c(1, 5, 6, 10, 29, 30, 65, 66),
+                                     replicate %in% c("Technical", "Biological")) 
 ```
 Plot only the effect of incremental training (Fig. 3B).
 ```{r Fig3B, echo = F}
@@ -199,7 +200,8 @@ trainingset_plot + geom_point(alpha = 0.7,
 ```
 Create a subset of experiments for the incremental length of training  experiments (Fig.4A).
 ```{r EpochsSet}
-epochs_set <- F1_07_tbl %>% filter(run %in% c(6, 10, 12, 16, 17, 18, 67, 68))
+epochs_set <- F1_07_tbl %>% filter(run %in% c(6, 10, 12, 16, 17, 18, 67, 68),
+                                     replicate %in% c("Technical", "Biological"))
 ```
 Plot only the effect of incremental length of training (Fig. 4A).
 ```{r Fig4A, echo=F}
@@ -217,7 +219,8 @@ epochs_plot + geom_point(alpha = 0.7,
 ```
 Create a subset of experiments for the incremental size of the training set experiments (Fig.4B).
 ```{r TrainSizeSet}
-train_size_set <- F1_07_tbl %>% filter(run %in% c(6, 10, 11, 19, 20, 45:49))
+train_size_set <- F1_07_tbl %>% filter(run %in% c(6, 10, 11, 19, 20, 45:49),
+                                       replicate %in% c("Technical", "Biological"))
 ```
 Plot only the effect of incremental size of the training set (Fig. 4B).
 ```{r Fig4B, echo=F}
@@ -235,7 +238,8 @@ train_size_plot + geom_point(alpha = 0.7,
 ```
 Create a subset of experiments for different augmentations experiments (Fig.4C).
 ```{r AugSet} 
-aug_set <- F1_07_tbl %>% filter(run %in% c(6, 10, 22:25, 27, 62, 69:72))
+aug_set <- F1_07_tbl %>% filter(run %in% c(6, 10, 22:25, 27, 62, 69:72),
+                                     replicate %in% c("Technical", "Biological"))
 ```
 Plot only the effect of changing the augmentation strategies (Fig. 4C).
 ```{r Fig4C, echo=F}
@@ -254,7 +258,8 @@ aug_plot + geom_point(alpha = 0.7,
 
 Create a subset of experiments for different augmentations experiments and inizializations (Fig.4D).
 ```{r RepeatsSet}
-repeats_set <- F1_07_tbl %>% filter(run %in% c(6, 8, 10, 26, 32, 33:43, 50:64, 73:83))
+repeats_set <- F1_07_tbl %>% filter(run %in% c(6, 8, 10, 26, 32, 33:43, 50:64, 73:83),
+                                    replicate %in% c("Technical", "Biological"))
 ```
 Plot only the effect of changing the augmentation strategies and inizializations (Fig. 4D).
 ```{r Fig4D, echo = F}
@@ -279,14 +284,39 @@ repeats_plot + geom_point(alpha = 0.7,
   ylab("F1 Score @ IoU 0.7,\nMean and 95% CI")
 ```
 Plot the performance for the final MRCNN and FPN2-WS models comparing it with Jacobkie (Run044). This is Fig. 5B.
-```{r Fig5B, echo = F}
-fig_5B_set <- scores_tbl %>% filter(run %in% c(10, 37, 44))
+```{r FinalSet}
+fig_5B_set <- scores_tbl %>% filter(run %in% c(10, 37, 44),
+                                     replicate %in% c("Technical", "Biological"))
+```
 
+```{r Fig5B, echo = F}
 fig_5B_plot <- ggplot(fig_5B_set, aes(x = thres, 
                                  y = F1,
                                  color = cell_line))
 
 fig_5B_plot + geom_line() +
+  geom_vline(xintercept = 0.7, 
+             linetype = "longdash",
+             color = "grey60") +
+  facet_wrap(~ model) +
+  scale_linetype_discrete("Replicate") +
+  scale_color_few(name= "Cell Line") +
+  xlab("IoU Threshold") +
+  ylab("F1 Score")
+```
+Plot the performance for the final MRCNN and FPN2-WS models comparing it with Jacobkie (Run044) using both semi-automated generated labels and manually annotated labels. This is Fig. S1A.
+```{r manualSet, echo = F}
+fig_S1A_set <- scores_tbl %>% 
+              filter(run %in% c(10, 37, 44))
+```
+
+```{r FigS1A, echo = F}
+fig_S1A_plot <- ggplot(fig_5B_set, aes(x = thres, 
+                                 y = F1,
+                                 color = cell_line,
+                                 linetype = replicate))
+
+fig_S1A_plot + geom_line() +
   geom_vline(xintercept = 0.7, 
              linetype = "longdash",
              color = "grey60") +
