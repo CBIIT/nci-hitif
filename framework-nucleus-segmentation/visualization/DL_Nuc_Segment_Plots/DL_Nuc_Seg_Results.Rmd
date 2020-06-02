@@ -299,29 +299,30 @@ fig_5B_plot + geom_line() +
              linetype = "longdash",
              color = "grey60") +
   facet_wrap(~ model) +
-  scale_linetype_discrete("Replicate") +
   scale_color_few(name= "Cell Line") +
   xlab("IoU Threshold") +
   ylab("F1 Score")
 ```
 Plot the performance for the final MRCNN and FPN2-WS models comparing it with Jacobkie (Run044) using both semi-automated generated labels and manually annotated labels. This is Fig. S1A.
-```{r manualSet, echo = F}
+```{r manualSet}
 fig_S1A_set <- scores_tbl %>% 
-              filter(run %in% c(10, 37, 44))
+               filter(run %in% c(10, 37, 44)) %>%
+               mutate(annotation = ifelse(str_detect(replicate, "manual"), "Manual", "Semi-Automated"))
+  
 ```
 
 ```{r FigS1A, echo = F}
-fig_S1A_plot <- ggplot(fig_5B_set, aes(x = thres, 
+fig_S1A_plot <- ggplot(fig_S1A_set, aes(x = thres, 
                                  y = F1,
                                  color = cell_line,
-                                 linetype = replicate))
+                                 linetype = annotation))
 
 fig_S1A_plot + geom_line() +
   geom_vline(xintercept = 0.7, 
              linetype = "longdash",
              color = "grey60") +
   facet_wrap(~ model) +
-  scale_linetype_discrete("Replicate") +
+  scale_linetype_discrete("Annotation") +
   scale_color_few(name= "Cell Line") +
   xlab("IoU Threshold") +
   ylab("F1 Score")

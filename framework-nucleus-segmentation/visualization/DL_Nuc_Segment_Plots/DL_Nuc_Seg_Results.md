@@ -1,6 +1,6 @@
 Generation of the Figures for the DL Nuclear Segmentation Manuscript
 ================
-Apr 8 2020
+Jun 2 2020
 
 ### Analysis initialization
 
@@ -11,14 +11,14 @@ Load the required
 library(tidyverse)
 ```
 
-    ## ── Attaching packages ─────────────────────────────────────────────────────────────────────────────────────────────────────────────────── tidyverse 1.3.0 ──
+    ## ── Attaching packages ───────────────────────────────────────────────────────────────────────────────────────────── tidyverse 1.3.0 ──
 
-    ## ✓ ggplot2 3.3.0     ✓ purrr   0.3.3
-    ## ✓ tibble  3.0.0     ✓ dplyr   0.8.5
-    ## ✓ tidyr   1.0.2     ✓ stringr 1.4.0
+    ## ✓ ggplot2 3.3.1     ✓ purrr   0.3.4
+    ## ✓ tibble  3.0.1     ✓ dplyr   1.0.0
+    ## ✓ tidyr   1.1.0     ✓ stringr 1.4.0
     ## ✓ readr   1.3.1     ✓ forcats 0.5.0
 
-    ## ── Conflicts ────────────────────────────────────────────────────────────────────────────────────────────────────────────────────── tidyverse_conflicts() ──
+    ## ── Conflicts ──────────────────────────────────────────────────────────────────────────────────────────────── tidyverse_conflicts() ──
     ## x dplyr::filter() masks stats::filter()
     ## x dplyr::lag()    masks stats::lag()
 
@@ -75,9 +75,9 @@ Download unzip the input results of the inference experiments from
 Figshare.
 
 ``` r
-URL <- "https://ndownloader.figshare.com/files/22184748"  
+URL <- "https://ndownloader.figshare.com/files/22863422"
 curl_download(URL, "data.zip")
-unzip("data.zip")
+unzip("data.zip") 
 ```
 
 Recursively read ands process all the data from all the paper runs.
@@ -104,7 +104,7 @@ raw_tbl <- dir(path = "Data",
 glimpse(raw_tbl)
 ```
 
-    ## Rows: 7,330
+    ## Rows: 7,450
     ## Columns: 7
     ## $ filename <chr> "Data/run001/mean-average-precision/mrcnn/BABE_Biological/ma…
     ## $ thres    <dbl> 0.50, 0.55, 0.60, 0.65, 0.70, 0.75, 0.80, 0.85, 0.90, 0.95, …
@@ -119,7 +119,7 @@ with the actual cell names used in the experiments.
 
 ``` r
 levs1 <- c("MCF10A", "U2OS", "HCT116", "Eosinophils")
-levs2 <- c("Original", "Technical", "Biological")
+levs2 <- c("Original", "Technical", "Biological", "Technical_manual", "Biological_manual")
 
 raw_tbl <- raw_tbl %>%
            mutate(filename = str_replace(filename, "BABE", "MCF10A"),
@@ -135,7 +135,7 @@ raw_tbl <- raw_tbl %>%
 glimpse(raw_tbl)
 ```
 
-    ## Rows: 7,330
+    ## Rows: 7,450
     ## Columns: 10
     ## $ filename  <chr> "Data/run001/mean-average-precision/mrcnn/MCF10A_Biological…
     ## $ thres     <dbl> 0.50, 0.55, 0.60, 0.65, 0.70, 0.75, 0.80, 0.85, 0.90, 0.95,…
@@ -188,13 +188,13 @@ scores_tbl <- raw_tbl %>%
                   aug = factor(aug),
                   epochs = factor(epochs),
                   model = factor(model, levels = levs5)) %>%
-           filter(replicate != "Original" ) %>%
+           filter(replicate != "Original") %>%
            filter(!(cell_line == "MCF10A" & replicate == "Technical"))
 
 glimpse(scores_tbl)
 ```
 
-    ## Rows: 3,260
+    ## Rows: 3,380
     ## Columns: 16
     ## $ filename       <chr> "Data/run001/mean-average-precision/mrcnn/MCF10A_Biolo…
     ## $ thres          <dbl> 0.50, 0.55, 0.60, 0.65, 0.70, 0.75, 0.80, 0.85, 0.90, …
@@ -220,37 +220,45 @@ Create a summary of the annotated data
 summary(scores_tbl)
 ```
 
-    ##    filename             thres             TP             FP        
-    ##  Length:3260        Min.   :0.500   Min.   :   0   Min.   :   3.0  
-    ##  Class :character   1st Qu.:0.600   1st Qu.: 143   1st Qu.:  29.0  
-    ##  Mode  :character   Median :0.725   Median : 467   Median : 114.0  
-    ##                     Mean   :0.725   Mean   : 549   Mean   : 215.8  
-    ##                     3rd Qu.:0.850   3rd Qu.:1099   3rd Qu.: 268.0  
-    ##                     Max.   :0.950   Max.   :1361   Max.   :1701.0  
-    ##                                                                    
-    ##        FN               mAP               F1              run      
-    ##  Min.   :   7.00   Min.   :0.0000   Min.   :0.0000   1      :  40  
-    ##  1st Qu.:  31.75   1st Qu.:0.2199   1st Qu.:0.3606   2      :  40  
-    ##  Median : 112.00   Median :0.6787   Median :0.8086   3      :  40  
-    ##  Mean   : 276.97   Mean   :0.5633   Mean   :0.6427   4      :  40  
-    ##  3rd Qu.: 273.00   3rd Qu.:0.9064   3rd Qu.:0.9509   5      :  40  
-    ##  Max.   :1433.00   Max.   :0.9808   Max.   :0.9903   6      :  40  
-    ##                                                      (Other):3020  
-    ##        cell_line        replicate                 train_set     train_size  
-    ##  MCF10A     :810   Original  :   0   MCF10A            : 240   0.125X:  80  
-    ##  U2OS       :810   Technical :1640   Eosinophils       :  20   0.25X :  90  
-    ##  HCT116     :810   Biological:1620   MCF10A_HCT116     :  80   0.5X  :  80  
-    ##  Eosinophils:830                     MCF10A_HCT116_U2OS:  80   1X    :2890  
-    ##                                      All               :2760   2X    : 120  
-    ##                                      BBBC038           :  80                
-    ##                                                                             
-    ##           aug         epochs            model              initialization
-    ##  Full       :2300   0.25X:  80   MRCNN     :1740   Random         :1280  
-    ##  Min_Blur   :  80   0.5X : 120   FPN2-WS   :1360   Pre-initialized:1980  
-    ##  Min_Contr  :  80   0.75X:  80   Jacobkie  :  40                         
-    ##  Min_Noise  :  80   1X   :2980   Kaggle_5th: 120                         
-    ##  Min_Scaling:  80                                                        
-    ##  None       : 640                                                        
+    ##    filename             thres             TP               FP        
+    ##  Length:3380        Min.   :0.500   Min.   :   0.0   Min.   :   3.0  
+    ##  Class :character   1st Qu.:0.600   1st Qu.: 143.8   1st Qu.:  30.0  
+    ##  Mode  :character   Median :0.725   Median : 468.0   Median : 114.0  
+    ##                     Mean   :0.725   Mean   : 550.6   Mean   : 217.3  
+    ##                     3rd Qu.:0.850   3rd Qu.:1100.0   3rd Qu.: 267.2  
+    ##                     Max.   :0.950   Max.   :1361.0   Max.   :1701.0  
+    ##                                                                      
+    ##        FN              mAP               F1              run      
+    ##  Min.   :   7.0   Min.   :0.0000   Min.   :0.0000   10     :  80  
+    ##  1st Qu.:  31.0   1st Qu.:0.2211   1st Qu.:0.3622   37     :  80  
+    ##  Median : 111.0   Median :0.6813   Median :0.8105   44     :  80  
+    ##  Mean   : 275.3   Mean   :0.5650   Mean   :0.6441   1      :  40  
+    ##  3rd Qu.: 265.5   3rd Qu.:0.9076   3rd Qu.:0.9515   2      :  40  
+    ##  Max.   :1433.0   Max.   :0.9808   Max.   :0.9903   3      :  40  
+    ##                                                     (Other):3020  
+    ##        cell_line               replicate                 train_set   
+    ##  MCF10A     :840   Original         :   0   MCF10A            : 240  
+    ##  U2OS       :840   Technical        :1640   Eosinophils       :  20  
+    ##  HCT116     :840   Biological       :1620   MCF10A_HCT116     :  80  
+    ##  Eosinophils:860   Technical_manual :  60   MCF10A_HCT116_U2OS:  80  
+    ##                    Biological_manual:  60   All               :2840  
+    ##                                             BBBC038           : 120  
+    ##                                                                      
+    ##   train_size            aug         epochs            model     
+    ##  0.125X:  80   Full       :2380   0.25X:  80   MRCNN     :1780  
+    ##  0.25X :  90   Min_Blur   :  80   0.5X : 120   FPN2-WS   :1400  
+    ##  0.5X  :  80   Min_Contr  :  80   0.75X:  80   Jacobkie  :  80  
+    ##  1X    :3010   Min_Noise  :  80   1X   :3100   Kaggle_5th: 120  
+    ##  2X    : 120   Min_Scaling:  80                                 
+    ##                None       : 680                                 
+    ##                                                                 
+    ##          initialization
+    ##  Random         :1320  
+    ##  Pre-initialized:2060  
+    ##                        
+    ##                        
+    ##                        
+    ##                        
     ## 
 
 Plot the baseline model training performance using only MCF10A cells
@@ -279,7 +287,8 @@ experiments
 (Fig.3B).
 
 ``` r
-training_set <- F1_07_tbl %>% filter(run %in% c(1, 5, 6, 10, 29, 30, 65, 66))
+training_set <- F1_07_tbl %>% filter(run %in% c(1, 5, 6, 10, 29, 30, 65, 66),
+                                     replicate %in% c("Technical", "Biological")) 
 ```
 
 Plot only the effect of incremental training (Fig. 3B).
@@ -288,7 +297,8 @@ incremental length of training experiments
 (Fig.4A).
 
 ``` r
-epochs_set <- F1_07_tbl %>% filter(run %in% c(6, 10, 12, 16, 17, 18, 67, 68))
+epochs_set <- F1_07_tbl %>% filter(run %in% c(6, 10, 12, 16, 17, 18, 67, 68),
+                                     replicate %in% c("Technical", "Biological"))
 ```
 
 Plot only the effect of incremental length of training (Fig. 4A).
@@ -297,7 +307,8 @@ incremental size of the training set experiments
 (Fig.4B).
 
 ``` r
-train_size_set <- F1_07_tbl %>% filter(run %in% c(6, 10, 11, 19, 20, 45:49))
+train_size_set <- F1_07_tbl %>% filter(run %in% c(6, 10, 11, 19, 20, 45:49),
+                                       replicate %in% c("Technical", "Biological"))
 ```
 
 Plot only the effect of incremental size of the training set (Fig. 4B).
@@ -305,7 +316,8 @@ Plot only the effect of incremental size of the training set (Fig. 4B).
 different augmentations experiments (Fig.4C).
 
 ``` r
-aug_set <- F1_07_tbl %>% filter(run %in% c(6, 10, 22:25, 27, 62, 69:72))
+aug_set <- F1_07_tbl %>% filter(run %in% c(6, 10, 22:25, 27, 62, 69:72),
+                                     replicate %in% c("Technical", "Biological"))
 ```
 
 Plot only the effect of changing the augmentation strategies (Fig. 4C).
@@ -316,13 +328,32 @@ and inizializations
 (Fig.4D).
 
 ``` r
-repeats_set <- F1_07_tbl %>% filter(run %in% c(6, 8, 10, 26, 32, 33:43, 50:64, 73:83))
+repeats_set <- F1_07_tbl %>% filter(run %in% c(6, 8, 10, 26, 32, 33:43, 50:64, 73:83),
+                                    replicate %in% c("Technical", "Biological"))
 ```
 
 Plot only the effect of changing the augmentation strategies and
 inizializations (Fig. 4D). ![](Output/Fig4D-1.png)<!-- --> Plot the
 performance for the final MRCNN and FPN2-WS models comparing it with
-Jacobkie (Run044). This is Fig. 5B. ![](Output/Fig5B-1.png)<!-- -->
+Jacobkie (Run044). This is Fig. 5B.
+
+``` r
+fig_5B_set <- scores_tbl %>% filter(run %in% c(10, 37, 44),
+                                     replicate %in% c("Technical", "Biological"))
+```
+
+![](Output/Fig5B-1.png)<!-- --> Plot the performance for the final MRCNN
+and FPN2-WS models comparing it with Jacobkie (Run044) using both
+semi-automated generated labels and manually annotated labels. This is
+Fig. S1A.
+
+``` r
+fig_S1A_set <- scores_tbl %>% 
+               filter(run %in% c(10, 37, 44)) %>%
+               mutate(annotation = ifelse(str_detect(replicate, "manual"), "Manual", "Semi-Automated"))
+```
+
+![](Output/FigS1A-1.png)<!-- -->
 
 ``` r
 sessionInfo()
@@ -344,32 +375,32 @@ sessionInfo()
     ## 
     ## other attached packages:
     ##  [1] ggthemes_4.2.0  curl_4.3        forcats_0.5.0   stringr_1.4.0  
-    ##  [5] dplyr_0.8.5     purrr_0.3.3     readr_1.3.1     tidyr_1.0.2    
-    ##  [9] tibble_3.0.0    ggplot2_3.3.0   tidyverse_1.3.0
+    ##  [5] dplyr_1.0.0     purrr_0.3.4     readr_1.3.1     tidyr_1.1.0    
+    ##  [9] tibble_3.0.1    ggplot2_3.3.1   tidyverse_1.3.0
     ## 
     ## loaded via a namespace (and not attached):
     ##  [1] httr_1.4.1          jsonlite_1.6.1      splines_3.6.3      
-    ##  [4] modelr_0.1.6        Formula_1.2-3       assertthat_0.2.1   
+    ##  [4] modelr_0.1.7        Formula_1.2-3       assertthat_0.2.1   
     ##  [7] latticeExtra_0.6-29 cellranger_1.1.0    yaml_2.2.1         
-    ## [10] pillar_1.4.3        backports_1.1.5     lattice_0.20-41    
-    ## [13] glue_1.3.2          digest_0.6.25       checkmate_2.0.0    
-    ## [16] RColorBrewer_1.1-2  rvest_0.3.5         colorspace_1.4-1   
+    ## [10] pillar_1.4.4        backports_1.1.7     lattice_0.20-41    
+    ## [13] glue_1.4.1          digest_0.6.25       RColorBrewer_1.1-2 
+    ## [16] checkmate_2.0.0     rvest_0.3.5         colorspace_1.4-1   
     ## [19] htmltools_0.4.0     Matrix_1.2-18       pkgconfig_2.0.3    
-    ## [22] broom_0.5.5         haven_2.2.0         scales_1.1.0       
+    ## [22] broom_0.5.6         haven_2.2.0         scales_1.1.1       
     ## [25] jpeg_0.1-8.1        htmlTable_1.13.3    generics_0.0.2     
-    ## [28] farver_2.0.3        ellipsis_0.3.0      withr_2.1.2        
-    ## [31] nnet_7.3-13         cli_2.0.2           survival_3.1-11    
+    ## [28] farver_2.0.3        ellipsis_0.3.1      withr_2.2.0        
+    ## [31] nnet_7.3-14         cli_2.0.2           survival_3.1-12    
     ## [34] magrittr_1.5        crayon_1.3.4        readxl_1.3.1       
-    ## [37] evaluate_0.14       fs_1.4.0            fansi_0.4.1        
-    ## [40] nlme_3.1-145        xml2_1.3.0          foreign_0.8-76     
+    ## [37] evaluate_0.14       fs_1.4.1            fansi_0.4.1        
+    ## [40] nlme_3.1-147        xml2_1.3.2          foreign_0.8-76     
     ## [43] data.table_1.12.8   tools_3.6.3         hms_0.5.3          
     ## [46] lifecycle_0.2.0     munsell_0.5.0       reprex_0.3.0       
-    ## [49] cluster_2.1.0       compiler_3.6.3      rlang_0.4.5        
+    ## [49] cluster_2.1.0       compiler_3.6.3      rlang_0.4.6        
     ## [52] grid_3.6.3          rstudioapi_0.11     htmlwidgets_1.5.1  
     ## [55] base64enc_0.1-3     labeling_0.3        rmarkdown_2.1      
     ## [58] gtable_0.3.0        DBI_1.1.0           R6_2.4.1           
-    ## [61] gridExtra_2.3       lubridate_1.7.4     knitr_1.28         
+    ## [61] gridExtra_2.3       lubridate_1.7.8     knitr_1.28         
     ## [64] utf8_1.1.4          Hmisc_4.4-0         stringi_1.4.6      
-    ## [67] Rcpp_1.0.4          vctrs_0.2.4         rpart_4.1-15       
-    ## [70] acepack_1.4.1       png_0.1-7           dbplyr_1.4.2       
-    ## [73] tidyselect_1.0.0    xfun_0.12
+    ## [67] Rcpp_1.0.4.6        vctrs_0.3.0         rpart_4.1-15       
+    ## [70] acepack_1.4.1       png_0.1-7           dbplyr_1.4.3       
+    ## [73] tidyselect_1.1.0    xfun_0.13
