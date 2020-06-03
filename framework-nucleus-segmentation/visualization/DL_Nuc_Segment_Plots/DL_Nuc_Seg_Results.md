@@ -1,6 +1,6 @@
 Generation of the Figures for the DL Nuclear Segmentation Manuscript
 ================
-Jun 2 2020
+Jun 3 2020
 
 ### Analysis initialization
 
@@ -265,6 +265,23 @@ Plot the baseline model training performance using only MCF10A cells
 images for training and random weights (Fig. 2B).
 ![](Output/Fig2B-1.png)<!-- -->
 
+Generate and save a table for the F1 results shown in Fig 2 at the 0.7
+and 0.9 thresholds.
+
+``` r
+table1 <- fig_2B %>%
+  filter(round(thres, digits = 2) %in% c(0.70, 0.9)) %>%
+  select(Model = model, 
+         `Cell Line` = cell_line, 
+         Threshold = thres, 
+         `F1 Score` = F1) %>%
+  pivot_wider(names_from = c(Model, `Threshold`),
+              values_from = `F1 Score`,
+              names_sep = "-")
+
+write_csv(table1, path = "Output/Table1.csv")
+```
+
 Select and plot only the F1 values for IoU = 0.7 (As in [the KAGGLE ’18
 nucleus challenge paper](https://paperpile.com/shared/xZiVUo)).
 
@@ -353,7 +370,40 @@ fig_S1A_set <- scores_tbl %>%
                mutate(annotation = ifelse(str_detect(replicate, "manual"), "Manual", "Semi-Automated"))
 ```
 
-![](Output/FigS1A-1.png)<!-- -->
+![](Output/FigS1A-1.png)<!-- --> Generate and save a table for the F1
+results shown in Fig 5B at the 0.7 and 0.9 thresholds.
+
+``` r
+table2 <- fig_5B_set %>%
+  filter(round(thres, digits = 2) %in% c(0.70, 0.9)) %>%
+  select(Model = model, 
+         `Cell Line` = cell_line, 
+         Threshold = thres, 
+         `F1 Score` = F1) %>%
+  pivot_wider(names_from = c(Model, `Threshold`),
+              values_from = `F1 Score`,
+              names_sep = "-")
+
+write_csv(table2, path = "Output/Table2.csv")
+```
+
+Generate and save a table for the F1 results shown in Fig 5B at the 0.7
+and 0.9 thresholds.
+
+``` r
+tableS1 <- fig_S1A_set %>%
+  filter(round(thres, digits = 2) %in% c(0.70, 0.9)) %>%
+  select(Model = model,
+         Annotation = annotation,
+         `Cell Line` = cell_line, 
+         Threshold = thres, 
+         `F1 Score` = F1) %>%
+  pivot_wider(names_from = c(Model, Annotation, `Threshold`),
+              values_from = `F1 Score`,
+              names_sep = "-")
+
+write_csv(tableS1, path = "Output/TableS1.csv")
+```
 
 ``` r
 sessionInfo()
