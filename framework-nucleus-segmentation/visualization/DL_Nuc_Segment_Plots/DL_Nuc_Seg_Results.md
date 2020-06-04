@@ -1,6 +1,6 @@
 Generation of the Figures for the DL Nuclear Segmentation Manuscript
 ================
-Jun 3 2020
+Jun 4 2020
 
 ### Analysis initialization
 

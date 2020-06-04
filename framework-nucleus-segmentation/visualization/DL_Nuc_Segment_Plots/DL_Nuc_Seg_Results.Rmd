@@ -1,6 +1,6 @@
 ---
 title: "Generation of the Figures for the DL Nuclear Segmentation Manuscript"
-date: "Jun 3 2020"
+date: "Jun 4 2020"
 authors: "Gianluca Pegoraro/George Zaki, NCI/NIH"
 output: github_document
 ---
@@ -329,17 +329,15 @@ fig_S1A_set <- scores_tbl %>%
 
 ```{r FigS1A, echo = F}
 fig_S1A_plot <- ggplot(fig_S1A_set, aes(x = thres, 
-                                 y = F1,
-                                 color = cell_line,
-                                 linetype = annotation))
+                                        y = F1,
+                                        color = annotation))
 
 fig_S1A_plot + geom_line() +
   geom_vline(xintercept = 0.7, 
              linetype = "longdash",
              color = "grey60") +
-  facet_wrap(~ model) +
-  scale_linetype_discrete("Annotation") +
-  scale_color_few(name= "Cell Line") +
+  facet_grid(cell_line ~ model) +
+  scale_color_few(name= "Annotation") +
   xlab("IoU Threshold") +
   ylab("F1 Score")
 ```
