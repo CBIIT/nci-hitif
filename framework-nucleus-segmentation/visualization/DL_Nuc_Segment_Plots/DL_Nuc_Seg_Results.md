@@ -1,6 +1,6 @@
-Generation of the Figures for the DL Nuclear Segmentation Manuscript
+Figures for the DL Nuclear Segmentation Manuscript
 ================
-Jun 4 2020
+Jun 9 2020
 
 ### Analysis initialization
 
@@ -44,6 +44,7 @@ Set `knitr` and `ggplot2` options.
 knitr::opts_chunk$set(
     cache = FALSE,
     fig.path = "Output/",
+    dev = c("png", "pdf"),
     message = FALSE,
     warning = FALSE
     )
@@ -75,7 +76,7 @@ Download unzip the input results of the inference experiments from
 Figshare.
 
 ``` r
-URL <- "https://ndownloader.figshare.com/files/22863422"
+URL <- "https://ndownloader.figshare.com/files/23026505" 
 curl_download(URL, "data.zip")
 unzip("data.zip") 
 ```
@@ -222,18 +223,18 @@ summary(scores_tbl)
 
     ##    filename             thres             TP               FP        
     ##  Length:3380        Min.   :0.500   Min.   :   0.0   Min.   :   3.0  
-    ##  Class :character   1st Qu.:0.600   1st Qu.: 143.8   1st Qu.:  30.0  
+    ##  Class :character   1st Qu.:0.600   1st Qu.: 143.0   1st Qu.:  30.0  
     ##  Mode  :character   Median :0.725   Median : 468.0   Median : 114.0  
-    ##                     Mean   :0.725   Mean   : 550.6   Mean   : 217.3  
-    ##                     3rd Qu.:0.850   3rd Qu.:1100.0   3rd Qu.: 267.2  
+    ##                     Mean   :0.725   Mean   : 550.4   Mean   : 217.5  
+    ##                     3rd Qu.:0.850   3rd Qu.:1100.0   3rd Qu.: 268.0  
     ##                     Max.   :0.950   Max.   :1361.0   Max.   :1701.0  
     ##                                                                      
     ##        FN              mAP               F1              run      
     ##  Min.   :   7.0   Min.   :0.0000   Min.   :0.0000   10     :  80  
-    ##  1st Qu.:  31.0   1st Qu.:0.2211   1st Qu.:0.3622   37     :  80  
-    ##  Median : 111.0   Median :0.6813   Median :0.8105   44     :  80  
-    ##  Mean   : 275.3   Mean   :0.5650   Mean   :0.6441   1      :  40  
-    ##  3rd Qu.: 265.5   3rd Qu.:0.9076   3rd Qu.:0.9515   2      :  40  
+    ##  1st Qu.:  31.0   1st Qu.:0.2210   1st Qu.:0.3620   37     :  80  
+    ##  Median : 111.0   Median :0.6804   Median :0.8098   44     :  80  
+    ##  Mean   : 275.5   Mean   :0.5645   Mean   :0.6437   1      :  40  
+    ##  3rd Qu.: 267.0   3rd Qu.:0.9074   3rd Qu.:0.9515   2      :  40  
     ##  Max.   :1433.0   Max.   :0.9808   Max.   :0.9903   3      :  40  
     ##                                                     (Other):3020  
     ##        cell_line               replicate                 train_set   

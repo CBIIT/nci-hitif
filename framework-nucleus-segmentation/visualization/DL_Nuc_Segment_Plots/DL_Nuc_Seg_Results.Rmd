@@ -1,6 +1,6 @@
 ---
-title: "Generation of the Figures for the DL Nuclear Segmentation Manuscript"
-date: "Jun 4 2020"
+title: "Figures for the DL Nuclear Segmentation Manuscript"
+date: "Jun 9 2020"
 authors: "Gianluca Pegoraro/George Zaki, NCI/NIH"
 output: github_document
 ---
@@ -19,6 +19,7 @@ Set `knitr` and `ggplot2` options.
 knitr::opts_chunk$set(
     cache = FALSE,
     fig.path = "Output/",
+    dev = c("png", "pdf"),
     message = FALSE,
     warning = FALSE
     )
@@ -45,7 +46,7 @@ calculate_F1 <- function(tp, fn, fp){
 
 Download unzip the input results of the inference experiments from Figshare.
 ```{r}
-URL <- "https://ndownloader.figshare.com/files/22863422"
+URL <- "https://ndownloader.figshare.com/files/23026505" 
 curl_download(URL, "data.zip")
 unzip("data.zip") 
 ```
