@@ -1,11 +1,10 @@
-Generation of the Figures for the DL Nuclear Segmentation Manuscript
+Generation of Figures 1 to S1 for the DL Nuclear Segmentation Manuscript
 ================
-Jun 4 2020
+Jun 19 2020
 
 ### Analysis initialization
 
-Load the required
-    libraries
+Load the required libraries
 
 ``` r
 library(tidyverse)
@@ -44,6 +43,7 @@ Set `knitr` and `ggplot2` options.
 knitr::opts_chunk$set(
     cache = FALSE,
     fig.path = "Output/",
+    dev = c("png", "pdf"),
     message = FALSE,
     warning = FALSE
     )
@@ -75,7 +75,7 @@ Download unzip the input results of the inference experiments from
 Figshare.
 
 ``` r
-URL <- "https://ndownloader.figshare.com/files/22863422"
+URL <- "https://ndownloader.figshare.com/files/23026505" 
 curl_download(URL, "data.zip")
 unzip("data.zip") 
 ```
@@ -213,8 +213,7 @@ glimpse(scores_tbl)
     ## $ model          <fct> MRCNN, MRCNN, MRCNN, MRCNN, MRCNN, MRCNN, MRCNN, MRCNN…
     ## $ initialization <fct> Pre-initialized, Pre-initialized, Pre-initialized, Pre…
 
-Create a summary of the annotated data
-    table.
+Create a summary of the annotated data table.
 
 ``` r
 summary(scores_tbl)
@@ -222,18 +221,18 @@ summary(scores_tbl)
 
     ##    filename             thres             TP               FP        
     ##  Length:3380        Min.   :0.500   Min.   :   0.0   Min.   :   3.0  
-    ##  Class :character   1st Qu.:0.600   1st Qu.: 143.8   1st Qu.:  30.0  
+    ##  Class :character   1st Qu.:0.600   1st Qu.: 143.0   1st Qu.:  30.0  
     ##  Mode  :character   Median :0.725   Median : 468.0   Median : 114.0  
-    ##                     Mean   :0.725   Mean   : 550.6   Mean   : 217.3  
-    ##                     3rd Qu.:0.850   3rd Qu.:1100.0   3rd Qu.: 267.2  
+    ##                     Mean   :0.725   Mean   : 550.4   Mean   : 217.5  
+    ##                     3rd Qu.:0.850   3rd Qu.:1100.0   3rd Qu.: 268.0  
     ##                     Max.   :0.950   Max.   :1361.0   Max.   :1701.0  
     ##                                                                      
     ##        FN              mAP               F1              run      
     ##  Min.   :   7.0   Min.   :0.0000   Min.   :0.0000   10     :  80  
-    ##  1st Qu.:  31.0   1st Qu.:0.2211   1st Qu.:0.3622   37     :  80  
-    ##  Median : 111.0   Median :0.6813   Median :0.8105   44     :  80  
-    ##  Mean   : 275.3   Mean   :0.5650   Mean   :0.6441   1      :  40  
-    ##  3rd Qu.: 265.5   3rd Qu.:0.9076   3rd Qu.:0.9515   2      :  40  
+    ##  1st Qu.:  31.0   1st Qu.:0.2210   1st Qu.:0.3620   37     :  80  
+    ##  Median : 111.0   Median :0.6804   Median :0.8098   44     :  80  
+    ##  Mean   : 275.5   Mean   :0.5645   Mean   :0.6437   1      :  40  
+    ##  3rd Qu.: 267.0   3rd Qu.:0.9074   3rd Qu.:0.9515   2      :  40  
     ##  Max.   :1433.0   Max.   :0.9808   Max.   :0.9903   3      :  40  
     ##                                                     (Other):3020  
     ##        cell_line               replicate                 train_set   
@@ -300,8 +299,7 @@ Plot only the effect of initialization (Fig. 3A).
 ![](Output/Fig3A-1.png)<!-- -->
 
 Create a subset of experiments for the incremental training strategy
-experiments
-(Fig.3B).
+experiments (Fig.3B).
 
 ``` r
 training_set <- F1_07_tbl %>% filter(run %in% c(1, 5, 6, 10, 29, 30, 65, 66),
@@ -310,8 +308,7 @@ training_set <- F1_07_tbl %>% filter(run %in% c(1, 5, 6, 10, 29, 30, 65, 66),
 
 Plot only the effect of incremental training (Fig. 3B).
 ![](Output/Fig3B-1.png)<!-- --> Create a subset of experiments for the
-incremental length of training experiments
-(Fig.4A).
+incremental length of training experiments (Fig.4A).
 
 ``` r
 epochs_set <- F1_07_tbl %>% filter(run %in% c(6, 10, 12, 16, 17, 18, 67, 68),
@@ -320,8 +317,7 @@ epochs_set <- F1_07_tbl %>% filter(run %in% c(6, 10, 12, 16, 17, 18, 67, 68),
 
 Plot only the effect of incremental length of training (Fig. 4A).
 ![](Output/Fig4A-1.png)<!-- --> Create a subset of experiments for the
-incremental size of the training set experiments
-(Fig.4B).
+incremental size of the training set experiments (Fig.4B).
 
 ``` r
 train_size_set <- F1_07_tbl %>% filter(run %in% c(6, 10, 11, 19, 20, 45:49),
@@ -341,8 +337,7 @@ Plot only the effect of changing the augmentation strategies (Fig. 4C).
 ![](Output/Fig4C-1.png)<!-- -->
 
 Create a subset of experiments for different augmentations experiments
-and inizializations
-(Fig.4D).
+and inizializations (Fig.4D).
 
 ``` r
 repeats_set <- F1_07_tbl %>% filter(run %in% c(6, 8, 10, 26, 32, 33:43, 50:64, 73:83),
