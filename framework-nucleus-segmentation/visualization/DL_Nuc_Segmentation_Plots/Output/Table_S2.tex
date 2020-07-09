@@ -1,0 +1,46 @@
+\documentclass[border=1mm, preview]{standalone}
+\usepackage[active,tightpage]{preview}
+\usepackage{varwidth}
+\usepackage{amssymb, amsmath}
+\usepackage{ifxetex,ifluatex}
+\usepackage{fixltx2e}
+\usepackage{polyglossia}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{multirow}
+\usepackage{wrapfig}
+\usepackage{float}
+\usepackage{colortbl}
+\usepackage{pdflscape}
+\usepackage{tabu}
+\usepackage{threeparttable}
+\usepackage{threeparttablex}
+\usepackage[normalem]{ulem}
+\usepackage[normalem]{ulem}
+\usepackage[utf8]{inputenc}
+\usepackage{makecell}
+\usepackage{xcolor}
+\usepackage{graphicx}
+\usepackage{xltxtra,xunicode}
+\begin{document}
+
+\begin{landscape}\begin{table}[H]
+\centering
+\resizebox{\linewidth}{!}{
+\begin{tabular}{cccccccccc}
+\toprule
+Model & GT Annotation & MCF10A/0.7 & MCF10A/0.9 & HCT116/0.7 & HCT116/0.9 & U2OS/0.7 & U2OS/0.9 & Eosinophils/0.7 & Eosinophils/0.9\\
+\midrule
+FPN2-WS & Manual & \textbf{0.99} & 0.8 & 0.87 & 0.03 & 0.97 & 0.68 & 0.41 & 0.02\\
+FPN2-WS & SemiAutomated & 0.98 & \textbf{0.96} & 0.87 & 0.14 & \textbf{0.97} & 0.94 & 0.46 & 0.21\\
+MRCNN & Manual & 0.97 & 0.74 & 0.9 & 0.18 & 0.96 & 0.71 & \textbf{0.9} & 0.2\\
+MRCNN & SemiAutomated & 0.97 & 0.95 & \textbf{0.9} & \textbf{0.4} & 0.97 & \textbf{0.95} & 0.83 & \textbf{0.39}\\
+Jacobkie & Manual & 0.95 & 0.02 & 0.85 & 0.12 & 0.85 & 0.33 & 0.19 & 0.02\\
+\addlinespace
+Jacobkie & SemiAutomated & 0.96 & 0.03 & 0.85 & 0.07 & 0.84 & 0.3 & 0.23 & 0\\
+\bottomrule
+\end{tabular}}
+\end{table}
+\end{landscape}
+\end{document}

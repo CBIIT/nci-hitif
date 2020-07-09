@@ -1,0 +1,109 @@
+---
+title: "Generation of Figure S2"
+date: "Jun 22 2020"
+authors: "Gianluca Pegoraro/George Zaki, NCI/NIH"
+output: github_document
+---
+
+```{r}
+library(tidyverse)
+library(readr)
+library(ggthemes)
+```
+Set `knitr` and `ggplot2` options.
+```{r}
+knitr::opts_chunk$set(
+    cache = FALSE,
+    fig.path = "Output/",
+    dev = c("png", "pdf"),
+    message = FALSE,
+    warning = FALSE
+    )
+
+theme_set(theme_bw())
+
+theme_update(
+  axis.text.x = element_text(
+    angle = -45,
+    hjust = 0,
+    vjust = 0.5
+  ),
+  axis.text.y = element_text(hjust = 0)
+)
+```
+
+Read the FN, FP, splits and merges data provided by George Zaki. 
+```{r}
+errors_df <- read_csv('Output/errors_cleaned.csv')
+```
+
+Calculate the error percentages
+```{r}
+calc_perc <- function(a,b){
+  return(100*(a/b))
+}
+
+levs1 <- c("MCF10A", "U2OS", "HCT116", "Eosinophils")
+levs2 <- c("MRCNN", "FPN2-WS", "Jacobkie", "Kaggle_5th")
+
+errors_df <- errors_df %>%
+  mutate_at(c("FP", "FN", "merges", "splits"), ~calc_perc(., total)) %>%
+  mutate(cell_line = factor(cell_line, levels = levs1),
+         model = factor(model, levels = levs2))
+```
+
+Generate the the False Positives bar plot.
+```{r figS2A, echo = F}
+Fig_S2A <- ggplot(errors_df, aes(x = model, 
+                                 y = FP))
+
+Fig_S2A + geom_bar(stat = "identity") +
+  facet_wrap(~ cell_line, 
+             nrow = 1,
+             scales = "free_y") +
+  xlab("Model") +
+  ylab("% of False Positives")
+```
+
+Generate the the False Negatives bar plot.
+```{r figS2B, echo = F}
+Fig_S2B <- ggplot(errors_df, aes(x = model, 
+                                 y = FN))
+
+Fig_S2B + geom_bar(stat = "identity") +
+  facet_wrap(~ cell_line, 
+             nrow = 1,
+             scales = "free_y") +
+  xlab("Model") +
+  ylab("% of False Negatives")
+```
+
+Generate the the Over-splitting bar plot.
+```{r figS2C, echo = F}
+Fig_S2C <- ggplot(errors_df, aes(x = model, 
+                                 y = splits))
+
+Fig_S2C + geom_bar(stat = "identity") +
+  facet_wrap(~ cell_line, 
+             nrow = 1,
+             scales = "free_y") +
+  xlab("Model") +
+  ylab("% of Over-splitting events")
+```
+
+Generate the merges plot. 
+```{r figS2D, echo = F}
+Fig_S2D <- ggplot(errors_df, aes(x = model, 
+                                 y = merges))
+
+Fig_S2D + geom_bar(stat = "identity") +
+  facet_wrap(~ cell_line, 
+             nrow = 1,
+             scales = "free_y") +
+  xlab("Model") +
+  ylab("% of Merge events")
+```
+
+```{r sessionInfo, results='markup'}
+sessionInfo()
+```

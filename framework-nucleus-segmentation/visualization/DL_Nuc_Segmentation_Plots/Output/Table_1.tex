@@ -1,0 +1,41 @@
+\documentclass[border=1mm, preview]{standalone}
+\usepackage[active,tightpage]{preview}
+\usepackage{varwidth}
+\usepackage{amssymb, amsmath}
+\usepackage{ifxetex,ifluatex}
+\usepackage{fixltx2e}
+\usepackage{polyglossia}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{multirow}
+\usepackage{wrapfig}
+\usepackage{float}
+\usepackage{colortbl}
+\usepackage{pdflscape}
+\usepackage{tabu}
+\usepackage{threeparttable}
+\usepackage{threeparttablex}
+\usepackage[normalem]{ulem}
+\usepackage[normalem]{ulem}
+\usepackage[utf8]{inputenc}
+\usepackage{makecell}
+\usepackage{xcolor}
+\usepackage{graphicx}
+\usepackage{xltxtra,xunicode}
+\begin{document}
+
+\begin{landscape}\begin{table}[H]
+\centering
+\resizebox{\linewidth}{!}{
+\begin{tabular}{ccccccccc}
+\toprule
+Model & MCF10A/0.7 & MCF10A/0.9 & HCT116/0.7 & HCT116/0.9 & U2OS/0.7 & U2OS/0.9 & Eosinophils/0.7 & Eosinophils/0.9\\
+\midrule
+FPN2-WS & \textbf{0.97} & \textbf{0.97} & \textbf{0.84} & \textbf{0.2} & \textbf{0.94} & \textbf{0.92} & 0.48 & \textbf{0.21}\\
+MRCNN & 0.82 & 0.75 & 0.63 & 0.07 & 0.84 & 0.65 & \textbf{0.72} & 0.06\\
+\bottomrule
+\end{tabular}}
+\end{table}
+\end{landscape}
+\end{document}
