@@ -1,8 +1,8 @@
 ---
-title: "Generation of Tables 1 to 3 and Table S1 for the DL Nuclear Segmentation Manuscript"
+title: "Generation of Tables 1 and 2 and Table S1 for the DL Nuclear Segmentation Manuscript"
 date: "Jul 9 2020"
 authors: "Gianluca Pegoraro/George Zaki, NCI/NIH"
-output: github_document
+output: html_document
 ---
 
 Load the required libraries
@@ -17,8 +17,6 @@ Set `knitr` options.
 ```{r}
 knitr::opts_chunk$set(
     cache = FALSE,
-    fig.path = "Output/",
-    dev = c("png", "pdf"),
     message = FALSE,
     warning = FALSE
     )
@@ -95,117 +93,114 @@ table_S2_reformat <- table_S2 %>%
                 names_sep = "/")
 ```
 
-Generate Table 1. The table is saved as a .pdf file. 
+Generate Table 1.
 ```{r, label = 'Table 1'}
 table_1_reformat %>%
     # This part is to label in bold the maximum values for any
     # combination of cell line and threshold
     mutate(`MCF10A/0.7` = cell_spec(round(`MCF10A/0.7`, 2), 
-                                    "latex", 
+                                    "html", 
                                      bold = `MCF10A/0.7` == max(`MCF10A/0.7`)),
            `MCF10A/0.9` = cell_spec(round(`MCF10A/0.9`, 2), 
-                                    "latex", 
+                                    "html", 
                                      bold = `MCF10A/0.9` == max(`MCF10A/0.9`)),
            `U2OS/0.7` = cell_spec(round(`U2OS/0.7`, 2), 
-                                    "latex", 
+                                    "html", 
                                      bold = `U2OS/0.7` == max(`U2OS/0.7`)),
            `U2OS/0.9` = cell_spec(round(`U2OS/0.9`, 2), 
-                                    "latex", 
+                                    "html", 
                                      bold = `U2OS/0.9` == max(`U2OS/0.9`)),
            `HCT116/0.7` = cell_spec(round(`HCT116/0.7`, 2), 
-                                    "latex", 
+                                    "html", 
                                      bold = `HCT116/0.7` == max(`HCT116/0.7`)),
            `HCT116/0.9` = cell_spec(round(`HCT116/0.9`, 2), 
-                                    "latex", 
+                                    "html", 
                                      bold = `HCT116/0.9` == max(`HCT116/0.9`)),
            `Eosinophils/0.7` = cell_spec(round(`Eosinophils/0.7`, 2), 
-                                    "latex", 
+                                    "html", 
                                      bold = `Eosinophils/0.7` == max(`Eosinophils/0.7`)),
            `Eosinophils/0.9` = cell_spec(round(`Eosinophils/0.9`, 2), 
-                                    "latex", 
+                                    "html", 
                                      bold = `Eosinophils/0.9` == max(`Eosinophils/0.9`))
            ) %>%
-kable(format = "latex",
-      escape = F,
-      booktabs = T,
-      align = "c") %>%
-   kable_styling(latex_options = "scale_down") %>%
-   landscape() %>%
-   save_kable("Output/Table_1.jpeg", keep_tex = TRUE)
+kable(format = "html",
+      escape = F) %>%
+   kable_styling(bootstrap_options = "striped", 
+                 full_width = F,
+                 position = "center") %>%
+  column_spec(1, bold = T)
 ```
 
 Same, but for Table 2.
 ```{r, label = 'Table 2'}
 table_2_reformat %>%
     mutate(`MCF10A/0.7` = cell_spec(round(`MCF10A/0.7`, 2), 
-                                    "latex", 
+                                    "html", 
                                      bold = `MCF10A/0.7` == max(`MCF10A/0.7`)),
            `MCF10A/0.9` = cell_spec(round(`MCF10A/0.9`, 2), 
-                                    "latex", 
+                                    "html", 
                                      bold = `MCF10A/0.9` == max(`MCF10A/0.9`)),
            `U2OS/0.7` = cell_spec(round(`U2OS/0.7`, 2), 
-                                    "latex", 
+                                    "html", 
                                      bold = `U2OS/0.7` == max(`U2OS/0.7`)),
            `U2OS/0.9` = cell_spec(round(`U2OS/0.9`, 2), 
-                                    "latex", 
+                                    "html", 
                                      bold = `U2OS/0.9` == max(`U2OS/0.9`)),
            `HCT116/0.7` = cell_spec(round(`HCT116/0.7`, 2), 
-                                    "latex", 
+                                    "html", 
                                      bold = `HCT116/0.7` == max(`HCT116/0.7`)),
            `HCT116/0.9` = cell_spec(round(`HCT116/0.9`, 2), 
-                                    "latex", 
+                                    "html", 
                                      bold = `HCT116/0.9` == max(`HCT116/0.9`)),
            `Eosinophils/0.7` = cell_spec(round(`Eosinophils/0.7`, 2), 
-                                    "latex", 
+                                    "html", 
                                      bold = `Eosinophils/0.7` == max(`Eosinophils/0.7`)),
            `Eosinophils/0.9` = cell_spec(round(`Eosinophils/0.9`, 2), 
-                                    "latex", 
+                                    "html", 
                                      bold = `Eosinophils/0.9` == max(`Eosinophils/0.9`))
            ) %>%
-kable(format = "latex",
-      escape = F,
-      booktabs = T,
-      align = "c") %>%
-   kable_styling(latex_options = "scale_down") %>%
-   landscape() %>% 
-   save_kable("Output/Table_2.jpeg", keep_tex = TRUE)
+kable(format = "html",
+      escape = F) %>%
+   kable_styling(bootstrap_options = "striped", 
+                 full_width = F,
+                 position = "center") %>%
+  column_spec(1, bold = T)
 ```
 
 Same but for Table S2.
 ```{r, label = 'Table S2'}
 table_S2_reformat %>%
     mutate(`MCF10A/0.7` = cell_spec(round(`MCF10A/0.7`, 2), 
-                                    "latex", 
+                                    "html", 
                                      bold = `MCF10A/0.7` == max(`MCF10A/0.7`)),
            `MCF10A/0.9` = cell_spec(round(`MCF10A/0.9`, 2), 
-                                    "latex", 
+                                    "html", 
                                      bold = `MCF10A/0.9` == max(`MCF10A/0.9`)),
            `U2OS/0.7` = cell_spec(round(`U2OS/0.7`, 2), 
-                                    "latex", 
+                                    "html", 
                                      bold = `U2OS/0.7` == max(`U2OS/0.7`)),
            `U2OS/0.9` = cell_spec(round(`U2OS/0.9`, 2), 
-                                    "latex", 
+                                    "html", 
                                      bold = `U2OS/0.9` == max(`U2OS/0.9`)),
            `HCT116/0.7` = cell_spec(round(`HCT116/0.7`, 2), 
-                                    "latex", 
+                                    "html", 
                                      bold = `HCT116/0.7` == max(`HCT116/0.7`)),
            `HCT116/0.9` = cell_spec(round(`HCT116/0.9`, 2), 
-                                    "latex", 
+                                    "html", 
                                      bold = `HCT116/0.9` == max(`HCT116/0.9`)),
            `Eosinophils/0.7` = cell_spec(round(`Eosinophils/0.7`, 2), 
-                                    "latex", 
+                                    "html", 
                                      bold = `Eosinophils/0.7` == max(`Eosinophils/0.7`)),
            `Eosinophils/0.9` = cell_spec(round(`Eosinophils/0.9`, 2), 
-                                    "latex", 
+                                    "html", 
                                      bold = `Eosinophils/0.9` == max(`Eosinophils/0.9`))
            ) %>%
-kable(format = "latex",
-      escape = F,
-      booktabs = T,
-      align = "c") %>%
-   kable_styling(latex_options = "scale_down") %>%
-   landscape() %>%
-   save_kable("Output/Table_S2.jpeg", keep_tex = TRUE)
+kable(format = "html",
+      escape = F) %>%
+   kable_styling(bootstrap_options = "striped", 
+                 full_width = F,
+                 position = "center") %>%
+  column_spec(1, bold = T)
 ```
 
 ```{r sessionInfo, results='markup'}
