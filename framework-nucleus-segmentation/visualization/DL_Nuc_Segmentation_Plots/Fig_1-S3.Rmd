@@ -1,0 +1,478 @@
+---
+title: "Generation of Figures 1 to S2 for the DL Nuclear Segmentation Manuscript"
+date: "Sep 18 2020"
+authors: "Gianluca Pegoraro/George Zaki, NCI/NIH"
+output: github_document
+editor_options: 
+  chunk_output_type: inline
+---
+
+### Analysis initialization
+Load the required libraries
+```{r import-libraries}
+library(tidyverse)
+library(readr)
+library(curl)
+library(ggthemes)
+```
+
+Set `knitr` and `ggplot2` options.
+```{r set-knitr-options}
+knitr::opts_chunk$set(
+    cache = FALSE,
+    fig.path = "Output/",
+    dev = c("png", "pdf"),
+    message = FALSE,
+    warning = FALSE
+    )
+
+theme_set(theme_bw())
+
+theme_update(
+  axis.text.x = element_text(
+    angle = -45,
+    hjust = 0,
+    vjust = 0.5
+  ),
+  axis.text.y = element_text(hjust = 0)
+)
+```
+
+### Read and process data and metadata
+Define a function to calculate the F1 score based on the number of true positives, false positives and false negatives.
+```{r calculate-F1}
+calculate_F1 <- function(tp, fn, fp){
+  tp/(tp + (fn + fp)/2)
+}
+```
+
+Download unzip the input results of the inference experiments from Figshare if they have not been already downoladed.
+```{r downlaod-data}
+if(!dir.exists("Data")) {
+  URL <- "https://ndownloader.figshare.com/files/23026505"
+  curl_download(URL, "data.zip")
+  unzip("data.zip")
+}
+```
+
+Recursively read ands process all the data from all the models runs and the manual vs. automated run. This is the data for both training and testing results. 
+```{r read-data, message=FALSE}
+raw_tbl <- dir(path = "Data", 
+               pattern = ".*maps\\.csv$", 
+               recursive = TRUE,
+               full.names = TRUE) %>%
+  set_names() %>%
+  map_df(read_csv, .id = "filename") %>%
+  select(filename, 
+         thres = `IoU(Threshold)`,
+         TP = `Sum(all_tp)`,
+         FP = `Sum(all_fp)`,
+         FN = `Sum(all_fn)`,
+         mAP = AP) %>%
+  mutate(F1 = calculate_F1(tp = TP,
+                           fn = FN,
+                           fp = FP))
+glimpse(raw_tbl)
+```
+
+Recode the values of the `cell_line` variable only for the model runs to make them compatible with the actual cell names. 
+```{r modify-data}
+levs1 <- c("MCF10A", "U2OS", "HCT116", "Eosinophils")
+levs2 <-
+  c("Original",
+    "Technical",
+    "Biological",
+    "Technical_manual",
+    "Biological_manual")
+
+runs_tbl <- raw_tbl %>%
+  filter(!str_detect(filename, "manual-vs-semi-auto")) %>% #only model runs
+  mutate(
+    filename = str_replace(filename, "BABE", "MCF10A"),
+    filename = str_replace(filename, "HiTIF_Colorectal", "HCT116"),
+    filename = str_replace(filename, "HiTIF_Laurent", "U2OS"),
+    filename = str_replace(filename, "Manasi", "Eosinophils"),
+    run = as.numeric(str_match(filename, pattern = "run([0-9]{3})")[, 2]),
+    cell_line = str_match(filename, pattern = "Data/.*?/.*?/.*?/(.*?)_.*?/")[, 2],
+    replicate = str_match(filename, pattern = "Data/.*?/.*?/.*?/.*?_(.*?)/")[, 2],
+    cell_line = factor(cell_line, levels = levs1),
+    replicate = factor(replicate, levels = levs2)
+  )
+
+glimpse(runs_tbl)
+```
+
+Recode the values of the `cell_line` variable only for the manual vs. auomated run to make them compatible with the actual cell names.
+```{r modify-data-vs-manual}
+manual_vs_auto_tbl <- raw_tbl %>%
+  filter(str_detect(filename, "manual-vs-semi-auto")) %>% #only manual vs. semi-automated run
+  mutate(
+    filename = str_replace(filename, "BABE", "MCF10A"),
+    filename = str_replace(filename, "HiTIF_Colorectal", "HCT116"),
+    filename = str_replace(filename, "HiTIF_Laurent", "U2OS"),
+    filename = str_replace(filename, "Manasi", "Eosinophils"),
+    cell_line = str_match(filename, pattern = "Data/.*?/(.*?)_.*?/")[, 2],
+    replicate = str_match(filename, pattern = "Data/.*?/.*?_(.*?)/")[, 2],
+    cell_line = factor(cell_line, levels = levs1),
+    replicate = factor(replicate, levels = levs2)
+  )
+
+glimpse(manual_vs_auto_tbl)
+```
+
+Read the run metadata table.
+```{r read-metadata}
+md_tbl <- read_csv("Metadata/Metadata.csv")
+
+glimpse(md_tbl)
+```
+
+Tidy up the metadata table for visual exploration. 
+```{r results='asis'}
+md_explore <-
+  md_tbl %>% select(model, initialization, train_set, train_size, epochs, aug, run) %>%
+  arrange(model, initialization, train_set, train_size, epochs, aug, run)
+
+knitr::kable(md_explore)
+```
+
+Reorder some factors and join the model runs table with the metadata table. Keep only the data for the test dataset runs and not for the training/evaluation dataset runs. 
+```{r join-metadata}
+levs3 <- c("Random", "Pre-initialized")
+levs4 <-
+  c("MCF10A",
+    "Eosinophils",
+    "MCF10A_HCT116",
+    "MCF10A_HCT116_U2OS",
+    "All",
+    "BBBC038")
+levs5 <- c("MRCNN", "FPN2-WS", "Jacobkie", "Kaggle_5th")
+
+
+runs_tbl <- runs_tbl %>%
+  left_join(md_tbl, by = c("run")) %>%
+  mutate(
+    initialization = factor(initialization, levels = levs3),
+    train_set = factor(train_set, levels = levs4),
+    train_size = factor(train_size),
+    run = factor(run),
+    aug = factor(aug),
+    epochs = factor(epochs),
+    model = factor(model, levels = levs5)
+  ) 
+
+glimpse(runs_tbl)
+```
+
+Separate testing datasets from training datasets. 
+```{r filter-testing}
+testing_tbl <- runs_tbl %>%
+  #only test datasets
+  filter(replicate != "Original") %>% 
+  # only the `biological` replicate for MCF10 cells
+  filter(!(cell_line == "MCF10A" & replicate == "Technical")) 
+
+glimpse(testing_tbl)
+```
+
+Select only the F1 values for IoU = 0.7 (As in [the KAGGLE '18 nucleus challenge paper](https://paperpile.com/shared/xZiVUo)).
+```{r filter-testing-zero-seven}
+testing_07_tbl <- testing_tbl %>%
+             filter(round(thres, digits = 2) == 0.70, 
+                    replicate %in% c("Technical", "Biological"))
+```
+
+### Plotting and Table Generating functions
+```{r gen-line}
+gen_line <- function(df) {
+  df %>%
+  ggplot(aes(
+    x = thres,
+    y = F1,
+    color = cell_line
+  )) +
+    geom_line() +
+    geom_vline(xintercept = 0.7,
+               linetype = "longdash",
+               color = "grey60") +
+    facet_wrap(vars(model)) +
+    scale_linetype_discrete("Replicate") +
+    scale_color_few(name = "Cell Line") +
+    xlab("IoU Threshold") +
+    ylab("F1 Score")
+}
+
+
+gen_point <- function(df, varx, x_legend){
+  df %>% 
+    ggplot(aes(x = {{ varx}},
+               y = F1,
+               color = model)) +
+    geom_point(alpha = 0.7,
+               size = 3) +
+    scale_y_continuous(lim = c(0, 1.05), 
+                       breaks = seq(0, 1, 0.1)) +
+    scale_color_few(name = "Model") +
+    facet_wrap(vars(.data$cell_line),
+                    nrow = 1) +
+    xlab(x_legend) +
+    ylab("F1 Score @ IoU 0.7")
+}
+```
+
+```{r gen-table}
+gen_table <- function(df, varx){
+  df %>%
+    filter(round(.data$thres, digits = 2) %in% c(0.70, 0.9)) %>%
+    select(.data$model, .data$cell_line, {{varx}}, .data$F1) %>%
+    pivot_wider(
+      names_from = c(.data$model, {{varx}}),
+      values_from = .data$F1,
+      names_sep = "-"
+    )
+}
+```
+
+### Figure 2
+Create a subset of testing F1 results for the baseline models. 
+```{r filter-2B}
+fig_2B <- testing_tbl %>%
+  filter(run %in% c(3, 4),
+         replicate %in% c("Technical", "Biological"))
+```
+
+Plot the baseline model training performance using only MCF10A cells images for training and using random weights (Fig. 2B).
+```{r Fig2B, echo = F}
+gen_line(fig_2B)
+```
+
+Generate and save a table for the F1 results shown in Fig 2B at the 0.7 and 0.9 thresholds (Table1).
+```{r table1}
+table1 <- gen_table(fig_2B, thres)
+
+write_csv(table1, path = "Output/Table1.csv")
+```
+
+### Figure 3
+Create a subset of F1 testing results for the experiments where we tested changes to the model inizialization.
+```{r filter-3A}
+fig_3A <- testing_07_tbl %>% 
+  filter(run %in% c(1, 3, 4, 5))
+```
+
+Plot only the effect of changes to initialization (Fig. 3A).
+```{r Fig3A, echo=F}
+gen_point(fig_3A, initialization, "Initialization")
+```
+
+Generate and save a table for the F1 results shown in Fig 3A at the 0.7 threshold (Table2).
+```{r table2}
+table2 <- gen_table(fig_3A, initialization)
+
+write_csv(table2, path = "Output/Table2.csv")
+```
+
+Create a subset of F1 testing results for the experiments where we tested changes to the composition of the training datasets (Fig.3B).
+```{r filter-3B}
+fig_3B <- testing_07_tbl %>% 
+  filter(run %in% c(1, 5, 6, 10, 29, 30, 65, 66)) 
+```
+
+Plot only the effect of incremental training (Fig. 3B).
+```{r Fig3B, echo = F}
+gen_point(fig_3B, train_set, "Training Set")
+```
+
+Generate and save a table for the F1 results shown in Fig 3B at the 0.7 threshold (Table3).
+```{r table3}
+table3 <- gen_table(fig_3B, train_set)
+
+write_csv(table3, path = "Output/Table3.csv")
+```
+
+### Figure 4
+Create a subset of F1 testing results for the experiments where we tested changes in the length of model training (Fig.4A).
+```{r filter-4A}
+fig_4A <- testing_07_tbl %>% 
+  filter(run %in% c(6, 10, 12, 16, 17, 18, 67, 68))
+```
+
+Plot only the effect of incremental length of training (Fig. 4A).
+```{r Fig4A, echo=F}
+gen_point(fig_4A, epochs, "Number of Training Cycles")
+```
+
+Generate and save a table for the F1 results shown in Fig 4A at the 0.7 threshold (Table4).
+```{r table4}
+table4 <- gen_table(fig_4A, epochs)
+
+write_csv(table3, path = "Output/Table4.csv")
+```
+
+Create a subset of F1 testing results for the experiments where we tested changing the number of augmented ROI patches used for training (Fig.4B).
+```{r filter-4B}
+fig_4B <- testing_07_tbl %>% 
+  filter(run %in% c(6, 10, 11, 19, 20, 45:49))
+```
+
+Plot only the effect of incremental size of the training set (Fig. 4B).
+```{r Fig4B, echo=F}
+gen_point(fig_4B, train_size, "Number of Augmented ROIs Used for Training ")
+```
+
+Generate and save a table for the F1 results shown in Fig 4B at the 0.7 threshold (Table5).
+```{r table5}
+table5 <- gen_table(fig_4B, train_size)
+
+write_csv(table5, path = "Output/Table5.csv")
+```
+
+Create a subset of F1 testing results for the experiments where we tested changing the augmentation strategy used for image preprocessing (Fig.4C).
+```{r filter-4C} 
+fig_4C <- testing_07_tbl %>% 
+  filter(run %in% c(6, 10, 22:25, 27, 62, 69:72))
+```
+
+Plot only the effect of changing the augmentation strategies (Fig. 4C).
+```{r Fig4C, echo=F}
+gen_point(fig_4C, aug, "Augmentation")
+```
+Generate and save a table for the F1 results shown in Fig 4C at the 0.7 threshold (Table6).
+```{r table6}
+table6 <- gen_table(fig_4C, aug)
+
+write_csv(table6, path = "Output/Table6.csv")
+```
+
+Create a subset of F1 testing results for the experiments where we tested changing the number of augmented ROI patches used for training augmentations experiments and inizializations several times (i.e. repeats) (Fig.4D).
+```{r filter-4D}
+fig_4D <- testing_07_tbl %>% 
+  filter(run %in% c(6, 8, 10, 26, 32, 33:43, 50:64, 73:83))
+```
+
+Plot the effect of changing the augmentation strategies and inizializations several times (Fig. 4D).
+```{r Fig4D, echo = F}
+gen_point(fig_4D, 
+          interaction(aug, initialization, sep = "/"), 
+          "Augmentation/Initialization") +
+    stat_summary(
+    fun.data = "mean_cl_normal",
+    geom = "crossbar",
+    width = 0.5
+  )
+```
+
+Generate and save a table for the F1 results mean and 95% Confidence Interval as shown in Fig 4C at the 0.7 threshold (Table7).
+```{r table7}
+table7 <- fig_4D %>%
+  group_by(cell_line, aug, initialization, model) %>%
+  summarize(CI_95 = list(Hmisc::smean.cl.normal(F1))) %>%
+  unnest_wider(CI_95) %>%
+  rename(F1_mean = Mean,
+         CI_95_lower = Lower,
+         CI_95_upper = Upper)
+
+write_csv(table7, "Output/Table7.csv")
+```
+
+### Figure 5
+Create a subset of F1 testing results for the final models (Runs 10 for FPN2-WS and 37 for MRCNN) and comparison with the out-of-the-box Jacobkie model (Run 44) (Fig. 5B).
+```{r filter-5B}
+fig_5B <- testing_tbl %>% 
+  filter(run %in% c(10, 37, 44),
+         replicate %in% c("Technical", "Biological"))
+```
+
+Plot the performance for the final MRCNN and FPN2-WS models comparing it with Jacobkie. This is Fig. 5B.
+```{r Fig5B, echo = F}
+gen_line(fig_5B)
+```
+
+Generate and save a table for the F1 results shown in Fig 5B at the 0.7 and 0.9 thresholds (Table8).
+```{r table8}
+table8 <- gen_table(fig_5B, thres)
+
+write_csv(table8, path = "Output/Table8.csv")
+```
+
+### Figure S1B
+Create a subset of F1 testing results for the final models (Runs 10 for FPN2-WS and 37 for MRCNN) and comparison with the out-of-the-box Jacobkie model (Run 44) using both semi-automated and manual labelling (Fig. S1B).
+```{r filter-S1B}
+fig_S1B <- testing_tbl %>% 
+               filter(run %in% c(10, 37, 44)) %>%
+               mutate(annotation = ifelse(str_detect(replicate, "manual"), "Manual", "Semi-Automated"))
+  
+```
+
+Plot the performance for the final MRCNN and FPN2-WS models comparing it with Jacobkie (Run 44) using both semi-automated generated labels and manually annotated labels. This is Fig. S1B.
+```{r FigS1B, echo = F}
+fig_S1B %>% 
+  ggplot(aes(x = thres, 
+             y = F1,
+             color = annotation)) +
+  geom_line() +
+  geom_vline(xintercept = 0.7, 
+             linetype = "longdash",
+             color = "grey60") +
+  facet_grid(vars(cell_line), vars(model)) +
+  scale_color_few(name= "Annotation") +
+  xlab("IoU Threshold") +
+  ylab("F1 Score")
+```
+
+Generate and save a table for the F1 results shown in Fig S1B at the 0.7 and 0.9 thresholds.
+```{r tableS2}
+tableS2 <- fig_S1B %>%
+  filter(round(thres, digits = 2) %in% c(0.70, 0.9)) %>%
+  select(model,annotation, cell_line, thres, F1) %>%
+  pivot_wider(names_from = c(model, annotation, thres),
+              values_from = F1,
+              names_sep = "-")
+
+write_csv(tableS2, path = "Output/TableS2.csv")
+```
+
+### Figure S2
+Create a subset of F1 testing results for the final models (Runs 10 for FPN2-WS and 37 for MRCNN) and comparison with the out-of-the-box Jacobkie model (Run 44) using either the F1 training or testing inference results (Fig. S3).
+```{r filter-FigS2}
+fig_S3 <- runs_tbl %>%
+  filter(run %in% c(10, 37),
+         replicate %in% c("Original", "Technical", "Biological")) %>%
+  filter(!(cell_line == "MCF10A" & replicate == "Technical")) %>%      
+  mutate(replicate = if_else(str_detect(replicate, "Original"), "Training", "Testing")) %>%
+  mutate(replicate = factor(replicate, levels = c("Training", "Testing"))) 
+```
+
+Plot Fig. S3.
+```{r FigS3, echo=FALSE}
+fig_S3 %>%
+  ggplot(aes(x = thres,
+             y = F1,
+             color = replicate)) +
+  geom_line() +
+    geom_vline(xintercept = 0.7, 
+             linetype = "longdash",
+             color = "grey60") +
+  facet_grid(vars(cell_line),
+             vars(model)) +
+  scale_color_few(name= "Dataset") +
+  xlab("IoU Threshold") +
+  ylab("F1 Score")
+```
+
+Generate and save a table for the F1 results shown in Fig S3 at the 0.7 and 0.9 thresholds.
+```{r}
+tableS3 <- fig_S3 %>%
+  filter(round(thres, digits = 2) %in% c(0.70, 0.9)) %>%
+  select(model, replicate, cell_line, thres, F1) %>%
+  pivot_wider(names_from = c(model, replicate, thres),
+              values_from = F1,
+              names_sep = "-")
+
+write_csv(tableS3, path = "Output/TableS3.csv")
+```
+
+
+```{r sessionInfo, results='markup'}
+sessionInfo()
+```
