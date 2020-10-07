@@ -1,0 +1,13 @@
+Dataset Name	Number FOVs	FOV Size (px)	Number of Nuclei	Area Mean (px)	Area SD (px)	Dataset Type	GT Labelling
+MCF10A_Original	7	"1078, 1278"	1225	2606.1	855.1	Train	Semi-Auto
+MCF10A_Biological	7	"1078, 1278"	1349	2605.57	738.13	Test	Manual
+MCF10A_Biological	7	"1078, 1278"	1382	2575.46	828.18	Test	Semi-Auto
+HCT-116_Original	1	"1080, 1280"	1710	299.05	91.43	Train	Semi-Auto
+HCT-116_Biological	1	"1080, 1280"	1484	300.31	97.69	Test	Manual
+HCT-116_Biological	1	"1080, 1280"	1488	299.1	96.38	Test	Semi-Auto
+U2OS_Original	1	"2158, 2558"	782	2175.55	752.44	Train	Semi-Auto
+U2OS_Technical	1	"2158, 2558"	518	1991.52	663.17	Test	Manual
+U2OS_Technical	1	"2158, 2558"	529	1926.78	687.21	Test	Semi-Auto
+Eosinophils_Original	1	"1080, 1280"	295	562.38	183.31	Train	Semi-Auto
+Eosinophils_Technical	1	"1080, 1280"	256	566.41	157.88	Test	Manual
+Eosinophils_Technical	1	"1080, 1280"	270	528.01	185.87	Test	Semi-Auto
