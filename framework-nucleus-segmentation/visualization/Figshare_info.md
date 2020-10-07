@@ -10,7 +10,7 @@
 
 - [Inference Labels Image Dataset](https://ndownloader.figshare.com/files/22248840)
 
-- [DL Models Inference Results](https://ndownloader.figshare.com/files/23026505)
+- [DL Models Inference Results](https://ndownloader.figshare.com/files/24856241)
 
 - [Model weights for the Distance Map FPN model pre-trained with ImageNet](https://ndownloader.figshare.com/files/22280352)
 

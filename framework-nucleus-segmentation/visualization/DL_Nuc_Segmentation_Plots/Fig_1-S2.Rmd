@@ -1,10 +1,8 @@
 ---
 title: "Generation of Figures 1 to S2 for the DL Nuclear Segmentation Manuscript"
-date: "Sep 18 2020"
+date: "Sep 29 2020"
 authors: "Gianluca Pegoraro/George Zaki, NCI/NIH"
 output: github_document
-editor_options: 
-  chunk_output_type: inline
 ---
 
 ### Analysis initialization
@@ -49,7 +47,7 @@ calculate_F1 <- function(tp, fn, fp){
 Download unzip the input results of the inference experiments from Figshare if they have not been already downoladed.
 ```{r downlaod-data}
 if(!dir.exists("Data")) {
-  URL <- "https://ndownloader.figshare.com/files/23026505"
+  URL <- "https://ndownloader.figshare.com/files/24856241"
   curl_download(URL, "data.zip")
   unzip("data.zip")
 }
@@ -231,6 +229,8 @@ gen_table <- function(df, varx){
       names_sep = "-"
     )
 }
+
+
 ```
 
 ### Figure 2
@@ -306,7 +306,7 @@ Generate and save a table for the F1 results shown in Fig 4A at the 0.7 threshol
 ```{r table4}
 table4 <- gen_table(fig_4A, epochs)
 
-write_csv(table3, path = "Output/Table4.csv")
+write_csv(table4, path = "Output/Table4.csv")
 ```
 
 Create a subset of F1 testing results for the experiments where we tested changing the number of augmented ROI patches used for training (Fig.4B).
@@ -421,21 +421,36 @@ fig_S1B %>%
 ```
 
 Generate and save a table for the F1 results shown in Fig S1B at the 0.7 and 0.9 thresholds.
-```{r tableS2}
-tableS2 <- fig_S1B %>%
+```{r tableS3}
+tableS3 <- fig_S1B %>%
   filter(round(thres, digits = 2) %in% c(0.70, 0.9)) %>%
   select(model,annotation, cell_line, thres, F1) %>%
   pivot_wider(names_from = c(model, annotation, thres),
               values_from = F1,
               names_sep = "-")
 
-write_csv(tableS2, path = "Output/TableS2.csv")
+write_csv(tableS3, path = "Output/TableS3.csv")
+```
+### Figure S2A
+Plot Fig S2A: comparison of the manual vs. semi-automated labelling strategy. 
+```{r FigS3B, echo=FALSE}
+manual_vs_auto_tbl %>%
+  ggplot(aes(x = thres,
+             y = F1)) +
+  geom_line() +
+  geom_vline(xintercept = 0.7, 
+             linetype = "longdash",
+             color = "grey60") +
+  facet_wrap(vars(cell_line),
+             nrow = 1) +
+  xlab("IoU Threshold") +
+  ylab("F1 Score")
 ```
 
-### Figure S2
-Create a subset of F1 testing results for the final models (Runs 10 for FPN2-WS and 37 for MRCNN) and comparison with the out-of-the-box Jacobkie model (Run 44) using either the F1 training or testing inference results (Fig. S3).
-```{r filter-FigS2}
-fig_S3 <- runs_tbl %>%
+### Figure S2B
+Create a subset of F1 testing results for the final models (Runs 10 for FPN2-WS and 37 for MRCNN)  using either the F1 training or testing inference results (Fig. S2B).
+```{r filter-FigS2B}
+fig_S2B <- runs_tbl %>%
   filter(run %in% c(10, 37),
          replicate %in% c("Original", "Technical", "Biological")) %>%
   filter(!(cell_line == "MCF10A" & replicate == "Technical")) %>%      
@@ -443,9 +458,9 @@ fig_S3 <- runs_tbl %>%
   mutate(replicate = factor(replicate, levels = c("Training", "Testing"))) 
 ```
 
-Plot Fig. S3.
-```{r FigS3, echo=FALSE}
-fig_S3 %>%
+Plot Fig. S2B.
+```{r FigS3A, echo=FALSE}
+fig_S2B %>%
   ggplot(aes(x = thres,
              y = F1,
              color = replicate)) +
@@ -460,18 +475,17 @@ fig_S3 %>%
   ylab("F1 Score")
 ```
 
-Generate and save a table for the F1 results shown in Fig S3 at the 0.7 and 0.9 thresholds.
-```{r}
-tableS3 <- fig_S3 %>%
+Generate and save a table for the F1 results shown in Fig S2B at the 0.7 and 0.9 thresholds (Table S4).
+```{r tableS4}
+tableS4 <- fig_S2B %>%
   filter(round(thres, digits = 2) %in% c(0.70, 0.9)) %>%
   select(model, replicate, cell_line, thres, F1) %>%
   pivot_wider(names_from = c(model, replicate, thres),
               values_from = F1,
               names_sep = "-")
 
-write_csv(tableS3, path = "Output/TableS3.csv")
+write_csv(tableS4, path = "Output/TableS4.csv")
 ```
-
 
 ```{r sessionInfo, results='markup'}
 sessionInfo()

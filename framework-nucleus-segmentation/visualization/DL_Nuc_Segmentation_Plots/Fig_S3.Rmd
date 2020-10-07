@@ -1,6 +1,6 @@
 ---
-title: "Generation of Figure S2"
-date: "Jun 22 2020"
+title: "Generation of Figure S3"
+date: "Sep 29 2020"
 authors: "Gianluca Pegoraro/George Zaki, NCI/NIH"
 output: github_document
 ---
@@ -53,11 +53,11 @@ errors_df <- errors_df %>%
 ```
 
 Generate the the False Positives bar plot.
-```{r figS2A, echo = F}
-Fig_S2A <- ggplot(errors_df, aes(x = model, 
+```{r figS3A, echo = F}
+Fig_S3A <- ggplot(errors_df, aes(x = model, 
                                  y = FP))
 
-Fig_S2A + geom_bar(stat = "identity") +
+Fig_S3A + geom_bar(stat = "identity") +
   facet_wrap(~ cell_line, 
              nrow = 1,
              scales = "free_y") +
@@ -66,11 +66,11 @@ Fig_S2A + geom_bar(stat = "identity") +
 ```
 
 Generate the the False Negatives bar plot.
-```{r figS2B, echo = F}
-Fig_S2B <- ggplot(errors_df, aes(x = model, 
+```{r figS3B, echo = F}
+Fig_S3B <- ggplot(errors_df, aes(x = model, 
                                  y = FN))
 
-Fig_S2B + geom_bar(stat = "identity") +
+Fig_S3B + geom_bar(stat = "identity") +
   facet_wrap(~ cell_line, 
              nrow = 1,
              scales = "free_y") +
@@ -79,11 +79,11 @@ Fig_S2B + geom_bar(stat = "identity") +
 ```
 
 Generate the the Over-splitting bar plot.
-```{r figS2C, echo = F}
-Fig_S2C <- ggplot(errors_df, aes(x = model, 
+```{r figS3C, echo = F}
+Fig_S3C <- ggplot(errors_df, aes(x = model, 
                                  y = splits))
 
-Fig_S2C + geom_bar(stat = "identity") +
+Fig_S3C + geom_bar(stat = "identity") +
   facet_wrap(~ cell_line, 
              nrow = 1,
              scales = "free_y") +
@@ -92,11 +92,11 @@ Fig_S2C + geom_bar(stat = "identity") +
 ```
 
 Generate the merges plot. 
-```{r figS2D, echo = F}
-Fig_S2D <- ggplot(errors_df, aes(x = model, 
+```{r figS3D, echo = F}
+Fig_S3D <- ggplot(errors_df, aes(x = model, 
                                  y = merges))
 
-Fig_S2D + geom_bar(stat = "identity") +
+Fig_S3D + geom_bar(stat = "identity") +
   facet_wrap(~ cell_line, 
              nrow = 1,
              scales = "free_y") +
