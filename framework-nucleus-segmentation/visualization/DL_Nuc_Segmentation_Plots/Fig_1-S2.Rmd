@@ -433,7 +433,7 @@ write_csv(tableS3, path = "Output/TableS3.csv")
 ```
 ### Figure S2A
 Plot Fig S2A: comparison of the manual vs. semi-automated labelling strategy. 
-```{r FigS3B, echo=FALSE}
+```{r FigS2A, echo=FALSE}
 manual_vs_auto_tbl %>%
   ggplot(aes(x = thres,
              y = F1)) +
@@ -459,7 +459,7 @@ fig_S2B <- runs_tbl %>%
 ```
 
 Plot Fig. S2B.
-```{r FigS3A, echo=FALSE}
+```{r FigS2B, echo=FALSE}
 fig_S2B %>%
   ggplot(aes(x = thres,
              y = F1,

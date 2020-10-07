@@ -10,14 +10,14 @@ Load the required libraries
 library(tidyverse)
 ```
 
-    ## ── Attaching packages ────────────────────────────────────────── tidyverse 1.3.0 ──
+    ## ── Attaching packages ─────────────────────────────────────────────────────────────────────────────────────────────────────── tidyverse 1.3.0 ──
 
     ## ✓ ggplot2 3.3.2     ✓ purrr   0.3.4
     ## ✓ tibble  3.0.3     ✓ dplyr   1.0.2
     ## ✓ tidyr   1.1.2     ✓ stringr 1.4.0
     ## ✓ readr   1.3.1     ✓ forcats 0.5.0
 
-    ## ── Conflicts ───────────────────────────────────────────── tidyverse_conflicts() ──
+    ## ── Conflicts ────────────────────────────────────────────────────────────────────────────────────────────────────────── tidyverse_conflicts() ──
     ## x dplyr::filter() masks stats::filter()
     ## x dplyr::lag()    masks stats::lag()
 
@@ -659,7 +659,7 @@ write_csv(tableS3, path = "Output/TableS3.csv")
 ### Figure S2A
 
 Plot Fig S2A: comparison of the manual vs. semi-automated labelling
-strategy. ![](Output/FigS3B-1.png)<!-- -->
+strategy. ![](Output/FigS2A-1.png)<!-- -->
 
 ### Figure S2B
 
@@ -676,7 +676,7 @@ fig_S2B <- runs_tbl %>%
   mutate(replicate = factor(replicate, levels = c("Training", "Testing"))) 
 ```
 
-Plot Fig. S2B. ![](Output/FigS3A-1.png)<!-- -->
+Plot Fig. S2B. ![](Output/FigS2B-1.png)<!-- -->
 
 Generate and save a table for the F1 results shown in Fig S2B at the 0.7
 and 0.9 thresholds (Table S4).
