@@ -82,3 +82,4 @@ run,train_set,train_size,aug,epochs,model,initialization
 81,All,1X,Full,1X,MRCNN,Random
 82,All,1X,Full,1X,MRCNN,Random
 83,All,1X,Full,1X,MRCNN,Random
+84,CellPose,1X,Full,1X,CellPose,Random

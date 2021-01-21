@@ -1,6 +1,6 @@
 ---
 title: "Generation of Figures 1 to S2 for the DL Nuclear Segmentation Manuscript"
-date: "Sep 29 2020"
+date: "Jan 19 2021"
 authors: "Gianluca Pegoraro/George Zaki, NCI/NIH"
 output: github_document
 ---
@@ -143,8 +143,9 @@ levs4 <-
     "MCF10A_HCT116",
     "MCF10A_HCT116_U2OS",
     "All",
-    "BBBC038")
-levs5 <- c("MRCNN", "FPN2-WS", "Jacobkie", "Kaggle_5th")
+    "BBBC038",
+    "CellPose")
+levs5 <- c("MRCNN", "FPN2-WS", "Jacobkie", "CellPose", "Kaggle_5th")
 
 
 runs_tbl <- runs_tbl %>%
@@ -203,7 +204,7 @@ gen_line <- function(df) {
 
 gen_point <- function(df, varx, x_legend){
   df %>% 
-    ggplot(aes(x = {{ varx}},
+    ggplot(aes(x = {{varx}},
                y = F1,
                color = model)) +
     geom_point(alpha = 0.7,
@@ -229,8 +230,6 @@ gen_table <- function(df, varx){
       names_sep = "-"
     )
 }
-
-
 ```
 
 ### Figure 2
@@ -485,6 +484,22 @@ tableS4 <- fig_S2B %>%
               names_sep = "-")
 
 write_csv(tableS4, path = "Output/TableS4.csv")
+```
+
+Bonus: comparison of MRCNN and FPN-WS2 performance with (Cellpose) [https://cellpose.readthedocs.io/en/latest/]
+```{r filter-FigCellPose}
+cell_pose <- testing_tbl %>% 
+  filter(run %in% c(10, 37, 44, 84),
+         replicate %in% c("Technical", "Biological"))
+```
+
+```{r FigCellPose, echo=FALSE}
+gen_line(cell_pose)
+```
+```{r, tableCellPose}
+cell_pose_table <- gen_table(cell_pose, thres)
+
+write_csv(cell_pose_table, path = "Output/cell_pose_table.csv")
 ```
 
 ```{r sessionInfo, results='markup'}

@@ -1,6 +1,6 @@
 Generation of Figures 1 to S2 for the DL Nuclear Segmentation Manuscript
 ================
-Sep 29 2020
+Jan 19 2021
 
 ### Analysis initialization
 
@@ -10,14 +10,14 @@ Load the required libraries
 library(tidyverse)
 ```
 
-    ## ── Attaching packages ─────────────────────────────────────────────────────────────────────────────────────────────────────── tidyverse 1.3.0 ──
+    ## ── Attaching packages ───────────────────────────────────────────────────────────────────── tidyverse 1.3.0 ──
 
     ## ✓ ggplot2 3.3.2     ✓ purrr   0.3.4
     ## ✓ tibble  3.0.3     ✓ dplyr   1.0.2
     ## ✓ tidyr   1.1.2     ✓ stringr 1.4.0
     ## ✓ readr   1.3.1     ✓ forcats 0.5.0
 
-    ## ── Conflicts ────────────────────────────────────────────────────────────────────────────────────────────────────────── tidyverse_conflicts() ──
+    ## ── Conflicts ──────────────────────────────────────────────────────────────────────── tidyverse_conflicts() ──
     ## x dplyr::filter() masks stats::filter()
     ## x dplyr::lag()    masks stats::lag()
 
@@ -105,7 +105,7 @@ raw_tbl <- dir(path = "Data",
 glimpse(raw_tbl)
 ```
 
-    ## Rows: 10,610
+    ## Rows: 10,700
     ## Columns: 7
     ## $ filename <chr> "Data/run-manual-vs-semi-auto/BABE_Biological_manual/maps.cs…
     ## $ thres    <dbl> 0.50, 0.55, 0.60, 0.65, 0.70, 0.75, 0.80, 0.85, 0.90, 0.95, …
@@ -144,7 +144,7 @@ runs_tbl <- raw_tbl %>%
 glimpse(runs_tbl)
 ```
 
-    ## Rows: 10,570
+    ## Rows: 10,660
     ## Columns: 10
     ## $ filename  <chr> "Data/run001/mean-average-precision/mrcnn/MCF10A_Biological…
     ## $ thres     <dbl> 0.50, 0.55, 0.60, 0.65, 0.70, 0.75, 0.80, 0.85, 0.90, 0.95,…
@@ -197,7 +197,7 @@ md_tbl <- read_csv("Metadata/Metadata.csv")
 glimpse(md_tbl)
 ```
 
-    ## Rows: 83
+    ## Rows: 84
     ## Columns: 7
     ## $ run            <dbl> 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16,…
     ## $ train_set      <chr> "MCF10A", "MCF10A", "MCF10A", "MCF10A", "MCF10A", "All…
@@ -218,7 +218,8 @@ knitr::kable(md_explore)
 ```
 
 | model       | initialization  | train\_set           | train\_size | epochs | aug          | run |
-| :---------- | :-------------- | :------------------- | :---------- | :----- | :----------- | --: |
+|:------------|:----------------|:---------------------|:------------|:-------|:-------------|----:|
+| CellPose    | Random          | CellPose             | 1X          | 1X     | Full         |  84 |
 | FPN2-WS     | Pre-initialized | All                  | 0.125X      | 1X     | Full         |  49 |
 | FPN2-WS     | Pre-initialized | All                  | 0.25X       | 1X     | Full         |  48 |
 | FPN2-WS     | Pre-initialized | All                  | 0.5X        | 1X     | Full         |  47 |
@@ -315,8 +316,9 @@ levs4 <-
     "MCF10A_HCT116",
     "MCF10A_HCT116_U2OS",
     "All",
-    "BBBC038")
-levs5 <- c("MRCNN", "FPN2-WS", "Jacobkie", "Kaggle_5th")
+    "BBBC038",
+    "CellPose")
+levs5 <- c("MRCNN", "FPN2-WS", "Jacobkie", "CellPose", "Kaggle_5th")
 
 
 runs_tbl <- runs_tbl %>%
@@ -334,7 +336,7 @@ runs_tbl <- runs_tbl %>%
 glimpse(runs_tbl)
 ```
 
-    ## Rows: 10,570
+    ## Rows: 10,660
     ## Columns: 16
     ## $ filename       <chr> "Data/run001/mean-average-precision/mrcnn/MCF10A_Biolo…
     ## $ thres          <dbl> 0.50, 0.55, 0.60, 0.65, 0.70, 0.75, 0.80, 0.85, 0.90, …
@@ -365,7 +367,7 @@ testing_tbl <- runs_tbl %>%
 glimpse(testing_tbl)
 ```
 
-    ## Rows: 6,500
+    ## Rows: 6,540
     ## Columns: 16
     ## $ filename       <chr> "Data/run001/mean-average-precision/mrcnn/MCF10A_Biolo…
     ## $ thres          <dbl> 0.50, 0.55, 0.60, 0.65, 0.70, 0.75, 0.80, 0.85, 0.90, …
@@ -417,7 +419,7 @@ gen_line <- function(df) {
 
 gen_point <- function(df, varx, x_legend){
   df %>% 
-    ggplot(aes(x = {{ varx}},
+    ggplot(aes(x = {{varx}},
                y = F1,
                color = model)) +
     geom_point(alpha = 0.7,
@@ -692,13 +694,30 @@ tableS4 <- fig_S2B %>%
 write_csv(tableS4, path = "Output/TableS4.csv")
 ```
 
+Bonus: comparison of MRCNN and FPN-WS2 performance with (Cellpose)
+\[<https://cellpose.readthedocs.io/en/latest/>\]
+
+``` r
+cell_pose <- testing_tbl %>% 
+  filter(run %in% c(10, 37, 44, 84),
+         replicate %in% c("Technical", "Biological"))
+```
+
+![](Output/FigCellPose-1.png)<!-- -->
+
+``` r
+cell_pose_table <- gen_table(cell_pose, thres)
+
+write_csv(cell_pose_table, path = "Output/cell_pose_table.csv")
+```
+
 ``` r
 sessionInfo()
 ```
 
-    ## R version 4.0.2 (2020-06-22)
+    ## R version 4.0.3 (2020-10-10)
     ## Platform: x86_64-apple-darwin17.0 (64-bit)
-    ## Running under: macOS Mojave 10.14.6
+    ## Running under: macOS Catalina 10.15.7
     ## 
     ## Matrix products: default
     ## BLAS:   /Library/Frameworks/R.framework/Versions/4.0/Resources/lib/libRblas.dylib
@@ -716,7 +735,7 @@ sessionInfo()
     ##  [9] tibble_3.0.3    ggplot2_3.3.2   tidyverse_1.3.0
     ## 
     ## loaded via a namespace (and not attached):
-    ##  [1] httr_1.4.2          jsonlite_1.7.1      splines_4.0.2      
+    ##  [1] httr_1.4.2          jsonlite_1.7.1      splines_4.0.3      
     ##  [4] modelr_0.1.8        Formula_1.2-3       assertthat_0.2.1   
     ##  [7] highr_0.8           latticeExtra_0.6-29 blob_1.2.1         
     ## [10] renv_0.12.0         cellranger_1.1.0    yaml_2.2.1         
@@ -727,15 +746,15 @@ sessionInfo()
     ## [25] broom_0.7.0         haven_2.3.1         scales_1.1.1       
     ## [28] jpeg_0.1-8.1        htmlTable_2.1.0     generics_0.0.2     
     ## [31] farver_2.0.3        ellipsis_0.3.1      withr_2.2.0        
-    ## [34] nnet_7.3-14         cli_2.0.2           survival_3.2-3     
+    ## [34] nnet_7.3-14         cli_2.0.2           survival_3.2-7     
     ## [37] magrittr_1.5        crayon_1.3.4        readxl_1.3.1       
     ## [40] evaluate_0.14       fs_1.5.0            fansi_0.4.1        
     ## [43] xml2_1.3.2          foreign_0.8-80      data.table_1.13.0  
-    ## [46] tools_4.0.2         hms_0.5.3           lifecycle_0.2.0    
+    ## [46] tools_4.0.3         hms_0.5.3           lifecycle_0.2.0    
     ## [49] munsell_0.5.0       reprex_0.3.0        cluster_2.1.0      
-    ## [52] compiler_4.0.2      rlang_0.4.7         grid_4.0.2         
+    ## [52] compiler_4.0.3      rlang_0.4.7         grid_4.0.3         
     ## [55] rstudioapi_0.11     htmlwidgets_1.5.1   base64enc_0.1-3    
-    ## [58] labeling_0.3        rmarkdown_2.3       gtable_0.3.0       
+    ## [58] labeling_0.3        rmarkdown_2.6       gtable_0.3.0       
     ## [61] DBI_1.1.0           R6_2.4.1            gridExtra_2.3      
     ## [64] lubridate_1.7.9     knitr_1.29          utf8_1.1.4         
     ## [67] Hmisc_4.4-1         stringi_1.5.3       Rcpp_1.0.5         
