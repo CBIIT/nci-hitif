@@ -24,10 +24,10 @@ if __name__ == '__main__':
                         default='256',
                         help='Size of patches. Must be multiple of 256')
     parser.add_argument('--padding', required=False,
-                        default='40',
+                        default='50',
                         help='Amount of overlapping pixels along one axis') 
     parser.add_argument('--threshold', required=False,
-                        default='30',
+                        default='10',
                         help='Min number of pixels belonging to a cell.')
 
 
